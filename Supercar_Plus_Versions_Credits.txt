@@ -1,0 +1,79 @@
+History and Credits -- Supercar Plus
+
+The Supercar was originally developed by Ingen Labs (Shin Ingen @ http://ingen-lab.com:8002)
+as a race car script with 12 gears and many great sound and particle effects.
+This major re-write improves on the 2015 Supercar as noted below.
+
+This version is maintained by Cuga Rajal - cugarajal@gmail.com
+ Opensim: Cuga_Rajal@http://rajal.org:9000
+ Second Life: Cuga Rajal
+
+Past contributors:
+ "Opensim BulletSim Supercar" Created: 2015-03-17 by Shin Ingen @ http://ingen-lab.com:8002
+ Available at: http://www.outworldz.com/cgi/freescripts.plx?ID=1072
+ Rev 1.1 04-14-2015 - Vegaslon
+ Rev 1.2 through present - Cuga Rajal
+
+Version History
+
+Rev 1.1 2015-04-14 Vegaslon  changed llSetVehicleRotationParam to reset all axes <0,0,0>
+ Ferd commented out useless code that assigned a var to itself and other vars that are never used.
+
+- Rev 1.2VRCamp 2015-06-15 Cuga Rajal  <cugarajal@gmail.com>
+- Changed all occurrences of llSay to llRegionSayTo
+- Removed all occurrences of listen() and llListen()
+- Removed touch menu
+- Added compatibility with new wheel rotation script
+-  New wheel scripts rotate wheel prims at correct rotation for diameter and speed
+- Reverse speed is now same as forward speed
+- Removed code that was disabled from previous developers 
+- Set to 4 slower speeds for smaller sim
+- Added message to driver on sit
+
+Rev 1.3-Cuga 2016-Jan-10
+- Updated to work in SL, for use in Burn2
+- Auto-detect sit animation in contents; Animation name not needed in configs
+- Improved front wheel rotation to prevent wobble
+- Reduced number of llMessageLinked messages
+Rev 1.4-Cuga 2016-Mar-04
+- Restored racecar speeds, sounds, gear names, burnout & pipeflame effects
+Rev 1.5-Cuga 2016-Apr-09
+- Many new user config options, including configurable gearing, effects, hover text and more
+- Major rewrite of internal messaging, reduced link messages and lag considerably. Eliminated message flooding.
+- Restores original prim physics types to child prims on stand;
+- Added support for headlights and headlight beams
+- Check if sounds are in Contents on rez, to prevent SL script errors if missing
+- Added option to turn in place while stopped, like the Mario script
+- Added an optional HUD with controls for horn, lights, pipeflame and smokescreen
+  (HUD uses llListen() between specific UUIDs)
+Rev 1.6
+- Faster initialization by SL/OS switch in user config settings
+Rev 1.62
+- Fix gSitTarget_Rot, add config for SL sounds
+Rev 1.63
+- Improved engine sounds while driving at low speeds
+Rev 1.64
+- Fixed startup sound only play on driver sit; Pie menu changes to Sit for passengers after driver is on
+Rev 1.65
+- Bug fixes and adds the option to use a config file named "Config" to store user settings. If used, the config file settings override main script settings.
+Rev 1.66
+- Fixes script reset bug introduced in 1.65
+Rev 1.67 2017-Mar-11
+- New config option to skip reset on rez if using a rezzer and auto-return not needed
+Rev 1.68 2017-May-1
+- Set Physics TRUE after changing child prims to type None
+Rev 1.69 2017-Aug-1
+- Dataserver asyncronous, wait till done before initializing engine; Added use_alt_sound.
+Rev 1.70 2018-09-28
+- Added options for permission to drive the vehicle; Option for anyone in group object belongs to; List of UUIDs allowed to drive
+- Added camera controls. CamDist is the camera distance behind the driver. CamPitch is the angle looking down.
+  Note: Option-arrow keys can be used to manually override camera view. Hit <esc> to return to camera settings.
+- Script no longer resets automatically on changed inventory. Make sure you reset the script manually when needed!
+- Script now uses same NC reading functions in Opensim and SL. Single code for both grids. Better OS compatibility.
+  Note: this change may break the reading of the Config notecard on older versions of Opensim
+- Added option to selectively keep a child prim physics type Prim when driving car, by setting prim description to "prim"
+  This can be used to create articulating connections, such as for multi-axle vehicles (experimental)
+  Default is to make all child prims physics type None while driving
+- Bug fix: Repeated chat messages when changing gears if already to lowest/highest gear
+Rev 1.71 2018-09-29
+- Some improvements to camera controls

@@ -1,0 +1,40 @@
+gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=rez group
+driverList = [ ]; // list of UUIDs allowed to drive
+gSitMessage = "Drive";  // Appears in the pie menu
+gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
+gSitTarget_Pos = <0,  0, 1>;   // sit position offset
+gSitTarget_Rot = <0, 0, 0>;   // sit angle offset
+
+maxGear = 3;       // highest gear that can be shifted to, max 11
+lowestGear = 0;     // lowest gear that can be shifted to, min 0
+startGear = 0;      // gear selected on sit 
+fallbackAbove = 6;  // releasing forward button when gear higher than this falls back to this
+turn_in_place = FALSE;  // Whether the vehicle should rotate in place when no linear velocity
+turn_in_place_speed = 2; // Rotation speed if rotating in place
+turnList = [ ]; // Empty list uses default values; Override defaults with this list 
+speedList = [ ]; // Empty list uses default values; Override defaults with this list 
+
+enableCamera = TRUE;  // Whether or not to enable camera controls
+CamDist = 4; // How far back you want the camera positioned
+CamPitch = 8.0;  // Angle looking down. Range is -45 to 80 Degrees
+lookAhead = 8.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
+
+burnoutGear = 2;    // gear that will disply burnout effects. Not used if no effects script in vehicle.
+turnburnGear = 5;   // this gear and above show smoke & screech when turning.
+pipeflameGear = 4;  // one selected gear will show pipe flames.
+lights_on_sit = FALSE; // Whether to turn on headlights on sit
+
+auto_return = FALSE; // Whether the car parks itself after use - to place/angle when script last reset
+reset_on_rez = FALSE; // Whether script resets on rez. Set to FALSE if using rezzer instead of auto-return
+auto_return_time = 300;  // Delay before auto-return in seconds
+sit_message = ""; // Chat window message shown to driver when sitting
+stand_message = "The vehicle will park itself after 5 minutes, unless it is still being driven."; // Chat window message shown to driver when standing
+show_speed = FALSE; // Whether the car should display speed vectors in hover text while driving
+verbose_level = 1; // 0 = no messages; 1 = display gear when shifting; 2 = display all llMessageLinked messages
+use_hud = FALSE;   // Whether to rez and attach HUD in contents - user must confirm in dialog
+hud_name = "Supercar HUD 1.57"; // If used, HUD should be in Contents and have this name
+HUD_CHANNEL = 19997;
+
+is_SL = FALSE;   // Whether this script is being used in with Havok (Second Life) or Bulletsim (Opensim)
+use_sl_sounds = FALSE;  // Whether to use DMV 3.0 sounds in Second Life
+use_alt_sound = "";
