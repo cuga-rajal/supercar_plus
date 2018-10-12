@@ -91,10 +91,12 @@ Two types of headlight scripts are provided. Headlight Beams are conical shaped 
 The Headlight Source script is meant for the headlight prim itself. The script switches the Fullbright setting and point light source.
 
 **Horn**
+
 A horn script makes the horn honk when it gets a signal from the optional HUD. The horn will be heard coming from the prim you place the horn script in. 
 
 **HUD**
-An optional HUD is also provided. To use, placing it in the root prim and then configure the Supercar script to use it. When the driver first sits, they will get a dialog requesting to temp-attach the HUD to their Top Center HUD location. The HUD allows the driver control headlights, horn, pipeflame and smoke effects ("smokescreen"). Each of those components needs to be set up and configured on the car in order for the HUD button to work. When the driver stands, the HUD automatically un-attaches and deletes.
+
+An optional HUD is also provided. Setup instructions are included in the notes in the HUD script. Once the HUD object is set up, place it in the root prim of the car and configure the Supercar script to use it. When the driver first sits, they will get a dialog requesting to temp-attach the HUD. The HUD allows the driver control headlights, horn, pipeflame and smoke effects ("smokescreen"). Each of those components needs to be set up and configured on the car in order for the HUD button to work. When the driver stands, the HUD automatically un-attaches and deletes.
 
 
 
