@@ -9,7 +9,7 @@
 
                 // Driver permissions and sit offsets
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
-list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist)
+list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
 vector          gSitTarget_Pos = <0, 0, 1>;   // sit position offset
@@ -605,7 +605,7 @@ default {
             if (gAgent != NULL_KEY){
                 
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (gAgent == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(gAgent)==TRUE))
-                    || (llListFindList( driverList, [gAgent] ) != -1)) {
+                    || (llListFindList( driverList, [(string)gAgent] ) != -1)) {
                     
                     gOldAgent = gAgent;
                     set_engine();

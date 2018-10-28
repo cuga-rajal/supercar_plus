@@ -77,3 +77,5 @@ Rev 1.70 2018-09-28
 - Bug fix: Repeated chat messages when changing gears if already to lowest/highest gear
 Rev 1.71 2018-09-29
 - Some improvements to camera controls
+Rev. 1.72 2018-10-24
+- Bug fix to support long UUID list
