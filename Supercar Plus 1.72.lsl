@@ -1,4 +1,4 @@
-// Supercar Plus 1.71
+// Supercar Plus 1.72
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
