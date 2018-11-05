@@ -1,4 +1,4 @@
-// Supercar Plus 1.72
+// Supercar Plus 1.73
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -480,7 +480,7 @@ enginesound(){
 }
 
 SendLinkMessage(integer Lnum, string Lstr) {
-   llMessageLinked(LINK_ALL_OTHERS, Lnum, Lstr, NULL_KEY);
+   llMessageLinked(LINK_SET, Lnum, Lstr, NULL_KEY);
    if(verbose_level>1) { llRegionSayTo(driver,0,"llMessageLinked: num=" + (string)Lnum + ", string=" + Lstr); }
 }
 

@@ -79,3 +79,5 @@ Rev 1.71 2018-09-29
 - Some improvements to camera controls
 Rev. 1.72 2018-10-24
 - Bug fix to support long UUID list
+Rev. 1.73 2018-11-04
+- llMessageLinked() messages sent to all prims not just child prims. Allows new Trak script to be in root prim.
