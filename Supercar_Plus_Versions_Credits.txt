@@ -81,3 +81,5 @@ Rev. 1.72 2018-10-24
 - Bug fix to support long UUID list
 Rev. 1.73 2018-11-04
 - llMessageLinked() messages sent to all prims not just child prims. Allows new Trak script to be in root prim.
+Rev. 1.74
+- llMessageLinked() message "car_park" sent when auto-park activated, allowing removal of rez-on-park objects

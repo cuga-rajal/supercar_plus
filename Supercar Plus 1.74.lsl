@@ -1,4 +1,4 @@
-// Supercar Plus 1.73
+// Supercar Plus 1.74
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -956,8 +956,9 @@ default {
             if(gSpeed<1) { llSetTimerEvent(0); }
         } else if(auto_return) {
             llSetRegionPos(startposition);
-               llSetRot(startrot);
-               llSetTimerEvent(0);
+            llSetRot(startrot);
+            SendLinkMessage(0, "car_park");
+            llSetTimerEvent(0);
         }
     }
 
