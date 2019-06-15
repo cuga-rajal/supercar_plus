@@ -27,9 +27,11 @@ Create a cube prim about the size of the vehicle's wheelbase. Make the X dimensi
 
 Place the Supercar Plus script in the prim and sit to drive the car. Move forward using your arrow keys and make note of it's direction of movement. This will need to be match the vehicle you are linking. Stand up. and then adjust the prim and/or your vehicle so that both are oriented the same direction. Move the root prim with the car script under the car along it's wheelbase. This can be lined up by eye, it doesn't have to be exact.
 
-Remove any driving scripts that may be on your car. If there is a special driver sit animation in the root prim of the car, transfer that from of the car's root prim into your inventory and then delete it from the car. Then drag it into the new cube prim which will become the new root prim of the vehicle.
+Remove any driving scripts that may be on your car. If there is a special driver sit animation in the root prim of the car, transfer that from of the car's root prim into your inventory and then delete it from the car. Then drag it into the new cube prim which will become the new root prim of the vehicle. Also transfer the name of the car object to the cube prim. 
 
-Now link the car and the new root prim together, with the cube prim as the new root prim. Also transfer the name of the car object into the cube prim. Reset the script and then test drive it. You will probably need to adjust the driver sit offset, gSitTarget_Pos, so the driver appears in the driver's seat. This is the offset from the center of the root prim.
+Now link the car and the new root prim together, with the cube prim selected last as the new root prim. Reset the script and then test drive it.
+
+You will probably need to adjust the driver sit offset, gSitTarget_Pos, so the driver appears in the driver's seat. This is the offset from the center of the root prim.
 
 **Getting Familiar:**
 
@@ -38,11 +40,11 @@ Take a look at the assets that come with the script.
 
 **Asset organization:**
 
-The easiest way to organize the assets is to create folders that each correspond to car parts, such as front right wheel, etc. So it's easy to see which assets go with which prims. Viewer software does not have an automated way to create nested folders through an unpacking process, so you will have to create those by hand. Assets are already organized this way at Github, so Github can be used as a guide for re-creating this folder structure in your viewer's inventory. A screen capture image of a viewer's nested folders is also provided.
+Since most assets correspond to specific car parts, the easiest way to organize the assets is to create folders that each correspond to car parts, such as front right wheel, etc. So it's easy to see which assets go with which prims. Viewer software does not have an automated way to create nested folders through an unpacking process, so you will have to create these by hand. A screen capture image is included showing a typical viewer inventory organization.
 
 **Passenger seats:**
 
-Any sittable child prims (with a non-zero sit offset) can be used as passenger prims. This can be an existing prim on the car or a poseball can be added. It is customary to set the 'Click To' setting of passenger prims to 'Sitting' (Edit window General tab) so it's easy for people to see which prims are intended to sit on. Sit scripts are not required inside passenger seat prims if their sit offset is already set. However, sit scripts can be used in passenger seats to force an animation or do other things on sit. If you want to drive a vehicle that has passenger seats, you need to right-click on any non-passenger prim and select Drive from the Pie Menu.
+Any child prim can be made sittable and used as passenger seats. This can be a prim already on the car or a poseball can be added. It is customary to set the 'Click To' setting of passenger prims to 'Sitting' (Edit window General tab) so it's easy for people to see which prims are intended to sit on using mouse hover. Sit scripts do not need to remain in the sittable prims if the default sit animation is ok; Custom sit scripts in passenger seats can force an animation or do other things when an avatar sits. If you want to drive a vehicle, make sure you don;t click on a passenger prim. Rght-clicking on a car might be required to drive.
 
 Do not place sit scripts in the root prim or driver's seat. This would cause the car not to be drivable. The Supercar Plus script already manages the driver's sitting.
 
