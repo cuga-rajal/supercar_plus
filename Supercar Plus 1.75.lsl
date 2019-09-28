@@ -1,4 +1,4 @@
-// Supercar Plus 1.74
+// Supercar Plus 1.75
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -140,10 +140,10 @@ list        gGearNameList                 =[   "1st Gear",
                                                "6th Gear",
                                                "7th Gear",
                                                "8th Gear",
-                                               "9th Gear / PRO-STOCK",
-                                               "10th Gear / PRO-MOD",
-                                               "11th Gear / TOP-FUEL",
-                                               "12th Gear / OPEN-PRO"
+                                               "9th Gear",
+                                               "10th Gear",
+                                               "11th Gear",
+                                               "12th Gear"
                                          ];
 float         gSpeed=0;
 //---------------------------------------------------------------------
@@ -236,81 +236,81 @@ init_PhysEng(){
         if(verbose_level > 0) { llOwnerSay("   Vehicle is tuned for Bullet physics engine / Opensim"); }
     }
     
-    if(gPhysEng==0){
+    if(gPhysEng==0){  // SL/Havok
         gTurnMulti=2;
         init_TSvar(1);
         if(llGetListLength(turnList)>0) {
             gTurnRatioList = turnList;
         } else {
-            gTurnRatioList        = [   1.1,    //  STAGER
-                                        1.5,    //  BURNOUT
-                                        1.5,    //  1ST
-                                        1.5,    //  2ND
-                                        3.9,    //  3RD
-                                        4.0,    //  4TH
-                                        4.1,    //  5TH
-                                        4.5,    //  6TH
-                                        10.0,   //  PRO-STOCK (START-DRAG-CLASS)
-                                        10.0,   //  PRO-MOD
-                                        10.0,   //  TOP-FUEL
-                                        10.0    //  OPEN-PRO
+            gTurnRatioList        = [   1.1,    //1st Gear
+                                        2.5,    //2nd Gear
+                                        1.5,    //3rd Gear
+                                        1.5,    //4th Gear
+                                        3.9,    //5th Gear
+                                        4.0,    //6th Gear
+                                        4.1,    //7th Gear
+                                        4.5,    //8th Gear
+                                        10.0,   //9th Gear
+                                        10.0,   //10th Gear
+                                        10.0,   //11th Gear
+                                        10.0    //12th Gear
                                     ];
         }
         
         if(llGetListLength(speedList)>0) {
             gGearPowerList = speedList;
         } else {
-               gGearPowerList        = [   4,    //  STAGER
-                                        10,    //  BURNOUT
-                                        20,    //  1ST
-                                        40,    //  2ND
-                                        70,    //  3RD
-                                        80,    //  4TH
-                                        100,    //  5TH
-                                        110,    //  6TH
-                                        155,    //  PRO-STOCK (START-DRAG-CLASS)
-                                        170,    //  PRO-MOD
-                                        198,    //  TOP-FUEL
-                                        256     //  OPEN-PRO
+               gGearPowerList        = [ 4,    //1st Gear
+                                        10,    //2nd Gear
+                                        24,    //3rd Gear
+                                        40,    //4th Gear
+                                        70,    //5th Gear
+                                        80,    //6th Gear
+                                        100,    //7th Gear
+                                        110,    //8th Gear
+                                        155,    //9th Gear
+                                        170,    //10th Gear
+                                        198,    //11th Gear
+                                        256     //12th Gear
                                    ];
         }
     
-    } else {
+    } else {  // Opensim/Bullet (works fine in ODE too)
         gTurnMulti=0.987654;
         init_TSvar(1);
         if(llGetListLength(turnList)>0) {
             gTurnRatioList = turnList;
         } else {
-            gTurnRatioList        = [   1.3,    //  STAGER
-                                        1.5,    //  BURNOUT
-                                        1.5,    //  1ST
-                                        2.5,    //  2ND
-                                        3.9,    //  3RD
-                                        4.0,    //  4TH
-                                        4.1,    //  5TH
-                                        4.5,    //  6TH
-                                        10.0,   //  PRO-STOCK (START-DRAG-CLASS)
-                                        10.0,   //  PRO-MOD
-                                        10.0,   //  TOP-FUEL
-                                        10.0    //  OPEN-PRO
+            gTurnRatioList        = [   1.3,    //1st Gear
+                                        2.5,    //2nd Gear
+                                        1.5,    //3rd Gear
+                                        2.5,    //4th Gear
+                                        3.9,    //5th Gear
+                                        4.0,    //6th Gear
+                                        4.1,    //7th Gear
+                                        4.5,    //8th Gear
+                                        10.0,   //9th Gear
+                                        10.0,   //10th Gear
+                                        10.0,   //11th Gear
+                                        10.0    //12th Gear
                                     ];
         }
         
         if(llGetListLength(speedList)>0) {
             gGearPowerList = speedList;
         } else {
-               gGearPowerList        = [   6,    //  STAGER
-                                        15,    //  BURNOUT 
-                                        20,    //  1ST
-                                        40,    //  2ND
-                                        70,    //  3RD
-                                        80,    //  4TH
-                                        100,    //  5TH
-                                        110,    //  6TH
-                                        155,    //  PRO-STOCK (START-DRAG-CLASS)
-                                        170,    //  PRO-MOD
-                                        198,    //  TOP-FUEL
-                                        256     //  OPEN-PRO 
+               gGearPowerList        = [   6,    //1st Gear
+                                        15,    //2nd Gear
+                                        24,    //3rd Gear
+                                        40,    //4th Gear
+                                        70,    //5th Gear
+                                        80,    //6th Gear
+                                        100,    //7th Gear
+                                        110,    //8th Gear
+                                        155,    //9th Gear
+                                        170,    //10th Gear
+                                        198,    //11th Gear
+                                        256     //12th Gear
                                    ];
         }
     }
@@ -564,7 +564,9 @@ finish() {
         }
     }
     llOwnerSay("   Done reading physics types of child prims");
+    llOwnerSay("   Loading sounds..");
     preload_sounds();
+    llOwnerSay("   Done loading sounds");
     init_engine();
     init_PhysEng();
     llOwnerSay("Initialization complete, ready to drive.");
@@ -667,6 +669,10 @@ default {
                 }
             }
         }
+        if (change & CHANGED_INVENTORY) { // possible Config NC change
+			llOwnerSay("** Inventory change detected, resetting **");
+        	llResetScript();
+		}
     }
     
     run_time_permissions(integer perm){
@@ -676,6 +682,8 @@ default {
         }
         
         if(perm & PERMISSION_TRIGGER_ANIMATION) {
+        	string pilot_anim = llGetAnimationOverride("Sitting");
+ 			llStopAnimation(pilot_anim);
             integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
             if (count != 0) {
                 llStopAnimation("sit");
@@ -815,7 +823,13 @@ default {
             gNewTireSpin = "NoSpin";
             gNewTurnAngle = "NoTurn";
             
-            if (gGear > fallbackAbove) { gGear = fallbackAbove; }
+            if (gGear > fallbackAbove) {
+            	gGear = fallbackAbove;
+            	if(verbose_level>0) {
+            		gGearName = llList2String(gGearNameList, gGear);
+            		llRegionSayTo(driver,0,"Fallback to " + gGearName);
+            	}
+            }
             
             llSetTimerEvent(0.3);
 

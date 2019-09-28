@@ -14,6 +14,8 @@ Past contributors:
  Rev 1.1 04-14-2015 - Vegaslon
  Rev 1.2 through present - Cuga Rajal
 
+Recent Contributors: Xiija Anzu
+
 Version History
 
 Rev 1.1 2015-04-14 Vegaslon  changed llSetVehicleRotationParam to reset all axes <0,0,0>
@@ -83,3 +85,8 @@ Rev. 1.73 2018-11-04
 - llMessageLinked() messages sent to all prims not just child prims. Allows new Trak script to be in root prim.
 Rev. 1.74
 - llMessageLinked() message "car_park" sent when auto-park activated, allowing removal of rez-on-park objects
+Rev. 1.75
+- Renamed gears 1-12 (previous names were from original iTec Supercar)
+- Gear fallback sends local chat message to driver
+- Script resets when updating the Config NC
+- Stops other animations from driver's AOs on sit
