@@ -1,17 +1,29 @@
-// Supercar Plus front left 1.6
+// Supercar Plus front wheel 1.62
 // For use with Supercar Plus script (https://github.com/cuga-rajal/supercar_plus)
 //
-// Place this script in the contents of front wheel prim
+// Place this script in the contents of front wheel prims
 // This will rotate the wheel prim at correct rotation for wheel diameter and ground speed
-// And will turn the front wheel left or right when in response to turn controls.
+// And will turn the front wheel left or right when the vehicle is turning.
 // This script rotates the prim, so the texture appears correct on both inner and outer sides.
+//
 // Notes:
-// 1. This script is pre-configured for cylinder shape prim wheels
-// 2. Mesh and other type wheels may be used by adjusting values of wheel_rotation, turnl, turnr, turnc
-// 3. Depending on the prim orientation, the wheel may spin in the opposite direction from desired.
-//    If this happens, either rotate the prim orientation by 180 degrees, or change the lines below
-//    that start with "rate = .." to the opposite values (negative to positive and positive to negative)
-
+// This script is pre-configured for cylinder regular prim wheels.
+// For regular cylinder prim wheels, the same script can be used for left and right front wheels.
+//
+// Mesh wheels:
+// Values for "wheel_rotation", "turnl", "turnr", and "turnc" will need to be adjusted manually for mesh.
+// The same script can be used for left and right front wheels but the values will differ for left and right.
+// There is no way for the script to automatically determine these from the mesh prim appearance.
+// You can use "wheel_rotation" value from a rear wheel using the same type prim
+// Determine "turnl", "turnr", and "turnc" vectors visually using a similar process as rear wheel.
+// Values for "turnl", "turnr", and "turnc" will be different for left and right front wheels.
+// Some examples of mesh wheel settings are shown in comments and can be used as a guide.
+//
+// Direction of motion:
+// This script can create rotation in the opposite direction desired, depending on the orientation of the prim.
+// If the reverse direction is observed, one solution is to flip the prim 180 degrees, moving the inner flat side to outer.
+// If you cannot flip the prim, the other solution is to invert the non-zero value in "wheel_rotation" vector below.
+// For example, change <0,0,0.7> to <0,0, -0.7>.
 
 
 rotation turnl;
@@ -19,39 +31,52 @@ rotation turnr;
 rotation turnc;
 rotation newrot;
 float rate=0;
-vector wheel_size = <0,0,0>;
+vector wheel_size;
 rotation turnstate;
 float spinstate;
 
 // cylinder prim
-vector wheel_rotation = <0,0,1>;
-// Example settings for mesh wheels:
+vector wheel_rotation = <0,0,0.7>;
 // mesh wheel - Offroad Car
 //vector wheel_rotation = <0,0,.84>;
 // mesh wheel - Scortcher
 //vector wheel_rotation = <-.4,0.0,0.0>;
 // mesh wheel - porsche supercar
-//vector wheel_rotation = <0,0.2,0>;
+// vector wheel_rotation = <0,0.2,0>;
 
 default {
     state_entry() {
-    	vector wheelrot = llRot2Euler(llGetLocalRot())*RAD_TO_DEG;
-        if((wheelrot.x > 2.00) || (wheelrot.y > 2.00)) { wheel_rotation = <wheel_rotation.x * -1, wheel_rotation.y * -1, wheel_rotation.z * -1>; }
-                
         wheel_size = llGetScale();
-        // cylinder prims
+        // If the prim is a regular cylinder we try to detect reverse orientation and adjust
+        if(llList2Integer(llGetPrimitiveParams([ PRIM_TYPE ]), 0)==1) {
+            vector wheelrot = llRot2Euler(llGetLocalRot())*RAD_TO_DEG;
+            if((wheelrot.x > 2.00) || (wheelrot.y > 2.00)) { wheel_rotation = <0, 0, wheel_rotation.z * -1>; }
+        }
+        
+        // Specify "turnl", "turnr", and "turnc" vectors. Values are preconfigured for regular cylinder prims.
+        // Some past examples for various mesh wheels are shown in comments.
+
+        // cylinder prims - left and right wheels
         turnl = llEuler2Rot(DEG_TO_RAD * <90,210,0>);
         turnr = llEuler2Rot(DEG_TO_RAD * <90,150,0>);
         turnc = llEuler2Rot(DEG_TO_RAD * <90,180,0>);
         
-        // Example settings for mesh wheels:
-        
         // mesh wheel - Offroad Car
-        //turnl = llEuler2Rot(DEG_TO_RAD * <90,30,0>);
+        // **right front wheel
+        //turnl = llEuler2Rot(DEG_TO_RAD * <90,210,0>);
+        //turnr = llEuler2Rot(DEG_TO_RAD * <90,150,0>);
+        //turnc = llEuler2Rot(DEG_TO_RAD * <90,180,0>);
+        // **left front wheel
+    	//turnl = llEuler2Rot(DEG_TO_RAD * <90,30,0>);
         //turnr = llEuler2Rot(DEG_TO_RAD * <90,-30,0>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <90,0,0>);
         
         // mesh wheel - Scortcher
+        // **right front wheel
+        //turnl = llEuler2Rot(DEG_TO_RAD * <90,120,0>);
+        //turnr = llEuler2Rot(DEG_TO_RAD * <90,60,0>);
+        //turnc = llEuler2Rot(DEG_TO_RAD * <90,90,0>);
+        // **left front wheel
         //turnl = llEuler2Rot(DEG_TO_RAD * <90,300,0>);
         //turnr = llEuler2Rot(DEG_TO_RAD * <90,240,0>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <90,270,0>);
@@ -61,15 +86,11 @@ default {
         //float x = vec.x;
         //float y = vec.y;
         //float z = vec.z;
+        // **right front wheel
         //turnl = llEuler2Rot(DEG_TO_RAD * <x,y,30>);
         //turnr = llEuler2Rot(DEG_TO_RAD * <x,y,330>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <x,y,0>);
-        
-        // mesh wheel - custom wheel
-        //vector vec = llRot2Euler(llGetLocalRot());
-        //float x = vec.x;
-        //float y = vec.y;
-        //float z = vec.z;
+        // **left front wheel
         //turnl = llEuler2Rot(DEG_TO_RAD * <x,y,30>);
         //turnr = llEuler2Rot(DEG_TO_RAD * <x,y,330>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <x,y,0>);
@@ -123,3 +144,4 @@ default {
         }
     }
 }
+

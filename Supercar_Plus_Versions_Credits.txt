@@ -88,5 +88,8 @@ Rev. 1.74
 Rev. 1.75
 - Renamed gears 1-12 (previous names were from original iTec Supercar)
 - Gear fallback sends local chat message to driver
+- Reset messages indicate when loading sounds
 - Script resets when updating the Config NC
-- Stops other animations from driver's AOs on sit
+- Stops default AO sit animation when driving
+- Supercar Plus Front Wheel 1.62 released. Improved cylinder prim orientation detecting, improved mesh prim documentation.
+  Now one script for both front wheels.

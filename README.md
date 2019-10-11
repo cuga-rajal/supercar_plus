@@ -1,6 +1,6 @@
 # supercar_plus
 Supercar Plus Notes
-version  0.33, Sept 16, 2018
+version  0.34, Sept 16, 2018
 
 This is a free LSL land vehicle car script by Cuga Rajal and past contributors, compatible with Opensim and Second Life.
 
@@ -15,19 +15,26 @@ For a history on how this script first came about please see https://github.com/
 
 Supercar Plus - Open-Source LSL Car Script
 
-The Supercar Plus is an LSL script for land vehicles. It merges the best features of several car scripts to provide many useful features and low server impact (lag). It works in Opensim (Bullet Physics) and Second Life (Havok engine).
+The Supercar Plus is an LSL script for land vehicles. It merges the best
+features of several car scripts to provide many useful features and low server
+impact (lag). It works in Opensim (Bullet or ubODE) and Second Life (Havok).
 
-In it's simplest form, the script can be dropped into a root prim and used immediately. The root prim containing the script should be an elongated cube prim positioned flat on the ground. In most cases this root prim is given an invisible texture after linking with a visual vehicle.
+In it's simplest form, the script can be dropped into a root prim and used
+immediately. The script causes the root prim to move directly on the ground,
+so for best results the root prim should be set to an elongated cube positioned flat on the ground.
+In most cases this root prim is given an
+invisible texture and the visual vehicle is linked to it as a linkset.
 
 **Quick Start Instructions**
 
-Rez your vehicle and adjust it's angle in-world so that it's square with the sim. 
+Rez your vehicle and adjust it's angle in-world so that it's square with the
+sim.
 
 Create a cube prim about the size of the vehicle's wheelbase. Make the X dimension the length and Y dimension the width. Also set the X-Taper to -0.15, this helps the car go over bumps and obstacles.
 
-Place the Supercar Plus script in the prim and sit to drive the car. Move forward using your arrow keys and make note of it's direction of movement. This will need to be match the vehicle you are linking. Stand up. and then adjust the prim and/or your vehicle so that both are oriented the same direction. Move the root prim with the car script under the car along it's wheelbase. This can be lined up by eye, it doesn't have to be exact.
+Slide this new cube prim away from the vehicle. Place the Supercar Plus script in the prim and sit to drive the car. Move forward using your arrow keys and notice it's direction of movement. This will need to be match the vehicle you are linking. Stand up. and then rotate the prim and/or your vehicle so that both are oriented the same direction. Move the root prim with the car script under the car along it's wheelbase. This can be lined up by eye, it doesn't have to be exact.
 
-Remove any driving scripts that may be on your car. If there is a special driver sit animation in the root prim of the car, transfer that from of the car's root prim into your inventory and then delete it from the car. Then drag it into the new cube prim which will become the new root prim of the vehicle. Also transfer the name of the car object to the cube prim. 
+Remove any driving scripts that may be on your car. If there is a special driver sit animation in the root prim of the car, transfer that from of the car's root prim into your inventory and then delete it from the car. Then drag it into the new cube prim which will become the new root prim of the vehicle. Also transfer the name of the car object to the cube prim.
 
 Now link the car and the new root prim together, with the cube prim selected last as the new root prim. Reset the script and then test drive it.
 
