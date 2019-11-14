@@ -1,4 +1,4 @@
-// Supercar Plus front wheel 1.62
+// Supercar Plus front wheel 1.80
 // For use with Supercar Plus script (https://github.com/cuga-rajal/supercar_plus)
 //
 // Place this script in the contents of front wheel prims
@@ -11,20 +11,14 @@
 // For regular cylinder prim wheels, the same script can be used for left and right front wheels.
 //
 // Mesh wheels:
-// Values for "wheel_rotation", "turnl", "turnr", and "turnc" will need to be adjusted manually for mesh.
-// The same script can be used for left and right front wheels but the values will differ for left and right.
-// There is no way for the script to automatically determine these from the mesh prim appearance.
-// You can use "wheel_rotation" value from a rear wheel using the same type prim
-// Determine "turnl", "turnr", and "turnc" vectors visually using a similar process as rear wheel.
+// Values for "wheel_rotation", "turnl", "turnr", and "turnc" will need to be configured manually for mesh.
+// The same script can be used for left and right front wheels but the configuration will differ.
+// There is no way to automate the correct rotation direction on mesh rotation.
+// The configuration can be determined through a short discovery process and updating the settings manually.
+// You can use "wheel_rotation" value from a rear wheel using the same type prim on the same side of the car.
+// Determine "turnl", "turnr", and "turnc" vectors visually using a similar process as the rear wheel.
 // Values for "turnl", "turnr", and "turnc" will be different for left and right front wheels.
-// Some examples of mesh wheel settings are shown in comments and can be used as a guide.
-//
-// Direction of motion:
-// This script can create rotation in the opposite direction desired, depending on the orientation of the prim.
-// If the reverse direction is observed, one solution is to flip the prim 180 degrees, moving the inner flat side to outer.
-// If you cannot flip the prim, the other solution is to invert the non-zero value in "wheel_rotation" vector below.
-// For example, change <0,0,0.7> to <0,0, -0.7>.
-
+// Some examples of mesh wheel settings are shown in comments below.
 
 rotation turnl;
 rotation turnr;
@@ -48,18 +42,26 @@ default {
     state_entry() {
         wheel_size = llGetScale();
         // If the prim is a regular cylinder we try to detect reverse orientation and adjust
+        integer isreversed = FALSE;
         if(llList2Integer(llGetPrimitiveParams([ PRIM_TYPE ]), 0)==1) {
             vector wheelrot = llRot2Euler(llGetLocalRot())*RAD_TO_DEG;
-            if((wheelrot.x > 2.00) || (wheelrot.y > 2.00)) { wheel_rotation = <0, 0, wheel_rotation.z * -1>; }
+            if(wheelrot.x < 180) { isreversed = TRUE; }
+            if(isreversed) { wheel_rotation = <0, 0, wheel_rotation.z * -1>; }
         }
         
         // Specify "turnl", "turnr", and "turnc" vectors. Values are preconfigured for regular cylinder prims.
         // Some past examples for various mesh wheels are shown in comments.
 
         // cylinder prims - left and right wheels
-        turnl = llEuler2Rot(DEG_TO_RAD * <90,210,0>);
-        turnr = llEuler2Rot(DEG_TO_RAD * <90,150,0>);
-        turnc = llEuler2Rot(DEG_TO_RAD * <90,180,0>);
+        if(! isreversed) {
+            turnl = llEuler2Rot(DEG_TO_RAD * <90,210,0>);
+            turnr = llEuler2Rot(DEG_TO_RAD * <90,150,0>);
+            turnc = llEuler2Rot(DEG_TO_RAD * <90,180,0>);
+        } else {
+            turnl = llEuler2Rot(DEG_TO_RAD * <90,30,0>);
+            turnr = llEuler2Rot(DEG_TO_RAD * <90,330,0>);
+            turnc = llEuler2Rot(DEG_TO_RAD * <90,0,0>);
+        }
         
         // mesh wheel - Offroad Car
         // **right front wheel
@@ -67,7 +69,7 @@ default {
         //turnr = llEuler2Rot(DEG_TO_RAD * <90,150,0>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <90,180,0>);
         // **left front wheel
-    	//turnl = llEuler2Rot(DEG_TO_RAD * <90,30,0>);
+        //turnl = llEuler2Rot(DEG_TO_RAD * <90,30,0>);
         //turnr = llEuler2Rot(DEG_TO_RAD * <90,-30,0>);
         //turnc = llEuler2Rot(DEG_TO_RAD * <90,0,0>);
         

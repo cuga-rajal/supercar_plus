@@ -7,23 +7,17 @@
 //
 // Notes:
 // This script is pre-configured for cylinder prim wheels.
+// For regular cylinder prim wheels, the same script can be used for left and right front wheels.
 //
 // Mesh wheels:
-// For mesh wheels, the vector "wheel_rotation" may need to be adjusted manually. 
-// There is no way for the script to automatically know the visual orientation of the mesh wheel.
+// Value for "wheel_rotation" will need to be configured manually for mesh.
+// The same script can be used for left and right front wheels but the configuration will differ.
+// There is no way to automate the correct rotation direction on mesh rotation.
+// The configuration can be determined through a short discovery process and updating the settings manually.
+// First, get the wheel moving in the correct orientation by trying different axes, such as <1,0,0>, <0,1,0> or <0,0,1>.
+// Then adjust the value (raising or lowering the number 1) so the rotation speed looks correct.
+// Use a negative number to change the direction of spin.
 // Some example mesh wheel settings are shown in comments below.
-// Proper setting for "wheel_rotation" can be confirmed visually by watching the wheel in use
-// Mesh settings can use a 2-step process.
-// First, get the wheel moving in the correct orientation by trying different axes, such as <1,0,0>, <0,1,0> or <0,0,1>
-// Then adjust the non-zero value so the rotation speed looks correct. Use a negative number to change the direction of spin.
-//
-// Direction of motion:
-// This script can create rotation in the opposite direction desired, depending on the orientation of the prim.
-// If the reverse direction is observed, one solution is to flip the prim 180 degrees, moving the inner flat side to outer.
-// If you cannot flip the prim, the other solution is to invert the non-zero value in "wheel_rotation" vector below.
-// For example, change <0,0,0.7> to <0,0, -0.7>.
-
-
 
 float rate=0;
 vector wheel_size =<0,0,0>;

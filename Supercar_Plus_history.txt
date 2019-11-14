@@ -1,48 +1,73 @@
 Supercar Plus - History
 
-In addition to hosting my own Opensim region with a collection of
-driveable cars, I am the custodian of a collection of 70 scripted art
-cars of all shapes and sizes, built by past and prersent members of
-Burn2, the official Burning Man regional event in Second Life, As the
-DMV custodian, I manage scripting in the existing collection and provide
-scripting kits for people building new cars. During Burn2 art festival
-events, server lag is always a challenge with lots of visitors, other
-art throughout, and art cars being driven around.
+The Supercar Plus project is the continued development of a land vehicle script
+originally written by Shin Ingen for a race track application in Opensim in
+2014. He decided not to continue development and published the assets as open
+source, which is where this project picked it up. Much of the underlying code
+has changed since then but the overall framework is based on the original work.
+The project also redistributes by permission some of the original assets for the
+iTec race car effects.
 
-Originally, vehicles in the collection had scripting with varying
-sources and quality, some laggy, some poorly written, many didn't have
-desired features. We wanted one vehicle script that could merge the best
-features of all of the scripts, fix the bugs, and be low lag as possible
-for the server. We also wanted to use a single script across all the
-cars to minimize hassle of re-scripting 70+ cars in the collection when
-new versions of the car script (such as bug fixes) come out.
+For the last few years I have been the custodian of a large collection (~70)
+scripted land vehicles in Second Life, of all shapes and sizes. This collection
+was built by past and prersent members of Burn2, the official Burning Man
+regional event in Second Life. As the DMV custodian I manage scripting the
+existing collection and provide scripting kits and workshops for people building
+new cars. During Burn2 art festival events, server lag is always a concern, and
+the use of a common script for vehicles helps avoid lag-producing scripts or
+unwieldy vehicles.
 
-Around the same time, in 2014, Burn2 was planning a stand-alone Opensim
-demo of Burn2's art, avatars and art cars. The project required
-importing vehicles into Opensim. Our car scripts from SL didn't work in
-Opensim so we had to rescript. I discovered the excellent iTec Supercar
-car script by Shin Ingen. We used a very pared-down version for the
-Burning Man Demo. Afterwards I got permission from Shin Ingen to fork
-the project since he was not planning to develop it further. I created a
-Github page to manage the project and the Supercar Plus project was
-born.
+When I first became involved in the DMV, vehicles in the collection had scripts
+from varying sources and of fair quality, some laggy, some poorly written. Many
+didn't have desired features. We wanted one vehicle script that could merge the
+best features of all of the scripts, fix the bugs, and be low lag as possible
+for the server. We also wanted a way to install future script updates with
+minimal hassle, ideally without having to hand-transfer settings between
+scripts.
 
-Long story short, I created a lightweight and powerful land vehicle
-script that works well on cars with a variety of sizes and speeds, in SL
-and in Opensim, and has many creative options. The script is continually
-being improved and getting new features. I have been maintaining the
-project since 2014, Burn2 DMV in SL officially switched to it in 2015,
-but it is also used elsewhere.
+Around the same time, Burn2 was also planning a stand-alone computer demo of
+Burn2's art, avatars and art cars to be presented at the Burning Man event. This
+was to be accomplished using standalone Opensim installation on a Windows
+laptop. The project required importing all the vehicles out of SL and into the
+Opensim demo. Our car scripts from SL didn't work in Opensim, so we had to find
+a solution. The work for finding a suitable vehicle script in Opensim ended up
+being a start for the efforts to find an improved scripting solution for Burn2's
+DMV.
 
-In 2017 I added a feature to put all configuration settings in a
-notecard. The script checks to see if the Config notecard is present,
-and if so it will use configs in the notecard  and ignore settings
-within the script file itself. This way, script updates can simply be
-dropped into the car, replacing the previous version, without having to
-hand-edit any settings.
+Around that time, I also began running my own Opensim region. I had a number of
+vehicles to permanently maintain and so also needed a common script solution
+similar to the needs of Burn2. My region allowed me to test scripts as they were
+being developed and make sure they remain compatimble with Opensim, perticularly
+on obODE and Bullet physics engines.
 
-This is a work in progress. Please notify me of bugs or feature
-requests.
+While we were exploring vehicle script options for Burn2's Opensim demo project,
+we discovered the excellent iTec Supercar car script by Shin Ingen. This had the
+most interesting and complete set of features, and it was adaptable for the art
+cars. We created a pared-down version for the Burning Man Demo with a few
+features added to support our cars. Afterwards, I got permission from Shin Ingen
+to fork the project since he was not planning to develop it further. I created a
+Github page to manage the project and the Supercar Plus project was born. The
+project has been running since 2014, and Burn2's DMV in SL officially switched
+to the Supercar Plus script in 2015.
+
+One of the goals for the script was to be able to put all car customizations
+into the configuration section and have a common, unaltered main script in all
+the cars. This allowed us to update vehicles with the new script (with bug fixes
+for example) and only need to transfer the config settings to the new script.
+Although this did require hand-editing, a single block of text in the
+configuration sections could be copied and pasted between the old and new
+scripts, requiring only the copy-paste keys. So the task of re-scripting 70
+vehicles was not as bad as it might have been, but still not ideal.
+
+In 2017 I added a feature to put all configuration settings in a notecard. The
+script, when reset, checks to see if the Config notecard is present, and if so
+it will use configs in the notecard  and ignore settings within the script file
+itself. This way, script version updates can simply be dropped into the car,
+replacing the previous version, without having to hand-edit any settings.
+
+I continually try to find ways to simplify the script, to keep it compatible
+across grids, and to add new features wanted by car builders. This is a work in
+progress. Please notify me of bugs or feature requests.
 
 Cuga Rajal (Second Life and OSGrid)
 cugarajal@gmail.com

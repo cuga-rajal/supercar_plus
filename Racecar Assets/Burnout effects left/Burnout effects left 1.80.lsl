@@ -1,20 +1,19 @@
-// Burnout effects rear left 1.61
-// For use with Supercar Plus script (https://github.com/cuga-rajal/supercar_plus)
-// Place this in a prim at the base of the rear left wheel
-// Requires a texture and sound to be placed in the same prim. 
+// Burnout effects 1.80 left
+// For use with Supercar Plus script by Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
+// Visit https://github.com/cuga-rajal/supercar_plus for the latest version and more information
 
+string      sound = "screech2";
+key         texture = "smoke-01";
 
 integer     burnout = FALSE;
 integer     turnburn = FALSE;
 integer     screech = FALSE;
-float		Speed;
-integer		LoopSound = 0;
-key			texture;
-key			screechsound;
+float       Speed;
+integer     LoopSound = 0;
 
 updateParticles() {
 
- llParticleSystem([
+    llParticleSystem([
      PSYS_SRC_PATTERN, PSYS_SRC_PATTERN_ANGLE_CONE,
      PSYS_SRC_BURST_PART_COUNT,  9999,
      PSYS_SRC_BURST_RATE,        0.0100000,
@@ -39,15 +38,13 @@ updateParticles() {
          PSYS_PART_FOLLOW_VELOCITY_MASK |
          PSYS_PART_INTERP_COLOR_MASK |
          PSYS_PART_INTERP_SCALE_MASK
-	]);
+    ]);
 }
 
 
 default {
     state_entry() {
         llParticleSystem([]);
-        texture = llGetInventoryName(INVENTORY_TEXTURE, 0);
-        screechsound = llGetInventoryName(INVENTORY_SOUND, 0);
     }
     
     on_rez( integer start_param ) {
@@ -55,47 +52,22 @@ default {
     }
 
     link_message(integer sender, integer num, string message, key id) {
-        if(message=="burnout") {
-            burnout = TRUE;
-        }
-        else if(message=="burnoutoff") {
-            burnout = FALSE;
-            llParticleSystem([]);
-        }
-        else if(message=="screechon") {
-            screech = TRUE;
-        }
-        else if(message=="screechoff") {
-            screech = FALSE;
-            llStopSound();
-            LoopSound = 0;
-        }
-        else if(message=="turnburnon") {
-            turnburn = TRUE;
-        }
-        else if(message=="turnburnoff") {
-            turnburn = FALSE;
-            llStopSound();
-            LoopSound = 0;
-            llParticleSystem([]);
-        }
-        else if(message=="letsburn") {
-            if(burnout) {
-                updateParticles();
-            }
-        }
-        else if(message=="letsscreech") {
-            if(screech) {
-                if(LoopSound != 1) {
-                    llLoopSound(screechsound,1); 
-                    LoopSound = 1; 
-                }
-            }
-        }
+        
+        if(message=="burnout"){ burnout = TRUE; }
+        else if(message=="burnoutoff") { burnout = FALSE; llParticleSystem([]); }
+        else if(message=="screechon"){ screech = TRUE; }
+        else if(message=="screechoff"){ screech = FALSE; llStopSound(); LoopSound = 0; }
+        else if(message=="turnburnon"){ turnburn = TRUE; }
+        else if(message=="turnburnoff"){ turnburn = FALSE; llStopSound(); LoopSound = 0; llParticleSystem([]); }
+
+        else if((message=="letsburn") && (burnout)) { updateParticles(); }
+        
+        else if((message=="letsscreech") && (screech) && (LoopSound != 1)) { llLoopSound(sound,1);  LoopSound = 1;  }
+        
         else if(message=="letsburnL" && turnburn) {
             updateParticles();
             if(LoopSound != 1) {
-                llLoopSound(screechsound,1);
+                llLoopSound(sound,1);
                 LoopSound = 1;
             }
         }

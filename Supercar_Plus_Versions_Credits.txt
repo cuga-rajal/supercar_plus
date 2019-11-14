@@ -93,3 +93,25 @@ Rev. 1.75
 - Stops default AO sit animation when driving
 - Supercar Plus Front Wheel 1.62 released. Improved cylinder prim orientation detecting, improved mesh prim documentation.
   Now one script for both front wheels.
+Rev. 1.80
+- This is a major rewrite that fixes bugs, improves efficiency and adds features. Better and simpler instructions.
+- All assets specific to race cars have been moved to a subfolder, to simplify folder structure.
+- The Config section and Config notecard have changed, removing old configs and using new ones.
+  If you are upgrading from a previous version, use the new Config notecard and transfer your settings.
+- Many of the add-on scripts have changed to support the new main script. If you are upgrading you may need to update these as well.
+- Add-on scripts were previously each on their own version numbers, which created confusion on what is the latest.
+  Starting with v1.80, all add-on scripts that depend on this release have also been numbered 1.80
+- New headlight script turns on headlights on driver sit, turns off on stand, and supports switching the lights from a HUD
+- New horn script merges previous touch and HUD versions, touch horn prim or use HUD to honk
+- All car sounds are now configurable in the Config notecard. Comments in the NC provide setup details.
+- Script previously set slow or fast engine sound based on detected speed. It now sets this based on gear selected.
+  New config "aggressive_gear" sets gear above which plays aggressive sound.
+- New config anim_fwd and anim_idle optionally allow different driver animations while stopped or moving forward.
+- Some settings have merged and the name kept the same name, but may require changes. See the Config notecard for details.
+  For example, "turn_in_place_speed" and "auto_return_time" must be set to 0 to disable. "hud_name" must be blank to disable.
+- Racecar burnout and exhaust scripts have code cleanup but are functionally same as before.
+- Wheel scripts have improved support for cylinder prim wheels, and improved instructions for configuring mesh wheels
+- New awesome HUD for race car applications
+
+
+// END OF VERSION ANS CREDITS
