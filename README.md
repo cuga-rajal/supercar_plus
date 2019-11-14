@@ -1,5 +1,6 @@
 # supercar_plus
-Supercar Plus Notes
+Supercar Plus - Open-Source LSL Car Script
+
 version  1.80, Nov 14, 2019
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past contributors, compatible with Opensim and Second Life.
@@ -11,8 +12,6 @@ For version information and credits please see https://github.com/cuga-rajal/sup
 For a history on how this script first came about please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_history.txt
 
 -----
-
-Supercar Plus - Open-Source LSL Car Script
 
 **Whats New and Upgrade Information:**
 
@@ -57,6 +56,7 @@ instructions for configuring mesh wheels.
 There are also numerous internal improvements in the script to make it run more
 efficiently.
 
+-----
 
 **Quick Start Instructions:**
 
@@ -245,8 +245,6 @@ headlights, horn, and burnout effects. When the driver stands, the HUD
 automatically un-attaches and deletes. It includes features to automatically
 delete itself if not attached after a specified time, to prevent stray objects
 in the region.
-
-
 
 ----
 
