@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  1.80, Nov 14, 2019
+version  1.81, June 13, 2020
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past contributors, compatible with Opensim and Second Life.
 
@@ -13,9 +13,9 @@ For a history on how this script first came about please see https://github.com/
 
 -----
 
-**Whats New and Upgrade Information:**
+**Whats New in 1.8x and Upgrading From Previous Versions**
 
-Version 1.80 of the Supercar Plus is a major rewrite that fixes bugs, improves
+Version 1.8x of the Supercar Plus is a major rewrite that fixes bugs, improves
 efficiency and adds features. If you are upgrading your vehicle from a previous
 version, the following describes steps required.
 
@@ -44,17 +44,17 @@ NC for the sound settings.
 The script previously set slow or fast engine sound based on detected speed, and
 that threshold was not adjustable. It now sets the slow or fast driving sound
 based on the gear selected. A new config setting "aggressive_gear" sets the gear
-above which plays fast engine sound.
+at or above which plays fast engine sound.
 
-Two new settings "anim_fwd" and "anim_idle" optionally allow different driver
-animations while idle or moving forward.
+Two new settings "anim_fwd", "anim_idle" and "anim_fast" optionally allow
+different driver animations while idle or moving forward.
 
 There is now one wheel script for the front wheels, and one for the rear wheels.
 Wheel scripts have improved support for cylinder prim wheels, and improved
 instructions for configuring mesh wheels.
 
-There are also numerous internal improvements in the script to make it run more
-efficiently.
+There are also numerous internal improvements in the script to make it more
+efficient.
 
 -----
 
@@ -68,17 +68,18 @@ are quick instructions for this setup.
 Rez your vehicle and adjust it's angle in-world so that it's square with the
 sim.
 
-Create a cube prim about the size of the vehicle's wheelbase. Make the X
-dimension the length and Y dimension the width. Also set the X-Taper to -0.15,
-this helps the car go over bumps and obstacles.
+Create a cube prim about the size of the vehicle's wheelbase. This can be done
+by eye, it doesn't have to be exact. Make the X dimension the length and Y
+dimension the width. (Setting the X-Taper to -0.15 can help the car go over
+bumps and obstacles, but this causes issues with some physics engines.)
 
 Slide this new cube prim away from the vehicle. Place the Supercar Plus script
-in the prim and sit to drive the car. Move forward using your arrow keys and
-notice it's direction of movement. This will need to be match the vehicle you
-are linking. Stand up. and then rotate the prim and/or your vehicle so that both
-are oriented the same direction. Move the root prim with the car script under
-the car along it's wheelbase. This can be lined up by eye, it doesn't have to be
-exact.
+in the prim. Sit on the prim to test drive it. Move forward using your arrow
+keys and notice it's direction of movement. This will need to be match the
+vehicle orientation you are linking. Stand up and then rotate the prim and/or
+your vehicle so that both are oriented the same direction. Now move the root
+prim with the car script back under the car along it's wheelbase. This can be
+lined up by eye, it doesn't have to be exact.
 
 Remove any driving scripts that may be on your car. If there is a special driver
 sit animation in the root prim of the car, transfer that from of the car's root
@@ -141,12 +142,12 @@ various driver controls; For example, a script could turn on headlights when a
 driver sits and turn off when they stand. Custom scripts can be added anywhere
 on the car that respond to these messages: 
 
-car_start - when driver first sits to drive
+car\_start - when driver first sits to drive
 ForwardSpin - when the forward arrow key is held down
 BackwardSpin - when the reverse arrow key is held down
 NoSpin - when a driver seated but not moving
-car_stop - when the driver stands
-car_park - if auto-return is active, just before car parks
+car\_stop - when the driver stands
+car\_park - if auto-return is active, just before car parks
 
 In addition to sending out link_messages, the script listens for incoming
 link messages beginning with "sitoffset" to dynamically adjust the driver sit

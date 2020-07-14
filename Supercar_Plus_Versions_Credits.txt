@@ -86,19 +86,19 @@ Rev. 1.73 2018-11-04
 Rev. 1.74
 - llMessageLinked() message "car_park" sent when auto-park activated, allowing removal of rez-on-park objects
 Rev. 1.75
-- Renamed gears 1-12 (previous names were from original iTec Supercar)
+- Renamed gears 1-12 (previous names were legacy from original iTec Supercar)
 - Gear fallback sends local chat message to driver
-- Reset messages indicate when loading sounds
+- Script reset messages include when loading sounds
 - Script resets when updating the Config NC
 - Stops default AO sit animation when driving
 - Supercar Plus Front Wheel 1.62 released. Improved cylinder prim orientation detecting, improved mesh prim documentation.
   Now one script for both front wheels.
 Rev. 1.80
 - This is a major rewrite that fixes bugs, improves efficiency and adds features. Better and simpler instructions.
-- All assets specific to race cars have been moved to a subfolder, to simplify folder structure.
-- The Config section and Config notecard have changed, removing old configs and using new ones.
+- All assets unique to race cars have been moved to a subfolder, to simplify folder structure.
+- The Config section and Config notecard have changed, removing old configs and adding new ones.
   If you are upgrading from a previous version, use the new Config notecard and transfer your settings.
-- Many of the add-on scripts have changed to support the new main script. If you are upgrading you may need to update these as well.
+- Many of the add-on scripts have changed to support the new main script. If you are upgrading you may need to update those as well.
 - Add-on scripts were previously each on their own version numbers, which created confusion on what is the latest.
   Starting with v1.80, all add-on scripts that depend on this release have also been numbered 1.80
 - New headlight script turns on headlights on driver sit, turns off on stand, and supports switching the lights from a HUD
@@ -108,10 +108,15 @@ Rev. 1.80
   New config "aggressive_gear" sets gear above which plays aggressive sound.
 - New config anim_fwd and anim_idle optionally allow different driver animations while stopped or moving forward.
 - Some settings have merged and the name kept the same name, but may require changes. See the Config notecard for details.
-  For example, "turn_in_place_speed" and "auto_return_time" must be set to 0 to disable. "hud_name" must be blank to disable.
+  For example, "turn_in_place_speed" and "auto_return_time" must now be set to 0 to disable. "hud_name" must be blank to disable.
 - Racecar burnout and exhaust scripts have code cleanup but are functionally same as before.
 - Wheel scripts have improved support for cylinder prim wheels, and improved instructions for configuring mesh wheels
 - New awesome HUD for race car applications
+Rev. 1.81
+- Added a config "anim_fast", if used, will play this animation instead of anim_fwd when gear is at or above aggressive_gear
+- A vehicle physics parameter was changed (VEHICLE_ANGULAR_FRICTION_TIMESCALE) to keep car more level with ground 
+- If auto_return_time is not set to 0, rezzing a car in world will reset park location and angle to its rezzed position
+- All add-on scripts version 1.80 will work with this update
 
 
 // END OF VERSION ANS CREDITS

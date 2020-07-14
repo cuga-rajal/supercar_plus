@@ -23,6 +23,7 @@ turnburnGear = 3;   // this gear and above show smoke & screech when turning.
 
 anim_fwd = ""; // animation to play when moving forward; set to "" to disable changing animations
 anim_idle = ""; // animation to play when idle; required if using anim_fwd
+anim_fast = ""; // optional animation to play when moving forward at or above aggressive_gear
 
 auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
 reset_on_rez = FALSE,  // Whether the script should reset when the vehicle is rezzed

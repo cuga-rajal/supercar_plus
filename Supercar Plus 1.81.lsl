@@ -1,4 +1,4 @@
-// Supercar Plus 1.80
+// Supercar Plus 1.81
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -37,6 +37,7 @@ integer         turnburnGear = 3;   // this gear and above show smoke & screech 
                 // Avatar animations if more than one used
 string          anim_fwd = "";  // animation to play when moving forward; set to "" to disable changing animations
 string          anim_idle = ""; // animation to play when idle; required if using anim_fwd
+string          anim_fast = ""; // animation to play when moving forward at or above aggressive_gear
                 
                 // Other options
 integer         auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
@@ -87,8 +88,8 @@ integer         driverFound = FALSE;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
-integer         is_running = FALSE;
 float           lastspeed;
+string          currentanimation;
 
 integer         gOldSound=3;   //variable for sound function
 integer         gNewSound=3;
@@ -98,7 +99,7 @@ list            gTSvarList;
 float           gVLMT=1.0;               // how fast to reach max speed
 float           gVLMDT=0.10;               // how fast to reach min speed or zero
 vector          gVLFT=<8.0,3000.0,8.0>;   // XYZ linear friction
-vector          gVAFT=<0.10,0.10,0.10>;   // XYZ angular friction
+vector          gVAFT=<10000, 10000,0.10>;   // XYZ angular friction  // Was <0.10,0.10,0.10>
 float           gVAMT=0.35;              // how fast turning force is applied 
 float           gVAMDT=0.20;               // how fast turning force is released
 float           gVLDE=0.80;                // adjusted on 0.7.6
@@ -283,7 +284,6 @@ set_engine(){
         }
     }
     
-    
     integer vfW = VEHICLE_FLAG_HOVER_WATER_ONLY | VEHICLE_FLAG_HOVER_TERRAIN_ONLY | VEHICLE_FLAG_HOVER_GLOBAL_HEIGHT;
     integer vfG = VEHICLE_FLAG_NO_DEFLECTION_UP | VEHICLE_FLAG_LIMIT_ROLL_ONLY | VEHICLE_FLAG_HOVER_UP_ONLY |
         VEHICLE_FLAG_LIMIT_MOTOR_UP;
@@ -402,7 +402,6 @@ setConfig(string setting, string qval) {
         qval = llStringTrim(llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0), STRING_TRIM);
         if(qval!="") { speedList = llParseString2List(qval,[","],[""]); }
     }
-        
     else if(setting=="enableCamera") { if(qval=="TRUE") { enableCamera=TRUE; } else { enableCamera=FALSE; } }
     else if(setting=="CamDist") { CamDist = (float)qval; }
     else if(setting=="CamPitch") { CamPitch = (float)qval; }
@@ -411,6 +410,7 @@ setConfig(string setting, string qval) {
     else if(setting=="turnburnGear") { turnburnGear = (integer)qval; }
     else if(setting=="anim_fwd") { anim_fwd = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="anim_idle") { anim_idle = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
+    else if(setting=="anim_fast") { anim_fast = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="auto_return_time") { auto_return_time = (integer)qval; }
     else if(setting=="reset_on_rez") { if(qval=="TRUE") { reset_on_rez=TRUE; } else { reset_on_rez=FALSE; } }
     else if(setting=="sit_message") { sit_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
@@ -483,6 +483,10 @@ default {
     
     on_rez(integer param) {
         if(reset_on_rez) { llResetScript(); }
+        else {
+           startposition = llGetPos();
+           startrot = llGetRot();
+        }
     }
     
     changed(integer change) {
@@ -568,8 +572,8 @@ default {
             string pilot_anim = llGetAnimationOverride("Sitting");
              llStopAnimation(pilot_anim);
              
-             if(anim_fwd != "") {
-                 llStopAnimation("sit");
+             if(anim_idle != "") {
+                llStopAnimation("sit");
                 llStartAnimation(anim_idle);
              } else {
                 integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
@@ -625,12 +629,16 @@ default {
         }
         if (held & CONTROL_FWD){
             
+            if((anim_fwd != "") && (currentanimation != anim_fwd) && ((gGear < aggressive_gear) || ((gGear > aggressive_gear) && (anim_fast == "")))) {
+                 if(currentanimation != "") { llStopAnimation(currentanimation); }
+                 llStartAnimation(anim_fwd);
+                 currentanimation=anim_fwd;
+            } else if((anim_fast != "") && (gGear>=aggressive_gear) && (currentanimation!=anim_fast)){
+                 if(currentanimation != "") { llStopAnimation(currentanimation); }
+                 llStartAnimation(anim_fast);
+                 currentanimation=anim_fast;
+            } 
             
-            if((anim_fwd != "") && (is_running==FALSE)) {
-                llStopAnimation(anim_idle);
-                llStartAnimation(anim_fwd);
-                is_running = TRUE;
-            }
             
             if(gGear == 0) {
                 llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, <1.0, 2.0, 8.0>);
@@ -685,11 +693,12 @@ default {
         if (~held & change & CONTROL_FWD) {
             //llSay(0,"CONTROL_FWD:Released");
             
-            if((anim_fwd != "") && (is_running==TRUE)) {
-                llStopAnimation(anim_fwd);
-                llStartAnimation(anim_idle);
-                is_running = FALSE;
+            if((anim_idle != "") && (currentanimation!=anim_idle)) {
+                 llStopAnimation(currentanimation);
+                 llStartAnimation(anim_idle);
+                 currentanimation=anim_idle;
             }
+            
             
             if((gGear == burnoutGear) && (burnoutState == TRUE)) {
                 SendLinkMessage(0, "burnoutoff");
