@@ -236,10 +236,16 @@ control which gears the pipeflame appears.
 
 **HUD:**
 
-An optional HUD is provided. Setup instructions are included in the notes
-in the HUD script. Once the HUD object is set up, place it in the root prim of
-the car and configure the Supercar script to use it. When the driver first sits,
-they will get a dialog requesting to temp-attach the HUD.
+An optional HUD is provided in the form of an archived linkset. Setup
+instructions are as follows:
+- Import the linkset with "Include Content" option checked.
+- After the object is imported in world, take it into inventory.
+- Select "Attach to HUD".. Bottom. Adjust screen position so it's fully visible.
+- Detach the HUD.. It is now ready to place in a vehicle.
+
+To include it with a car, place it in the root prim of the car and configure the
+Supercar script to use it. When the driver first sits, they will get a dialog
+requesting to temp-attach the HUD.
 
 The HUD shows speed, gear selection, and includes controls for changing gears,
 headlights, horn, and burnout effects. When the driver stands, the HUD
