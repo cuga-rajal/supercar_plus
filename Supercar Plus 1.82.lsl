@@ -1,11 +1,11 @@
-// Supercar Plus 1.81
+// Supercar Plus 1.82
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 //---USER-DEFINED VARIABLES--------------------------------------------------
-// ** NOTE ** On version 1.65 and later, a Config notecard will override these settings if present
+// * NOTE * On version 1.65 and later, a Config notecard containing settings, if present, will override settings listed below
 
                 // Driver permissions and sit offsets
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
@@ -90,6 +90,7 @@ integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
 float           lastspeed;
 string          currentanimation;
+integer         seated = 0;
 
 integer         gOldSound=3;   //variable for sound function
 integer         gNewSound=3;
@@ -447,10 +448,8 @@ finish() {
             prims_keep_prim += i;
         }
     }
-    llOwnerSay("   Done reading physics types of child prims");
     llOwnerSay("   Loading sounds..");
     preload_sounds();
-    llOwnerSay("   Done loading sounds");
     init_engine();
     init_PhysEng();
     llOwnerSay("Initialization complete, ready to drive.");
@@ -489,73 +488,75 @@ default {
         }
     }
     
-    changed(integer change) {
-        if ((change & CHANGED_LINK) == CHANGED_LINK){
-            gAgent = llAvatarOnSitTarget();
-            if (gAgent != NULL_KEY){
-                
-                if((gDrivePermit == 0) || ((gDrivePermit == 1) && (gAgent == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(gAgent)==TRUE))
-                    || (llListFindList( driverList, [(string)gAgent] ) != -1)) {
-                    
-                    gOldAgent = gAgent;
+    changed(integer change) {     
+        if (change & CHANGED_LINK) {
+            driver = llAvatarOnLinkSitTarget(LINK_THIS);
+            if (driver != NULL_KEY && seated == 0) { // happens once
+                seated = 1;
+                //llSay(0," driver : " + llKey2Name(driver) );
+                if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
+                    || (llListFindList( driverList, [(string)driver] ) != -1)) { 
+                    gRun = 1;
                     set_engine();
-                    llSetStatus(STATUS_PHYSICS, TRUE);
-                    if(driver == NULL_KEY) {
-                        driver = gAgent;
-                        llRequestPermissions(gAgent, PERMISSION_TRIGGER_ANIMATION | PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA);
-                        gRun = 1;
-                        if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
-                        llSetSitText("Sit");
-                    }
+                    llSetSitText("Sit");
+                    if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
+                    llSetStatus(STATUS_PHYSICS, TRUE);                  
+                    llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
                 }
                 else {
-                    llRegionSayTo(gAgent,0, gUrNotAllowedMessage);
-                    llUnSit(gAgent);
+                    llRegionSayTo(driver,0, gUrNotAllowedMessage);
+                    llUnSit(driver);
                     if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
-                    llPushObject(gAgent, <0,0,20>, ZERO_VECTOR, FALSE);
+                    llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
+                     seated = 0;
                 }
             }
-            else if (gRun==1) {  // If someone stood up while car is running
-                integer total_num = llGetObjectPrimCount(llGetKey());
-                driverFound = FALSE;
-                if(total_num < llGetNumberOfPrims()) {  // If there still are avatars seated, see if driver is still seated
-                    integer i = llGetObjectPrimCount(llGetKey());
-                    while(++i <= llGetNumberOfPrims()) {  if(llGetLinkKey(i)==driver) { driverFound = TRUE; } }
-                }
-                if((total_num == llGetNumberOfPrims()) || (! driverFound)) { // If there are no seated avatars or if driver is no longer seated
+            else if (driver == NULL_KEY && seated == 1) { // If driver stood up 
+                seated = 0;
+                driverFound = FALSE;             
+                gRun = 0;
+                init_engine();
+                
+                llSetTimerEvent(0.0);
+                llStopSound();
+                llReleaseControls();  
+                llSetText("",<0,0,0>,1.0);
+                SendLinkMessage(0, "pipeflameoff");
+                SendLinkMessage(0, "burnoutoff");
+                SendLinkMessage(0, "honkoff");
+                SendLinkMessage(0, "car_stop");
+                llRegionSayTo(hudid, HUD_CHANNEL, "control poof");
+                llListenRemove(listener);  
+                
+                if(stand_message !="") { llRegionSayTo(driver,0,stand_message); }  
+                if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
+                if(llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) {                    
+                    integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
+                    if (count != 0) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
+                    else { llStopAnimation("sit"); }
+                }   
+               
+                integer total_num = llGetObjectPrimCount(llGetKey());               
+                if(total_num == llGetNumberOfPrims()) { // If no driver && no passengers - physics off & auto-return                                 
                     llSetStatus(STATUS_PHYSICS, FALSE); 
                     for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
                         list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
                         if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
                             llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
                         }
-                    }
-                    gRun = 0;
-                    if(stand_message !="") { llRegionSayTo(driver,0,stand_message); }
-                    driver = NULL_KEY;
-                    init_engine();
-                    if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
-                    
-                    if(llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) {
-                        integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
-                        if (count != 0) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
-                        else { llStopAnimation("sit"); }
-                    }
-                    llSetTimerEvent(0.0);
-                    llStopSound();
-                    llReleaseControls();
-                    if(llGetPermissions() & PERMISSION_CONTROL_CAMERA) { llClearCameraParams(); }
-                    llSetText("",<0,0,0>,1.0);
-                    SendLinkMessage(0, "pipeflameoff");
-                    SendLinkMessage(0, "burnoutoff");
-                    SendLinkMessage(0, "honkoff");
-                    SendLinkMessage(0, "car_stop");
-                    llRegionSayTo(hudid, HUD_CHANNEL, "control poof");
-                    llListenRemove(listener);  
+                    }                   
                     if(auto_return_time>0) { llSetTimerEvent(auto_return_time); }
+                }  // end - no driver or passengers
+            } // end - no driver
+            
+            else { // someone sat or stood on another prim
+                integer total_num = llGetObjectPrimCount( llGetKey() );
+                if (llGetObjectPrimCount(llGetKey()) < llGetNumberOfPrims() && (driver != NULL_KEY)) { // still has a driver  
+                    llRequestPermissions(driver, PERMISSION_CONTROL_CAMERA | PERMISSION_TAKE_CONTROLS | PERMISSION_TRIGGER_ANIMATION);
                 }
-            }
-        }
+            }    
+        }// end changed link
+        
         if (change & CHANGED_INVENTORY) { // possible Config NC change
             llOwnerSay("** Inventory change detected, resetting **");
             llResetScript();
@@ -563,19 +564,31 @@ default {
     }
     
     run_time_permissions(integer perm) {
-        if( perm & PERMISSION_TAKE_CONTROLS ){
+        if(perm & PERMISSION_TAKE_CONTROLS){
             gGear = startGear;
-            llTakeControls(CONTROL_FWD | CONTROL_BACK | CONTROL_DOWN | CONTROL_UP | CONTROL_RIGHT | CONTROL_LEFT | CONTROL_ROT_RIGHT | CONTROL_ROT_LEFT, TRUE, FALSE);
+            SendLinkMessage(0, "startupflame");
+            SendLinkMessage(0, "car_start");
+            if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
+            llSleep(1.5);
+            enginesound();
+            llTakeControls(
+             CONTROL_FWD | CONTROL_BACK  | CONTROL_DOWN |
+             CONTROL_UP  | CONTROL_RIGHT | CONTROL_LEFT |
+             CONTROL_ROT_RIGHT | CONTROL_ROT_LEFT, TRUE, FALSE);            
+        }
+         
+        if( (perm & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
+            init_followCam(0);
         }
         
         if(perm & PERMISSION_TRIGGER_ANIMATION) {
             string pilot_anim = llGetAnimationOverride("Sitting");
-             llStopAnimation(pilot_anim);
+            llStopAnimation(pilot_anim);
              
-             if(anim_idle != "") {
+            if(anim_fwd != "") {
                 llStopAnimation("sit");
                 llStartAnimation(anim_idle);
-             } else {
+            } else {
                 integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
                 if (count != 0) {
                     llStopAnimation("sit");
@@ -585,24 +598,16 @@ default {
                 }
             }
         }
-        
-        if((perm & PERMISSION_CONTROL_CAMERA) && (enableCamera)) {
-            init_followCam(0);
-        }
-        
-        if(hud_name != "") {
-            i = llGetInventoryNumber(INVENTORY_OBJECT);
-            if ((i != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
-                llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
-                llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
+       
+        if(perm) {
+            if(hud_name != "") {
+                i = llGetInventoryNumber(INVENTORY_OBJECT);
+                if ((i != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
+                    llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
+                    llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
+                }
             }
         }
-        SendLinkMessage(0, "startupflame");
-        SendLinkMessage(0, "car_start");
-        if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
-        llSleep(1.5);
-        enginesound();
-
     }
 
     control(key id, integer held, integer change) {

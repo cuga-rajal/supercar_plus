@@ -117,6 +117,7 @@ Rev. 1.81
 - A vehicle physics parameter was changed (VEHICLE_ANGULAR_FRICTION_TIMESCALE) to keep car more level with ground 
 - If auto_return_time is not set to 0, rezzing a car in world will reset park location and angle to its rezzed position
 - All add-on scripts version 1.80 will work with this update
-
+Rev. 1.82
+- Bug fix: Driver camera controls now remain unchanged when passengers jump off. (Thank you Xiija)
 
 // END OF VERSION ANS CREDITS
