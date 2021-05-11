@@ -1,11 +1,13 @@
-// Supercar Plus 1.82
+// Supercar Plus 1.83
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 //---USER-DEFINED VARIABLES--------------------------------------------------
-// * NOTE * On version 1.65 and later, a Config notecard containing settings, if present, will override settings listed below
+// * NOTE * On version 1.65 and later, a Config notecard placed in the same prim as this script will override settings listed below.
+// * Please see the full distribution for a sample of the Config notecard. This is the recommended method.
+// * This allows script version updates (for example, bug fixes) without the need to hand-edit settings between script versions.
 
                 // Driver permissions and sit offsets
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
@@ -81,10 +83,8 @@ integer         listener;
 key             hudid = NULL_KEY;
 integer         index;
 vector          sitOffset;
-key             gOldAgent;
-key             gAgent;
 key             driver = NULL_KEY;
-integer         driverFound = FALSE;
+key             oldDriver = NULL_KEY;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
@@ -253,6 +253,7 @@ init_engine(){
 }
 
 init_followCam(float degrees){
+	// Set camera for driver
     llSetCameraParams([
                        CAMERA_ACTIVE, 1,                 // 0=INACTIVE  1=ACTIVE
                        CAMERA_BEHINDNESS_ANGLE, 2.0,     // (0 to 180) DEGREES
@@ -267,10 +268,12 @@ init_followCam(float degrees){
                        CAMERA_FOCUS_THRESHOLD, 8.0,      // (0 to 4) METERS
                        CAMERA_FOCUS_OFFSET, <lookAhead,0,0>   // <-10,-10,-10> to <10,10,10> METERS
                       ]);
-                        rotation sitRot = llAxisAngle2Rot(<0, 0, 1>, degrees * PI);
-                        llSetCameraEyeOffset(<-10, 0, 3.5> * sitRot);
-                        llSetCameraAtOffset(<4, 0, 3> * sitRot);
-                        llForceMouselook(FALSE);
+	
+	// The following sets camera params for passengers not taking control of vehicle
+	rotation sitRot = llAxisAngle2Rot(<0, 0, 1>, degrees * PI);
+	float camheight = (CamDist + lookAhead) * llSin(CamPitch * DEG_TO_RAD);
+	llSetCameraEyeOffset(<-(CamDist), 0, camheight> * sitRot);
+	llSetCameraAtOffset(<lookAhead, 0, 0> * sitRot);
 }
 
 
@@ -502,6 +505,7 @@ default {
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
                     llSetStatus(STATUS_PHYSICS, TRUE);                  
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
+                	oldDriver = driver;
                 }
                 else {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
@@ -512,8 +516,7 @@ default {
                 }
             }
             else if (driver == NULL_KEY && seated == 1) { // If driver stood up 
-                seated = 0;
-                driverFound = FALSE;             
+                seated = 0;       
                 gRun = 0;
                 init_engine();
                 
@@ -528,7 +531,7 @@ default {
                 llRegionSayTo(hudid, HUD_CHANNEL, "control poof");
                 llListenRemove(listener);  
                 
-                if(stand_message !="") { llRegionSayTo(driver,0,stand_message); }  
+                if(stand_message !="") { llRegionSayTo(oldDriver,0,stand_message); }  
                 if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
                 if(llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) {                    
                     integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
@@ -549,11 +552,8 @@ default {
                 }  // end - no driver or passengers
             } // end - no driver
             
-            else { // someone sat or stood on another prim
-                integer total_num = llGetObjectPrimCount( llGetKey() );
-                if (llGetObjectPrimCount(llGetKey()) < llGetNumberOfPrims() && (driver != NULL_KEY)) { // still has a driver  
-                    llRequestPermissions(driver, PERMISSION_CONTROL_CAMERA | PERMISSION_TAKE_CONTROLS | PERMISSION_TRIGGER_ANIMATION);
-                }
+            else if(driver !=NULL_KEY) { // someone sat or stood on another prim
+                llRequestPermissions(driver, PERMISSION_CONTROL_CAMERA | PERMISSION_TAKE_CONTROLS | PERMISSION_TRIGGER_ANIMATION);
             }    
         }// end changed link
         
@@ -578,7 +578,7 @@ default {
         }
          
         if( (perm & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
-            init_followCam(0);
+            init_followCam(gSitTarget_Rot.z);
         }
         
         if(perm & PERMISSION_TRIGGER_ANIMATION) {
@@ -593,9 +593,7 @@ default {
                 if (count != 0) {
                     llStopAnimation("sit");
                     llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
-                } else {
-                    llStartAnimation("sit");
-                }
+                } // otherwise default "sit" is automatic
             }
         }
        
@@ -617,7 +615,6 @@ default {
         llSetTimerEvent(0);
         reverse=0;
         gTurnRatio = llList2Float(gTurnRatioList,gGear);
-        //if(gGear == burnoutGear) { gTurnRatio = gTurnRatio * 0.6; }
         
         gSpeed = llRound(llVecMag(llGetVel()*2.23692912));
 

@@ -119,5 +119,7 @@ Rev. 1.81
 - All add-on scripts version 1.80 will work with this update
 Rev. 1.82
 - Bug fix: Driver camera controls now remain unchanged when passengers jump off. (Thank you Xiija)
+Rev. 1.83
+- Improved camera controls for passengers, and to match same as driver. Fixed a bug that prevented the stand_message from reaching the driver that stood up. Removed unused variables to reduce memory usage.
 
 // END OF VERSION ANS CREDITS
