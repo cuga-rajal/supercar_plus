@@ -121,5 +121,10 @@ Rev. 1.82
 - Bug fix: Driver camera controls now remain unchanged when passengers jump off. (Thank you Xiija)
 Rev. 1.83
 - Improved camera controls for passengers, and to match same as driver. Fixed a bug that prevented the stand_message from reaching the driver that stood up. Removed unused variables to reduce memory usage.
+Rev. 1.84
+- Changed auto-park behavior and fixed 2 bugs related to auto-park.
+  When driver stands and auto_return_time is not 0, a message is now broadcast with llSay() so that everyone nearby - including passengers - know that auto-park will occur.
+  As a result, stand_message no longer needs to include a notification about auto-park.
+  Previously, auto-park would not occur with passengers still seated, and Physics would not be turned off.
 
 // END OF VERSION ANS CREDITS

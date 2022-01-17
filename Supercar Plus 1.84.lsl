@@ -1,4 +1,4 @@
-// Supercar Plus 1.83
+// Supercar Plus 1.84
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -6,8 +6,8 @@
 
 //---USER-DEFINED VARIABLES--------------------------------------------------
 // * NOTE * On version 1.65 and later, a Config notecard placed in the same prim as this script will override settings listed below.
-// * Please see the full distribution for a sample of the Config notecard. This is the recommended method.
-// * This allows script version updates (for example, bug fixes) without the need to hand-edit settings between script versions.
+// * Please see the sample Config notecard. This is the recommended method.
+// * This allows script updates to be drop-in replacements without the need to hand-edit settings.
 
                 // Driver permissions and sit offsets
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
@@ -538,18 +538,18 @@ default {
                     if (count != 0) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
                     else { llStopAnimation("sit"); }
                 }   
-               
-                integer total_num = llGetObjectPrimCount(llGetKey());               
-                if(total_num == llGetNumberOfPrims()) { // If no driver && no passengers - physics off & auto-return                                 
-                    llSetStatus(STATUS_PHYSICS, FALSE); 
-                    for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
-                        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
-                        if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
-                            llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
-                        }
-                    }                   
-                    if(auto_return_time>0) { llSetTimerEvent(auto_return_time); }
-                }  // end - no driver or passengers
+                llSetStatus(STATUS_PHYSICS, FALSE); 
+                for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
+                    list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
+                    if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
+                        llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
+                    }
+                }                   
+                if(auto_return_time>0) {
+                	llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
+                	llSetTimerEvent(auto_return_time);
+                }
+
             } // end - no driver
             
             else if(driver !=NULL_KEY) { // someone sat or stood on another prim
