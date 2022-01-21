@@ -11,11 +11,10 @@ iTec race car effects.
 For the last few years I have been the custodian of a large collection (~70)
 scripted land vehicles in Second Life, of all shapes and sizes. This collection
 was built by past and prersent members of Burn2, the official Burning Man
-regional event in Second Life. As the DMV custodian I manage scripting the
-existing collection and provide scripting kits and workshops for people building
-new cars. During Burn2 art festival events, server lag is always a concern, and
-the use of a common script for vehicles helps avoid lag-producing scripts or
-unwieldy vehicles.
+regional event in Second Life. I manage the scripting for the collection and
+provide scripting kits and workshops for people building new cars. During Burn2
+art festival events, server lag is always a concern, and the use of a common
+script for vehicles helps avoid lag-producing scripts or unwieldy vehicles.
 
 When I first became involved in the DMV, vehicles in the collection had scripts
 from varying sources and of fair quality, some laggy, some poorly written. Many
@@ -25,20 +24,15 @@ for the server. We also wanted a way to install future script updates with
 minimal hassle, ideally without having to hand-transfer settings between
 scripts.
 
-Around the same time, Burn2 was also planning a stand-alone computer demo of
-Burn2's art, avatars and art cars to be presented at the Burning Man event. This
-was to be accomplished using standalone Opensim installation on a Windows
-laptop. The project required importing all the vehicles out of SL and into the
-Opensim demo. Our car scripts from SL didn't work in Opensim, so we had to find
-a solution. The work for finding a suitable vehicle script in Opensim ended up
-being a start for the efforts to find an improved scripting solution for Burn2's
-DMV.
+Around the same time, Burn2 was developing a stand-alone demo of Burn2's art,
+avatars and art cars to be presented at the Burning Man event using an Opensim
+installation. The project required importing all the vehicles out of SL and into
+the Opensim demo. Our car scripts from SL didn't work in Opensim, so we needed a
+script that worked there, ideally one that would work in both grids.
 
-Around that time, I also began running my own Opensim region. I had a number of
-vehicles to permanently maintain and so also needed a common script solution
-similar to the needs of Burn2. My region allowed me to test scripts as they were
-being developed and make sure they remain compatimble with Opensim, perticularly
-on obODE and Bullet physics engines.
+I also began running my own Opensim region which allowed me to test scripts as
+they were being developed and make sure they remain compatimble with Opensim,
+particularly on obODE and Bullet physics engines.
 
 While we were exploring vehicle script options for Burn2's Opensim demo project,
 we discovered the excellent iTec Supercar car script by Shin Ingen. This had the

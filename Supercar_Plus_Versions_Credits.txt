@@ -126,5 +126,9 @@ Rev. 1.84
   When driver stands and auto_return_time is not 0, a message is now broadcast with llSay() so that everyone nearby - including passengers - know that auto-park will occur.
   As a result, stand_message no longer needs to include a notification about auto-park.
   Previously, auto-park would not occur with passengers still seated, and Physics would not be turned off.
+up. Removed unused variables to reduce memory usage.
+Rev. 1.85
+- Fixed a bug that caused multiple copies of the HUD to be given to the driver each time a passenger sat on the vehicle, when the HUD was used.
+
 
 // END OF VERSION ANS CREDITS

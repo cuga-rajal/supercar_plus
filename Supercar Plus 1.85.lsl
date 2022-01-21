@@ -1,4 +1,4 @@
-// Supercar Plus 1.84
+// Supercar Plus 1.85
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -150,6 +150,8 @@ integer         gTcountR;
 key kQuery = NULL_KEY;
 integer iLine = 0;
 key notecard_key = NULL_KEY;
+
+integer hud_given = FALSE;
 
 
 //---------------------------------------------------------------------
@@ -496,6 +498,7 @@ default {
             driver = llAvatarOnLinkSitTarget(LINK_THIS);
             if (driver != NULL_KEY && seated == 0) { // happens once
                 seated = 1;
+                hud_given = FALSE;
                 //llSay(0," driver : " + llKey2Name(driver) );
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
@@ -598,9 +601,10 @@ default {
         }
        
         if(perm) {
-            if(hud_name != "") {
+            if((hud_name != "") && (! hud_given)) {
                 i = llGetInventoryNumber(INVENTORY_OBJECT);
                 if ((i != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
+                	hud_given = TRUE; // prevents multipe HUDS rezzed when passengers sit
                     llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
                     llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
                 }
