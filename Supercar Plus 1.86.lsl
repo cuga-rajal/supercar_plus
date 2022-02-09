@@ -78,7 +78,8 @@ integer         cornerFXLState = FALSE;
 list            prim_phys_types = [ ];
 list            prims_keep_prim = [ ];
 integer         i;
-integer         desc;
+integer			primcount;
+integer			is_resetting = FALSE;
 integer         listener;
 key             hudid = NULL_KEY;
 integer         index;
@@ -445,9 +446,9 @@ finish() {
     }
     llOwnerSay("   Reading physics types of child prims..");
     prim_phys_types = [ ];
-    for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
-        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC]);
-        desc = llList2Integer(params, 0);
+    primcount = llGetObjectPrimCount(llGetKey());
+    for(i=2; i<= primcount; i++) {
+        integer desc = llList2Integer(llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC]), 0);
         prim_phys_types += desc;
         if(llList2String(params, 1) == "prim") {
             prims_keep_prim += i;
@@ -457,11 +458,13 @@ finish() {
     preload_sounds();
     init_engine();
     init_PhysEng();
+    is_resetting = FALSE;
     llOwnerSay("Initialization complete, ready to drive.");
 }
 
 default {
     state_entry() {
+    	is_resetting = TRUE;
         config_init();
     }
 
@@ -495,11 +498,20 @@ default {
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
+        	if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0)) { // adding or removing a prim
+        		llOwnerSay("** Prim count changed, resetting **");
+            	llResetScript();
+        	}
+        	
             driver = llAvatarOnLinkSitTarget(LINK_THIS);
             if (driver != NULL_KEY && seated == 0) { // happens once
+            	if(is_resetting) {
+            		llRegionSayTo(driver,0, "Please wait for the script to finish resetting.");
+                    llUnSit(driver);
+                    return;
+            	}
                 seated = 1;
                 hud_given = FALSE;
-                //llSay(0," driver : " + llKey2Name(driver) );
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
                     gRun = 1;

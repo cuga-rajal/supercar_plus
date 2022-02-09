@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  1.85, January 20, 2022
+version  1.86, February 8, 2022
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past contributors, compatible with Opensim and Second Life.
 
@@ -15,12 +15,16 @@ For a history on how this script first came about please see https://github.com/
 
 **Whats New in 1.8x and Upgrading From Previous Versions**
 
-Version 1.85 fixes a bug where multiple copies of the HUD were rezzed when
-passengers sat on the vehicle. It is a drop-in replacement for 1.80 or later.
+Versions 1.86 adds two features to guard against potential issues while vehicle
+building. It is a drop-in replacement for previous versions, 1.80 or later.
+
+For a complete list of version releases and bug fixes please see
+https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 
 Version 1.8x of the Supercar Plus is a major rewrite that fixes bugs, improves
-efficiency and adds features. If you are upgrading your vehicle from a previous
-version, the following describes steps required.
+efficiency and adds features. If you are upgrading your vehicle from a version
+earlier than 1.80, the Config notecard and accessory scripts will need to be
+updated as well. The following describes steps required.
 
 The Config section and Config notecard has changed, removing some old settings
 and adding new ones. If you are upgrading your vehicle from a previous version,
@@ -30,8 +34,9 @@ Most of the add-on scripts have changed to support the new main script or with
 other improvements. If you are upgrading, you may need to update these as well.
 
 Add-on scripts were previously each on their own version numbers, which led to
-confusion on what is the latest. Starting with v1.80, all add-on scripts that
-depend on this release have also been numbered version 1.80.
+confusion on what was the latest version. Starting with v1.80, all add-on
+scripts that depend on the 1.80 or newer main script have also been numbered
+version 1.80 or 1.8x.
 
 The new headlight script works a little differently than before. It uses
 different link messages to switch on and off when the driver sits and stands. If
@@ -39,18 +44,23 @@ you are upgrading and your vehicle is using headlights you need to upgrade those
 scripts.
 
 New horn script merges previous touch and HUD versions. Touch the horn prim with
-your cursor or use HUD to honk.
+your cursor or use HUD to honk. The old scripts will continue to work but we
+recommend upgrading.
+
+Following are new configuration options in the Config file added in v1.80:
 
 All car sounds are now configurable in the Config notecard. See comments in the
 NC for the sound settings.
 
 The script previously set slow or fast engine sound based on detected speed, and
 that threshold was not adjustable. It now sets the slow or fast driving sound
-based on the gear selected. A new config setting "aggressive_gear" sets the gear
+based on the gear selected. A new config setting "aggressive\_gear" sets the gear
 at or above which plays fast engine sound.
 
-Two new settings "anim_fwd", "anim_idle" and "anim_fast" optionally allow
-different driver animations while idle or moving forward.
+Three new settings anim\_fwd, anim\_idle and anim\_fast optionally
+allow different driver animations while idling, moving forward. anim\_fast is
+an optional 3rd animation that can play when the gear is at or above
+"aggressive_gear".
 
 There is now one wheel script for the front wheels, and one for the rear wheels.
 Wheel scripts have improved support for cylinder prim wheels, and improved

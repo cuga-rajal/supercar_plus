@@ -129,6 +129,10 @@ Rev. 1.84
 up. Removed unused variables to reduce memory usage.
 Rev. 1.85
 - Fixed a bug that caused multiple copies of the HUD to be given to the driver each time a passenger sat on the vehicle, when the HUD was used.
+Rev. 1.86
+- Added two features to guard against potential issues while vehicle building. If a prim is added or removed from the vehicle, the script now resets automatically. This preserves the correct physics types when driven. If somebody tries to drive the car while the script is still initializing, they are now unseated until initialization is finished.
+
+
 
 
 // END OF VERSION ANS CREDITS
