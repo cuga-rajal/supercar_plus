@@ -1,4 +1,4 @@
-// Supercar Plus 1.85
+// Supercar Plus 1.86
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, GMail: cugarajal@gmail.com)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -78,8 +78,8 @@ integer         cornerFXLState = FALSE;
 list            prim_phys_types = [ ];
 list            prims_keep_prim = [ ];
 integer         i;
-integer			primcount;
-integer			is_resetting = FALSE;
+integer            primcount;
+integer            is_resetting = FALSE;
 integer         listener;
 key             hudid = NULL_KEY;
 integer         index;
@@ -256,7 +256,7 @@ init_engine(){
 }
 
 init_followCam(float degrees){
-	// Set camera for driver
+    // Set camera for driver
     llSetCameraParams([
                        CAMERA_ACTIVE, 1,                 // 0=INACTIVE  1=ACTIVE
                        CAMERA_BEHINDNESS_ANGLE, 2.0,     // (0 to 180) DEGREES
@@ -271,12 +271,12 @@ init_followCam(float degrees){
                        CAMERA_FOCUS_THRESHOLD, 8.0,      // (0 to 4) METERS
                        CAMERA_FOCUS_OFFSET, <lookAhead,0,0>   // <-10,-10,-10> to <10,10,10> METERS
                       ]);
-	
-	// The following sets camera params for passengers not taking control of vehicle
-	rotation sitRot = llAxisAngle2Rot(<0, 0, 1>, degrees * PI);
-	float camheight = (CamDist + lookAhead) * llSin(CamPitch * DEG_TO_RAD);
-	llSetCameraEyeOffset(<-(CamDist), 0, camheight> * sitRot);
-	llSetCameraAtOffset(<lookAhead, 0, 0> * sitRot);
+    
+    // The following sets camera params for passengers not taking control of vehicle
+    rotation sitRot = llAxisAngle2Rot(<0, 0, 1>, degrees * PI);
+    float camheight = (CamDist + lookAhead) * llSin(CamPitch * DEG_TO_RAD);
+    llSetCameraEyeOffset(<-(CamDist), 0, camheight> * sitRot);
+    llSetCameraAtOffset(<lookAhead, 0, 0> * sitRot);
 }
 
 
@@ -448,7 +448,8 @@ finish() {
     prim_phys_types = [ ];
     primcount = llGetObjectPrimCount(llGetKey());
     for(i=2; i<= primcount; i++) {
-        integer desc = llList2Integer(llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC]), 0);
+        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC]);
+        integer desc = llList2Integer(params, 0);
         prim_phys_types += desc;
         if(llList2String(params, 1) == "prim") {
             prims_keep_prim += i;
@@ -464,7 +465,7 @@ finish() {
 
 default {
     state_entry() {
-    	is_resetting = TRUE;
+        is_resetting = TRUE;
         config_init();
     }
 
@@ -498,18 +499,18 @@ default {
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
-        	if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0)) { // adding or removing a prim
-        		llOwnerSay("** Prim count changed, resetting **");
-            	llResetScript();
-        	}
-        	
+            if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0)) { // adding or removing a prim
+                llOwnerSay("** Prim count changed, resetting **");
+                llResetScript();
+            }
+            
             driver = llAvatarOnLinkSitTarget(LINK_THIS);
             if (driver != NULL_KEY && seated == 0) { // happens once
-            	if(is_resetting) {
-            		llRegionSayTo(driver,0, "Please wait for the script to finish resetting.");
+                if(is_resetting) {
+                    llRegionSayTo(driver,0, "Please wait for the script to finish resetting.");
                     llUnSit(driver);
                     return;
-            	}
+                }
                 seated = 1;
                 hud_given = FALSE;
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
@@ -520,7 +521,7 @@ default {
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
                     llSetStatus(STATUS_PHYSICS, TRUE);                  
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
-                	oldDriver = driver;
+                    oldDriver = driver;
                 }
                 else {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
@@ -561,8 +562,8 @@ default {
                     }
                 }                   
                 if(auto_return_time>0) {
-                	llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
-                	llSetTimerEvent(auto_return_time);
+                    llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
+                    llSetTimerEvent(auto_return_time);
                 }
 
             } // end - no driver
@@ -616,7 +617,7 @@ default {
             if((hud_name != "") && (! hud_given)) {
                 i = llGetInventoryNumber(INVENTORY_OBJECT);
                 if ((i != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
-                	hud_given = TRUE; // prevents multipe HUDS rezzed when passengers sit
+                    hud_given = TRUE; // prevents multipe HUDS rezzed when passengers sit
                     llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
                     llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
                 }
