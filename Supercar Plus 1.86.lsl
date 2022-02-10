@@ -78,8 +78,8 @@ integer         cornerFXLState = FALSE;
 list            prim_phys_types = [ ];
 list            prims_keep_prim = [ ];
 integer         i;
-integer            primcount;
-integer            is_resetting = FALSE;
+integer         primcount;
+integer         is_resetting = TRUE;
 integer         listener;
 key             hudid = NULL_KEY;
 integer         index;
@@ -151,8 +151,6 @@ integer         gTcountR;
 key kQuery = NULL_KEY;
 integer iLine = 0;
 key notecard_key = NULL_KEY;
-
-integer hud_given = FALSE;
 
 
 //---------------------------------------------------------------------
@@ -499,7 +497,7 @@ default {
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
-            if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0)) { // adding or removing a prim
+            if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0) && (! is_resetting)) { // adding or removing a prim
                 llOwnerSay("** Prim count changed, resetting **");
                 llResetScript();
             }
@@ -512,10 +510,16 @@ default {
                     return;
                 }
                 seated = 1;
-                hud_given = FALSE;
+                
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
                     gRun = 1;
+                    if(hud_name != "") {
+                        if ((llGetInventoryNumber(INVENTORY_OBJECT) != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
+                            llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
+                            llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
+                        }
+                    }
                     set_engine();
                     llSetSitText("Sit");
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
@@ -528,7 +532,7 @@ default {
                     llUnSit(driver);
                     if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
                     llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
-                     seated = 0;
+                    seated = 0;
                 }
             }
             else if (driver == NULL_KEY && seated == 1) { // If driver stood up 
@@ -613,16 +617,6 @@ default {
             }
         }
        
-        if(perm) {
-            if((hud_name != "") && (! hud_given)) {
-                i = llGetInventoryNumber(INVENTORY_OBJECT);
-                if ((i != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
-                    hud_given = TRUE; // prevents multipe HUDS rezzed when passengers sit
-                    llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
-                    llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
-                }
-            }
-        }
     }
 
     control(key id, integer held, integer change) {
