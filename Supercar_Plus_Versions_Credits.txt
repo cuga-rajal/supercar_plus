@@ -1,7 +1,8 @@
 History and Credits -- Supercar Plus
 
-The Supercar was originally developed by Ingen Labs (Shin Ingen @ http://ingen-lab.com:8002)
+The iTec Supercar vehicle script was originally developed by Ingen Labs (Shin Ingen @ http://ingen-lab.com:8002)
 as a race car script with 12 gears and many great sound and particle effects.
+In 2016 Shin Ingen gave me permission to fork the project and post it as open source.
 This major re-write improves on the 2015 Supercar as noted below.
 
 This version is maintained by Cuga Rajal - cugarajal@gmail.com
@@ -21,7 +22,7 @@ Version History
 Rev 1.1 2015-04-14 Vegaslon  changed llSetVehicleRotationParam to reset all axes <0,0,0>
  Ferd commented out useless code that assigned a var to itself and other vars that are never used.
 
-- Rev 1.2VRCamp 2015-06-15 Cuga Rajal  <cugarajal@gmail.com>
+Rev 1.2VRCamp 2015-06-15 Cuga Rajal  <cugarajal@gmail.com>
 - Changed all occurrences of llSay to llRegionSayTo
 - Removed all occurrences of listen() and llListen()
 - Removed touch menu
