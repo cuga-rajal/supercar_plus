@@ -131,8 +131,11 @@ Rev. 1.85
 - Fixed a bug that caused multiple copies of the HUD to be given to the driver each time a passenger sat on the vehicle, when the HUD was used.
 Rev. 1.86
 - Added two features to guard against potential issues while vehicle building. If a prim is added or removed from the vehicle, the script now resets automatically. This preserves the correct physics types when driven. If somebody tries to drive the car while the script is still initializing, they are now unseated until initialization is finished.
-
-
-
+Rev. 1.87
+- Adds a new config option "click_to_park". This option, if enabled, will allow the driver to touch the vehicle to set it to Park mode where the driver can remain seated with the engine and lights off. Click again to re-enable. Useful for such things as drive-in movies.
+Rev. 1.88
+- Adds a new config option "useAvsitter". If set to TRUE the vehicle script can co-exist with an avSitter scripting system. 
+- If set to TRUE, all sit offsets and animation settings in the car script configs are ignored and controlled by avSitter.
+- Please note that the driver will remain the same person regardless of their sit position using Swap in avSitter.
 
 // END OF VERSION ANS CREDITS

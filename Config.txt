@@ -2,6 +2,7 @@ gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=re
 driverList = [ ]; // list of UUIDs allowed to drive (whitelist), in quotes, comma delimited, no spaces
 gSitMessage = "Drive";  // Appears in the pie menu
 gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
+useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
 gSitTarget_Pos = <0.9, 0, 2.8>;   // sit position offset
 gSitTarget_Rot = <0, 0, 0>;   // sit angle offset in degrees
 
@@ -27,6 +28,7 @@ anim_fast = ""; // optional animation to play when moving forward at or above ag
 
 auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
 reset_on_rez = FALSE,  // Whether the script should reset when the vehicle is rezzed
+click_to_park = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 sit_message = "The car has 4 gears. Use up/down controls to change gears."; // Chat window message shown to driver when sitting
 stand_message = "The vehicle will park itself after 5 minutes, unless it is still being driven."; // Chat window message shown to driver when standing
 verbose_level = 1; // 0 = no messages; 1 = display gear when shifting; 2 = display all llMessageLinked messages
