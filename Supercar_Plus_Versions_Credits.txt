@@ -3,9 +3,9 @@ History and Credits -- Supercar Plus
 The iTec Supercar vehicle script was originally developed by Ingen Labs (Shin Ingen @ http://ingen-lab.com:8002)
 as a race car script with 12 gears and many great sound and particle effects.
 In 2016 Shin Ingen gave me permission to fork the project and post it as open source.
-This major re-write improves on the 2015 Supercar as noted below.
+This major re-write improves on the iTec Supercar as noted below.
 
-This version is maintained by Cuga Rajal - cugarajal@gmail.com
+This version is maintained by Cuga Rajal - cuga@rajal.org
  Opensim: Cuga_Rajal@http://rajal.org:9000
  Second Life: Cuga Rajal
 
@@ -138,5 +138,10 @@ Rev. 1.88
 - Adds a new config option "useAvsitter". If set to TRUE the vehicle script can co-exist with an avSitter scripting system. 
 - If set to TRUE, all sit offsets and animation settings in the car script configs are ignored and controlled by avSitter.
 - Please note that the driver will remain the same person regardless of their sit position using Swap in avSitter.
+Rev. 1.89
+- The click_to_park option now restores child prim physics types while parked. Child prims are switched back to physics type None when resuming driving.
+- Camera controls for avatars seated as passengers have been removed after feedback from end users.
+- If your vehicle used previous versions and you wish to remove the camera eye offset on child prims,
+  you will need to use a scrubbing script that sets llSetLinkCamera(LINK\_ALL\_CHILDREN, ZERO\_VECTOR, ZERO\_VECTOR);
 
 // END OF VERSION ANS CREDITS

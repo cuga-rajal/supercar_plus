@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  1.88, August 16, 2022
+version  1.89, Sept 20, 2022
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -20,11 +20,19 @@ txt
 
 **Whats new in the latest releases**
 
+Version 1.89 has 2 changes. The click\_to\_park option now restores child prim
+physics types while parked, allowing avatars to walk on the vehicle. Child prims
+are switched back to physics type None when resuming driving. Also, camera
+controls for avatars seated as passengers have been removed after feedback from
+end users. Camera eye offsets on child prims are a persistent property. If your
+vehicle used previous versions of the Supercar script and you wish to remove the
+camera eye offset on child prims, you will need to use a scrubbing script that
+sets
+	llSetLinkCamera(LINK\_ALL\_CHILDREN, ZERO\_VECTOR, ZERO\_VECTOR )
+
 Version 1.88 adds a new config option "useAvsitter" which if enabled, allows the
 Supercar Plus script to co-exist with an avSitter scripting system, something it
 was previously not compatible with.
-
-The new script version is a drop-in replacement for previous versions, 1.80 or later.
 
 With this option enabled, all sit offsets and animation settings in the Supercar
 Plus configs are ignored. All sit offsets and animations for everyone seated
@@ -37,7 +45,7 @@ enabled, will allow the driver to touch the vehicle to set it to Park mode,
 where the engine and lights off shut off but the driver can remain seated with
 the current animations running. Click again to re-enable the engine and lights.
 Useful for such things as drive-in movies. If this option is disabled, there is
-no effect when the drivers touches the vehicle while driving.
+no effect when the driver touches the vehicle.
 
 For a complete list of other feature changes and bug fixes in previous releases
 please see
@@ -308,5 +316,6 @@ in the region.
 
 This is a work in progress. Please notify me of bugs or feature requests.
 
-Cuga Rajal (Second Life and OSGrid)
+Cuga Rajal (Second Life and Opensim)
+
 cuga@rajal.org

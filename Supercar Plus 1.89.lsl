@@ -1,20 +1,20 @@
-// Supercar Plus 1.88
+// Supercar Plus 1.89
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 //---USER-DEFINED VARIABLES--------------------------------------------------
-// * NOTE * On version 1.65 and later, a Config notecard placed in the same prim as this script will override settings listed below.
+// * NOTE * Config notecard placed in the same prim as this script will override settings listed below.
 // * Please see the sample Config notecard. This is the recommended method.
-// * This allows script updates to be drop-in replacements without the need to hand-edit settings.
+// * This allows script updates to be drop-in replacements without the need for hand-editing.
 
                 // Driver permissions and sit offsets
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
-integer			useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
+integer            useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
 vector          gSitTarget_Pos = <0, 0, 1>;   // sit position offset
 vector          gSitTarget_Rot = <0, 0, 0>;   // sit angle offset
 
@@ -87,7 +87,7 @@ key             hudid = NULL_KEY;
 integer         index;
 vector          sitOffset;
 key             driver = NULL_KEY;
-key             oldDriver = NULL_KEY;
+key             prevDriver = NULL_KEY;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
@@ -119,11 +119,8 @@ float           gVB=0;
 
 integer         gGear;
 float           gGearPower;
-list            gGearPowerList;
 float           gTurnMulti=1.012345;
 float           gTurnRatio;
-list            gTurnRatioList;
-string          gGearName;
 list            gGearNameList             =[   "1st Gear",
                                                "2nd Gear",
                                                "3rd Gear",
@@ -177,11 +174,9 @@ init_PhysEng(){
         llOwnerSay("   Tuned for Opensim");
     }
     
-    if(llGetListLength(turnList)>0) {
-        gTurnRatioList = turnList;
-    } else {
+    if(llGetListLength(turnList)==0) {
             
-        gTurnRatioList        = [   1.1,    //1st Gear
+        turnList        = [   1.1,    //1st Gear
                                     2.5,    //2nd Gear
                                     2.3,    //3rd Gear
                                     2.1,    //4th Gear
@@ -196,10 +191,8 @@ init_PhysEng(){
                                 ];
     }
         
-    if(llGetListLength(speedList)>0) {
-        gGearPowerList = speedList;
-    } else {
-        gGearPowerList        = [   4,    //1st Gear
+    if(llGetListLength(speedList)==0) {
+        speedList        = [   4,    //1st Gear
                                     8,    //2nd Gear
                                     16,    //3rd Gear
                                     32,    //4th Gear
@@ -255,7 +248,7 @@ init_engine(){
     llSetSitText(gSitMessage);
     llCollisionSound("", 0.0);
     if(! useAvsitter) {
-    	llSitTarget(gSitTarget_Pos + sitOffset, llEuler2Rot(DEG_TO_RAD * gSitTarget_Rot));
+        llSitTarget(gSitTarget_Pos + sitOffset, llEuler2Rot(DEG_TO_RAD * gSitTarget_Rot));
     }
     gOldSound=3; 
     gNewSound=3;
@@ -284,11 +277,6 @@ init_followCam(float degrees){
                        CAMERA_FOCUS_OFFSET, <lookAhead,0,0>   // <-10,-10,-10> to <10,10,10> METERS
                       ]);
     
-    // The following sets camera params for passengers not taking control of vehicle
-    rotation sitRot = llAxisAngle2Rot(<0, 0, 1>, degrees * PI);
-    float camheight = (CamDist + lookAhead) * llSin(CamPitch * DEG_TO_RAD);
-    llSetCameraEyeOffset(<-(CamDist), 0, camheight> * sitRot);
-    llSetCameraAtOffset(<lookAhead, 0, 0> * sitRot);
 }
 
 
@@ -337,8 +325,7 @@ gearshift(integer g){
         llRegionSayTo(hudid,HUD_CHANNEL,"gear " + (string)(g+1));
     }
     if(verbose_level>0) {
-        gGearName = llList2String(gGearNameList, g);
-        llRegionSayTo(driver,0,gGearName);
+        llRegionSayTo(driver,0,llList2String(gGearNameList, g));
     }
 }
 
@@ -546,7 +533,7 @@ default {
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
                     llSetStatus(STATUS_PHYSICS, TRUE);                  
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
-                    oldDriver = driver;
+                    prevDriver = driver;
                 }
                 else {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
@@ -572,7 +559,7 @@ default {
                 llRegionSayTo(hudid, HUD_CHANNEL, "control poof");
                 llListenRemove(listener);  
                 
-                if(stand_message !="") { llRegionSayTo(oldDriver,0,stand_message); }  
+                if(stand_message !="") { llRegionSayTo(prevDriver,0,stand_message); }  
                 if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
                 if((llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) && (! useAvsitter)) {                    
                     integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
@@ -646,7 +633,7 @@ default {
         }
         llSetTimerEvent(0);
         reverse=0;
-        gTurnRatio = llList2Float(gTurnRatioList,gGear);
+        gTurnRatio = llList2Float(turnList,gGear);
         
         gSpeed = llRound(llVecMag(llGetVel()*2.23692912));
 
@@ -663,14 +650,14 @@ default {
         }
         if (held & CONTROL_FWD){
             if(! useAvsitter) {
-            	if((anim_fwd != "") && (currentanimation != anim_fwd) && ((gGear < aggressive_gear) || ((gGear > aggressive_gear) && (anim_fast == "")))) {
-                	if(currentanimation != "") { llStopAnimation(currentanimation); }
-                	llStartAnimation(anim_fwd);
-                	currentanimation=anim_fwd;
-            	} else if((anim_fast != "") && (gGear>=aggressive_gear) && (currentanimation!=anim_fast)){
-                	if(currentanimation != "") { llStopAnimation(currentanimation); }
-                	llStartAnimation(anim_fast);
-                	currentanimation=anim_fast;
+                if((anim_fwd != "") && (currentanimation != anim_fwd) && ((gGear < aggressive_gear) || ((gGear > aggressive_gear) && (anim_fast == "")))) {
+                    if(currentanimation != "") { llStopAnimation(currentanimation); }
+                    llStartAnimation(anim_fwd);
+                    currentanimation=anim_fwd;
+                } else if((anim_fast != "") && (gGear>=aggressive_gear) && (currentanimation!=anim_fast)){
+                    if(currentanimation != "") { llStopAnimation(currentanimation); }
+                    llStartAnimation(anim_fast);
+                    currentanimation=anim_fast;
                 }
             } 
             
@@ -706,7 +693,7 @@ default {
                 turnburnState = FALSE;
             }
             
-            gGearPower = llList2Integer(gGearPowerList, gGear);
+            gGearPower = llList2Integer(speedList, gGear);
             llSetVehicleVectorParam(VEHICLE_LINEAR_MOTOR_DIRECTION, <gGearPower,0,0>);
             gMoving=1;
             gNewTireSpin = "ForwardSpin";
@@ -752,8 +739,7 @@ default {
             if (gGear > fallbackAbove) {
                 gGear = fallbackAbove;
                 if(verbose_level>0) {
-                    gGearName = llList2String(gGearNameList, gGear);
-                    llRegionSayTo(driver,0,"Fallback to " + gGearName);
+                    llRegionSayTo(driver,0,"Fallback to " + llList2String(gGearNameList, gGear));
                 }
             }
             
@@ -864,7 +850,13 @@ default {
     listen(integer channel, string name, key av, string message) {
         if (channel == menu_channel) {             
             if((message == "Park Car") && (gRun==1))  { 
-                llSetStatus(STATUS_PHYSICS, FALSE);                  
+                llSetStatus(STATUS_PHYSICS, FALSE);
+                for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
+                    list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
+                    if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
+                        llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
+                    }
+                }               
                 gRun = 0;
                 gMoving = 0;
                 llStopSound();
@@ -873,6 +865,15 @@ default {
                 llRegionSayTo(driver, 0, "Car parked. Touch again to resume driving.");
             } 
             else if((message == "Drive") && (gRun==0)) { 
+                if(llGetListLength(prims_keep_prim) ==0) {
+                    llSetLinkPrimitiveParamsFast(LINK_ALL_CHILDREN, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
+                } else {
+                    for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
+                        if(llListFindList( prims_keep_prim, [ i ] ) == -1) {
+                            llSetLinkPrimitiveParamsFast(i, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
+                        }
+                    }
+                }
                 llSetStatus(STATUS_PHYSICS, TRUE);                  
                 gRun = 1;
                 llStopSound();
