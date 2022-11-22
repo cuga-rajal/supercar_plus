@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  1.89, Sept 20, 2022
+version  1.90, Nov 22, 2022
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -18,34 +18,38 @@ txt
 
 -----
 
-**Whats new in the latest releases**
+**Whats new in recent releases**
+
+Version 1.90 has bug fixes related to playing vehicle sounds. Vehicles with a
+sound for driving forward, but no idle sound, such as for snow sleds, now work
+correctly.
 
 Version 1.89 has 2 changes. The click\_to\_park option now restores child prim
 physics types while parked, allowing avatars to walk on the vehicle. Child prims
-are switched back to physics type None when resuming driving. Also, camera
-controls for avatars seated as passengers have been removed after feedback from
+are switched back to physics type None after resuming driving. Also, camera
+controls for avatars seated as passengers are no longer used after feedback from
 end users. Camera eye offsets on child prims are a persistent property. If your
-vehicle used previous versions of the Supercar script and you wish to remove the
-camera eye offset on child prims, you will need to use a scrubbing script that
-sets
+vehicle used previous versions of the Supercar script, and you wish to remove the
+camera eye offset on child prims, you will need to use a scrubbing script with
+the following: 
 	llSetLinkCamera(LINK\_ALL\_CHILDREN, ZERO\_VECTOR, ZERO\_VECTOR )
 
 Version 1.88 adds a new config option "useAvsitter" which if enabled, allows the
 Supercar Plus script to co-exist with an avSitter scripting system, something it
 was previously not compatible with.
 
-With this option enabled, all sit offsets and animation settings in the Supercar
+With useAvsitter enabled, all sit offsets and animation settings in the Supercar
 Plus configs are ignored. All sit offsets and animations for everyone seated
 including the driver are controlled through avSitter. Please note that the
-person who has control of driving the car will remain the same person regardless
-of their sit position using Swap in avSitter.
+person who controls driving the car will remain the same if they swap positions
+in avSitter.
 
-Version 1.87 adds a new config option "click\_to\_park". This option, if
-enabled, will allow the driver to touch the vehicle to set it to Park mode,
-where the engine and lights off shut off but the driver can remain seated with
-the current animations running. Click again to re-enable the engine and lights.
-Useful for such things as drive-in movies. If this option is disabled, there is
-no effect when the driver touches the vehicle.
+Version 1.87 adds a new config option "click\_to\_park". If enabled it allows
+the driver to touch the vehicle to set it to Park mode, where the engine and
+lights off shut off but the driver can remain seated with animations. Click
+again to re-enable the engine and lights. Useful for such things as drive-in
+movies. If this option is disabled, there is no effect when the driver touches
+the vehicle.
 
 For a complete list of other feature changes and bug fixes in previous releases
 please see
@@ -64,12 +68,12 @@ and adding new ones. If you are upgrading your vehicle from a previous version,
 you need to use the new Config notecard and transfer your settings.
 
 Most of the add-on scripts have changed to support the new main script or with
-other improvements. If you are upgrading, you may need to update these as well.
+other improvements. If you are upgrading, you will need to update these as well.
 
 Add-on scripts were previously each on their own version numbers, which led to
 confusion on what was the latest version. Starting with v1.80, all add-on
 scripts that depend on the 1.80 or newer main script have also been numbered
-version 1.80 or 1.8x.
+version 1.80 or later. Check the distribution for the most recent add-on scripts.
 
 The new headlight script works a little differently than before. It uses
 different link messages to switch on and off when the driver sits and stands. If

@@ -1,4 +1,4 @@
-// Supercar Plus 1.89
+// Supercar Plus 1.90
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -9,7 +9,7 @@
 // * Please see the sample Config notecard. This is the recommended method.
 // * This allows script updates to be drop-in replacements without the need for hand-editing.
 
-                // Driver permissions and sit offsets
+                // Driver permissions and sit offsets 
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
@@ -227,19 +227,19 @@ preload_sounds(){
             InventoryList += ItemName;
         }
         integer index = llListFindList(InventoryList, [gSoundStartup]);
-        if((index == -1) && (llStringLength(gSoundStartup) != 36)) { gSoundStartup=""; } else { llPreloadSound(gSoundStartup); }
+        if((index == -1) && (llStringLength(gSoundStartup) != 36)) { gSoundStartup=""; } else if(gSoundSlow != "") { llPreloadSound(gSoundStartup); }
         index = llListFindList(InventoryList, [gSoundIdle]);
-        if((index == -1) && (llStringLength(gSoundIdle) != 36)) { gSoundIdle=""; } else { llPreloadSound(gSoundIdle); }
+        if((index == -1) && (llStringLength(gSoundIdle) != 36)) { gSoundIdle=""; } else if(gSoundIdle != "") { llPreloadSound(gSoundIdle); }
         index = llListFindList(InventoryList, [gSoundSlow]);
-        if((index == -1) && (llStringLength(gSoundSlow) != 36)) { gSoundSlow=""; } else { llPreloadSound(gSoundSlow); }
+        if((index == -1) && (llStringLength(gSoundSlow) != 36)) { gSoundSlow=""; } else if(gSoundSlow != "") { llPreloadSound(gSoundSlow); }
         index = llListFindList(InventoryList, [gSoundAggressive]);
-        if((index == -1) && (llStringLength(gSoundAggressive) != 36)) { gSoundAggressive=""; } else { llPreloadSound(gSoundAggressive); }
+        if((index == -1) && (llStringLength(gSoundAggressive) != 36)) { gSoundAggressive=""; } else if(gSoundAggressive != "") { llPreloadSound(gSoundAggressive); }
         index = llListFindList(InventoryList, [gSoundRev]);
-        if((index == -1) && (llStringLength(gSoundRev) != 36)) { gSoundRev=""; } else { llPreloadSound(gSoundRev); }
+        if((index == -1) && (llStringLength(gSoundRev) != 36)) { gSoundRev=""; } else if(gSoundRev != "") { llPreloadSound(gSoundRev); }
         index = llListFindList(InventoryList, [gSoundAlarm]);
-        if((index == -1) && (llStringLength(gSoundAlarm) != 36)) { gSoundAlarm=""; } else { llPreloadSound(gSoundAlarm); }
+        if((index == -1) && (llStringLength(gSoundAlarm) != 36)) { gSoundAlarm=""; } else if(gSoundAlarm != "") { llPreloadSound(gSoundAlarm); }
         index = llListFindList(InventoryList, [gSoundStop]);
-        if((index == -1) && (llStringLength(gSoundStop) != 36)) { gSoundStop=""; } else { llPreloadSound(gSoundStop); }
+        if((index == -1) && (llStringLength(gSoundStop) != 36)) { gSoundStop=""; } else if(gSoundStop != "") { llPreloadSound(gSoundStop); }
     }
 }
 
@@ -332,33 +332,41 @@ gearshift(integer g){
 enginesound(){
     if (gMoving==0) {
         gNewSound = 0;
-        if ((gOldSound != gNewSound) && (gSoundIdle!="")) {
+        if (gOldSound != gNewSound) {
             llStopSound();
-            llLoopSound(gSoundIdle,1.0);
-            gOldSound = gNewSound;
+            if(gSoundIdle != "") {
+                llLoopSound(gSoundIdle,1.0);
+            }
         }
+        
     } else if (reverse) {
         gNewSound = 4;
-        if ((gOldSound != gNewSound) && (gSoundRev!="")) {
+        if (gOldSound != gNewSound) {
             llStopSound();
-            llLoopSound(gSoundRev,1.0);
-            gOldSound = gNewSound;
+            if(gSoundRev!="") {
+                llLoopSound(gSoundRev,1.0);
+            } else if(gSoundSlow!="") {
+                llLoopSound(gSoundSlow,1.0);
+            }
         }
-    } else if (gGear >= aggressive_gear) {
+    } else if ((gSoundAggressive != "") && (gGear >= aggressive_gear) && (gSoundSlow != gSoundAggressive)) {
         gNewSound = 2;
-        if ((gOldSound != gNewSound) && (gSoundAggressive!="")) {
+        if (gOldSound != gNewSound) {
             llStopSound();
-            llLoopSound(gSoundAggressive,1.0);
-            gOldSound = gNewSound;
+            if(gSoundAggressive!="") {
+                llLoopSound(gSoundAggressive,1.0);
+            }
         }
     } else {
         gNewSound = 1;
-        if ((gOldSound != gNewSound) && (gSoundSlow!="")) {
+        if (gOldSound != gNewSound) {
             llStopSound();
-            llLoopSound(gSoundSlow,1.0);
-            gOldSound = gNewSound;
+            if(gSoundSlow!="") {
+                llLoopSound(gSoundSlow,1.0);
+            }
         }
     }
+    gOldSound = gNewSound;
 }
 
 SendLinkMessage(integer Lnum, string Lstr) {
