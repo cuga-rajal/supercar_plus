@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  1.90, Nov 22, 2022
+version  1.91, March 23, 2023
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -20,18 +20,16 @@ txt
 
 **Whats new in recent releases**
 
-Version 1.90 has bug fixes related to playing vehicle sounds. Vehicles with a
-sound for driving forward, but no idle sound, such as for snow sleds, now work
-correctly.
+Version 1.90 and 1.91 contain bug fixes related to playing vehicle sounds.
 
 Version 1.89 has 2 changes. The click\_to\_park option now restores child prim
-physics types while parked, allowing avatars to walk on the vehicle. Child prims
-are switched back to physics type None after resuming driving. Also, camera
-controls for avatars seated as passengers are no longer used after feedback from
-end users. Camera eye offsets on child prims are a persistent property. If your
-vehicle used previous versions of the Supercar script, and you wish to remove the
-camera eye offset on child prims, you will need to use a scrubbing script with
-the following: 
+physics types while parked, allowing avatars to walk on the vehicle floor while
+passengers and driver are still seated. Child prims are switched back to physics
+type None after resuming driving. Also, camera controls for avatars seated as
+passengers are no longer used after feedback from end users. If your vehicle
+used previous versions of the Supercar script and you wish to remove the camera
+eye offset on child prims, you will need to use a scrubbing script with the
+following: 
 	llSetLinkCamera(LINK\_ALL\_CHILDREN, ZERO\_VECTOR, ZERO\_VECTOR )
 
 Version 1.88 adds a new config option "useAvsitter" which if enabled, allows the
@@ -51,8 +49,7 @@ again to re-enable the engine and lights. Useful for such things as drive-in
 movies. If this option is disabled, there is no effect when the driver touches
 the vehicle.
 
-For a complete list of other feature changes and bug fixes in previous releases
-please see
+For a list of feature changes and bug fixes in previous releases please see:
 https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 
 -----

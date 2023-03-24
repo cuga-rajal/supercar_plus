@@ -1,4 +1,4 @@
-// Supercar Plus 1.90
+// Supercar Plus 1.91
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -14,7 +14,7 @@ integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
-integer            useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
+integer         useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
 vector          gSitTarget_Pos = <0, 0, 1>;   // sit position offset
 vector          gSitTarget_Rot = <0, 0, 0>;   // sit angle offset
 
@@ -317,6 +317,7 @@ set_engine(){
     llRemoveVehicleFlags(vfW);      
     llRemoveVehicleFlags(vfA);      
     llSetVehicleFlags(vfG);     
+    if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
 }
 
 gearshift(integer g){
@@ -604,7 +605,6 @@ default {
             gGear = startGear;
             SendLinkMessage(0, "startupflame");
             SendLinkMessage(0, "car_start");
-            if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
             llSleep(1.5);
             enginesound();
             llTakeControls(

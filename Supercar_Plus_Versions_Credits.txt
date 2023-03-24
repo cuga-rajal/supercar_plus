@@ -144,7 +144,10 @@ Rev. 1.89
 - If your vehicle used previous versions and you wish to remove the camera eye offset on child prims,
   you will need to use a scrubbing script that sets llSetLinkCamera(LINK\_ALL\_CHILDREN, ZERO\_VECTOR, ZERO\_VECTOR);
 Rev. 1.90
-- Version 1.90 contains some bug fixes related to playing vehicle sounds.
+- bug fixes related to playing vehicle sounds.
   Vehicles with a sound for driving forward, but no idle sound, such as for snow sleds, now work correctly.
+Rev. 1.91
+- bug fixes related to playing vehicle sounds.
+  Engine startup sound no longer plays each time a passenger sits
 
 // END OF VERSION HISTORY AND CREDITS
