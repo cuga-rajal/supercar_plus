@@ -675,15 +675,15 @@ driver sits and turn off when they stand. Custom scripts can use these link
 messages to further customize the car.
 
 
-	car\_start - when driver first sits to drive
+	car_start - when driver first sits to drive
 	ForwardSpin - when the forward arrow key is held down
 	BackwardSpin - when the reverse arrow key is held down
 	NoSpin - when the forward or reverse arrow key is released
 	RightTurn - when the right arrow key is pressed down
 	LeftTurn - when the left arrow key is pressed down
 	NoTurn - when the left or right arrow key is released
-	car\_stop - when the driver stands
-	car\_park - if auto-park is active, just before the car parks
+	car_stop - when the driver stands
+	car_park - if auto-park is active, just before the car parks
 
 -----
 
