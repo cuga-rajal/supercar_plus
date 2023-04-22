@@ -49,10 +49,14 @@ opportunity to greatly reduce the script count on the car with some upgrading
 steps.
 
 The major changes from version 1.x are
-    1) There is ~25% less code, and uses much less CPU time
-    2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
-    3) A new wheel configurator provides a menu-driven wheel setup without hand-editing any numbers
-    4) Racecar features and animation controllers were moved to separate scripts
+
+1. There is ~25% less code, and uses much less CPU time
+    
+2. Separate wheel scripts are no longer needed (but it supports old wheel scripts)
+    
+3. A new wheel configurator provides a menu-driven wheel setup without hand-editing any numbers
+    
+4, Racecar features and animation controllers were moved to separate scripts
 
 The process to script a new car in-world is simpler than before. See the updated
 Quick Start section for a summary..
@@ -65,11 +69,11 @@ Quick Start section for a summary..
 from version 1.x, they will continue to work. However there 2 options to
 eliminate the wheel scripts to reduce script count and server lag:
         
-        a) transfer your settings from your old wheel scripts to the wheel prim
-        Description (details below), and delete the old wheel scripts, or
+a) transfer your settings from your old wheel scripts to the wheel prim
+Description (details below), and delete the old wheel scripts, or
 
-        b) just delete the wheel scripts and use the new wheel configurator See
-        the Wheel Rotation section on how to do this.
+b) just delete the wheel scripts and use the new wheel configurator See
+the Wheel Rotation section on how to do this.
     
 2. Driver's sit position/offset is no longer configured or enforced. Cars
 already using the Supercar script are not affected. People building new cars
@@ -175,7 +179,7 @@ be done once. A free Sit Positioner System is available at Burn2 from giver
 boxes in the sandbox.
 
 To get your wheels working, name any front wheel "fwheel" and any rear wheel
-"rwheel". Then drop in the Wheel Configurator 􀀒  to any wheel. Touch it to
+"rwheel". Then drop in the Wheel Configurator to any wheel. Touch it to
 begin the dialog process. When it asks to copy the settings to other wheels, say
 Yes. In most cases this will get all 4 wheels working correctly. If you need to
 adjust other wheels, use the Wheel Configuratopr for each individual wheel that
@@ -210,13 +214,13 @@ Description.
 
 The Wheel Configurator requires the following preparations:
 
-	a) For each wheel prim, remove any wheel moving script in Contents that may have been there.
+a) For each wheel prim, remove any wheel moving script in Contents that may have been there.
 
-	b) For each wheel prim, set the prim Name to "fwheel" for the front wheels (any wheels that turn left-right) and "rwheel" for the rear wheels (any wheels that stay straight)
+b) For each wheel prim, set the prim Name to "fwheel" for the front wheels (any wheels that turn left-right) and "rwheel" for the rear wheels (any wheels that stay straight)
 
-	c) For each wheel prim, erase anything in the Description (or it can say "(No Description)").
+c) For each wheel prim, erase anything in the Description (or it can say "(No Description)").
 
-	d) The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
+d) The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
     
 Once these steps are completed, the Wheel Configurator script can be dropped
 into any wheel. Then click on the wheel to open the dialogs. Follow the
