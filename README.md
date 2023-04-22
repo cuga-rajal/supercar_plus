@@ -32,8 +32,8 @@ seats, multiple gears/speeds with reverse, rotating wheels, headlights, horns,
 engine sounds, tank tred motions, and much more. A variety of add-on scripts are
 included with instructions.
 
-While most people will find everything they need in the Quick Start section, the
-List of Features section provides more details.
+While most people will find everything they need in the Quick Start section, other
+sections in this Readme have more details.
 
 -----
 
