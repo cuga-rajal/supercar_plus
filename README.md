@@ -56,7 +56,7 @@ The major changes from version 1.x are
     
 3. A new wheel configurator provides a menu-driven wheel setup without hand-editing any numbers
     
-4, Racecar features and animation controllers were moved to separate scripts
+4. Racecar features and animation controllers were moved to separate scripts
 
 The process to script a new car in-world is simpler than before. See the updated
 Quick Start section for a summary..
@@ -214,13 +214,13 @@ Description.
 
 The Wheel Configurator requires the following preparations:
 
-a) For each wheel prim, remove any wheel moving script in Contents that may have been there.
+1. For each wheel prim, remove any wheel moving script in Contents that may have been there.
 
-b) For each wheel prim, set the prim Name to "fwheel" for the front wheels (any wheels that turn left-right) and "rwheel" for the rear wheels (any wheels that stay straight)
+2. For each wheel prim, set the prim Name to "fwheel" for the front wheels (any wheels that turn left-right) and "rwheel" for the rear wheels (any wheels that stay straight)
 
-c) For each wheel prim, erase anything in the Description (or it can say "(No Description)").
+3. For each wheel prim, erase anything in the Description (or it can say "(No Description)").
 
-d) The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
+4. The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
     
 Once these steps are completed, the Wheel Configurator script can be dropped
 into any wheel. Then click on the wheel to open the dialogs. Follow the
@@ -675,15 +675,15 @@ driver sits and turn off when they stand. Custom scripts can use these link
 messages to further customize the car.
 
 
-car\_start - when driver first sits to drive
-ForwardSpin - when the forward arrow key is held down
-BackwardSpin - when the reverse arrow key is held down
-NoSpin - when the forward or reverse arrow key is released
-RightTurn - when the right arrow key is pressed down
-LeftTurn - when the left arrow key is pressed down
-NoTurn - when the left or right arrow key is released
-car\_stop - when the driver stands
-car\_park - if auto-park is active, just before the car parks
+	car\_start - when driver first sits to drive
+	ForwardSpin - when the forward arrow key is held down
+	BackwardSpin - when the reverse arrow key is held down
+	NoSpin - when the forward or reverse arrow key is released
+	RightTurn - when the right arrow key is pressed down
+	LeftTurn - when the left arrow key is pressed down
+	NoTurn - when the left or right arrow key is released
+	car\_stop - when the driver stands
+	car\_park - if auto-park is active, just before the car parks
 
 -----
 
