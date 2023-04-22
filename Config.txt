@@ -1,12 +1,12 @@
 gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=rez group
 driverList = [ ]; // list of UUIDs allowed to drive (whitelist), in quotes, comma delimited, no spaces
-gSitMessage = "Drive";  // Appears in the pie menu
+gSitMessage = "Drive";  // replaces "Sit" in the right-click menu
 gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
 useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
 gSitTarget_Pos = <0.9, 0, 2.8>;   // sit position offset
 gSitTarget_Rot = <0, 0, 0>;   // sit angle offset in degrees
 
-maxGear = 3;       // highest gear that can be shifted to, max 11  *note* 0=1st gear, 11=12th gear
+maxGear = 3;        // highest gear that can be shifted to, max 11  *note* 0=1st gear, 11=12th gear
 lowestGear = 0;     // lowest gear that can be shifted to, min 0
 startGear = 0;      // gear selected on sit 
 fallbackAbove = 6;  // releasing forward button when gear higher than this falls back to this
@@ -19,21 +19,10 @@ CamDist = 12; // How far back you want the camera positioned
 CamPitch = 30.0;  // Angle looking down. Range is -45 to 80 Degrees
 lookAhead = 5.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
 
-burnoutGear = 2;    // gear that will display burnout effects. Requires burnout scripts in vehicle.
-turnburnGear = 3;   // this gear and above show smoke & screech when turning.
-
-anim_fwd = ""; // animation to play when moving forward; set to "" to disable changing animations
-anim_idle = ""; // animation to play when idle; required if using anim_fwd
-anim_fast = ""; // optional animation to play when moving forward at or above aggressive_gear
-
 auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
-reset_on_rez = FALSE,  // Whether the script should reset when the vehicle is rezzed
 click_to_park = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 sit_message = "The car has 4 gears. Use up/down controls to change gears."; // Chat window message shown to driver when sitting
 stand_message = "The vehicle will park itself after 5 minutes, unless it is still being driven."; // Chat window message shown to driver when standing
-verbose_level = 1; // 0 = no messages; 1 = display gear when shifting; 2 = display all llMessageLinked messages
-hud_name = ""; // HUD should be in Contents and have this name. Set to null "" to disable
-HUD_CHANNEL = 19997;
 
 aggressive_gear = 3; // This gear and above play "gSoundAggressive", below this gear plays "gSoundSlow"
 use_sl_sounds = FALSE;  // Whether to use free car sounds in SL. If set to TRUE this overrides sounds below.

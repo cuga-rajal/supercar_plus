@@ -150,4 +150,8 @@ Rev. 1.91
 - bug fixes related to playing vehicle sounds.
   Engine startup sound no longer plays each time a passenger sits
 
+rev 2.0 RC9  22-Apr-2023
+- Major rewrite. Numberous major changes and bug fixes. See Documentatioin for complete list.
+
+
 // END OF VERSION HISTORY AND CREDITS

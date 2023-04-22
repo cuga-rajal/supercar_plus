@@ -3,50 +3,42 @@ Supercar Plus - History
 The Supercar Plus project is the continued development of a land vehicle script
 originally written by Shin Ingen for a race track application in Opensim in
 2014. He decided not to continue development and published the assets as open
-source, which is where this project picked it up. Much of the underlying code
+source, which is when this project picked it up. Much of the underlying code
 has changed since then but the overall framework is based on the original work.
 The project also redistributes by permission some of the original assets for the
 iTec race car effects.
 
 For the last few years I have been the custodian of a large collection (~70)
-scripted land vehicles in Second Life, of all shapes and sizes. This collection
-was built by past and prersent members of Burn2, the official Burning Man
-regional event in Second Life. I manage the scripting for the collection and
+scripted land vehicles at Burn2 in Second Life, the official Burning Man
+regional event in Second Life. I
 provide scripting kits and workshops for people building new cars. During Burn2
-art festival events, server lag is always a concern, and the use of a common
-script for vehicles helps avoid lag-producing scripts or unwieldy vehicles.
+art festival events, server lag is always a concern, where sometimes
+manay vehicles being used concurrently in a sim full of other scripted art
+and avatars.
 
-When I first became involved in the DMV, vehicles in the collection had scripts
-from varying sources and of fair quality, some laggy, some poorly written. Many
+When I first became involved, vehicles in the collection had scripts
+of varying sources and quality, some laggy, some poorly written. Many
 didn't have desired features. We wanted one vehicle script that could merge the
 best features of all of the scripts, fix the bugs, and be low lag as possible
-for the server. We also wanted a way to install future script updates with
-minimal hassle, ideally without having to hand-transfer settings between
+for the server. We also wanted a way to install updates into the entire collection
+with minimal hassle, ideally without having to hand-transfer settings between
 scripts.
 
-Around the same time, Burn2 was developing a stand-alone demo of Burn2's art,
-avatars and art cars to be presented at the Burning Man event using an Opensim
-installation. The project required importing all the vehicles out of SL and into
-the Opensim demo. Our car scripts from SL didn't work in Opensim, so we needed a
-script that worked there, ideally one that would work in both grids.
+Around the time, I became involved in Opensim and there was a need to
+replicate many of the vehicles there.  Our car scripts from SL didn't work in
+Opensim, so we needed a script that worked in both grids.
 
-I also began running my own Opensim region which allowed me to test scripts as
-they were being developed and make sure they remain compatimble with Opensim,
-particularly on obODE and Bullet physics engines.
+I discovered the excellent iTec Supercar car script by Shin Ingen. This had the
+most complete and creative set of features, and it was adaptable for the art
+cars. I created a pared-down version that worked for both grids.
+I got permission from Shin Ingen
+to fork the project since he was not planning to develop it further, and created a
+Github page to manage the project, and the Supercar Plus project was born. 
+Burn2's DMV in SL officially switched to the Supercar Plus script in 2015.
 
-While we were exploring vehicle script options for Burn2's Opensim demo project,
-we discovered the excellent iTec Supercar car script by Shin Ingen. This had the
-most interesting and complete set of features, and it was adaptable for the art
-cars. We created a pared-down version for the Burning Man Demo with a few
-features added to support our cars. Afterwards, I got permission from Shin Ingen
-to fork the project since he was not planning to develop it further. I created a
-Github page to manage the project and the Supercar Plus project was born. The
-project has been running since 2014, and Burn2's DMV in SL officially switched
-to the Supercar Plus script in 2015.
-
-One of the goals for the script was to be able to put all car customizations
-into the configuration section and have a common, unaltered main script in all
-the cars. This allowed us to update vehicles with the new script (with bug fixes
+The forst goal was to convert all the cars to the common script and place settings
+in a text block at the top of the script. 
+This allowed us to update vehicles with the new script (with bug fixes
 for example) and only need to transfer the config settings to the new script.
 Although this did require hand-editing, a single block of text in the
 configuration sections could be copied and pasted between the old and new
@@ -54,12 +46,14 @@ scripts, requiring only the copy-paste keys. So the task of re-scripting 70
 vehicles was not as bad as it might have been, but still not ideal.
 
 In 2017 I added a feature to put all configuration settings in a notecard. The
-script, when reset, checks to see if the Config notecard is present, and if so
-it will use configs in the notecard  and ignore settings within the script file
-itself. This way, script version updates can simply be dropped into the car,
-replacing the previous version, without having to hand-edit any settings.
+script checks to see if the Config notecard is present, and if so
+it will use configs in the notecard at reset time and ignore settings within the script
+itself. This way, updates can be done by deleting the old script,
+and dropping in the new script, without having to hand-edit any settings.
 
-I continually try to find ways to simplify the script, to keep it compatible
+Many features and bug fixes have been added since then based on what was
+needed or requested by builders. I continually try to find ways to
+simplify the script, to keep it compatible
 across grids, and to add new features wanted by car builders. This is a work in
 progress. Please notify me of bugs or feature requests.
 

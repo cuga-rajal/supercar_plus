@@ -1,24 +1,22 @@
-// Supercar Plus 1.91
+// Supercar 2.0 RC9
+
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
-// For history and credits please see https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
-
+ 
 //---USER-DEFINED VARIABLES--------------------------------------------------
-// * NOTE * Config notecard placed in the same prim as this script will override settings listed below.
+// * NOTE * A Config notecard placed in the same prim as this script will override settings listed below.
 // * Please see the sample Config notecard. This is the recommended method.
-// * This allows script updates to be drop-in replacements without the need for hand-editing.
-
-                // Driver permissions and sit offsets 
+// * This allows script updates to be drop-in replacements without the need to hand-edit settings.
+ 
+// Driver permissions and sit offsets 
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
-integer         useAvsitter = FALSE; // if TRUE the following sit offsets and all animation settings are ignored
-vector          gSitTarget_Pos = <0, 0, 1>;   // sit position offset
-vector          gSitTarget_Rot = <0, 0, 0>;   // sit angle offset
+integer         useAvsitter = FALSE; // if TRUE the scriipt does not run animations
 
-                // Gear options -- NOTE: 0=first gear, 11=12th gear
+// Gear options -- NOTE: 0=first gear, 11=12th gear
 integer         maxGear = 3;       // highest gear that can be shifted to, max 11
 integer         lowestGear = 0;     // lowest gear that can be shifted to, min 0
 integer         startGear = 0;      // gear selected on sit 
@@ -26,33 +24,20 @@ integer         fallbackAbove = 6;  // releasing forward button when gear higher
 float           turn_in_place_speed = 2; // Rotation speed if rotating in place. Set to 0 to disable.
 list            turnList = [ ]; // Empty list uses default values; Override defaults with this list 
 list            speedList = [ ]; // Empty list uses default values; Override defaults with this list 
-
-                // Camera options
+ 
+// Camera options
 integer         enableCamera = TRUE;  // Whether or not to enable camera controls
 float           CamDist = 4; // How far back you want the camera positioned
 float           CamPitch = 8.0;  // Angle looking down. Range is -45 to 80 Degrees
 float           lookAhead = 8.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
-
-                // The following are used only if there are effects scripts in other vehicle prims.
-integer         burnoutGear = 1;    // gear that will display burnout effects. Not used if no effects script in vehicle.
-integer         turnburnGear = 3;   // this gear and above show smoke & screech when turning.
-
-                // Avatar animations if more than one used
-string          anim_fwd = "";  // animation to play when moving forward; set to "" to disable changing animations
-string          anim_idle = ""; // animation to play when idle; required if using anim_fwd
-string          anim_fast = ""; // animation to play when moving forward at or above aggressive_gear
                 
-                // Other options
+// Other options
 integer         auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
-integer         reset_on_rez = FALSE; // Whether script resets on rez. Set to FALSE if using rezzer
 integer         click_to_park = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 string          sit_message = ""; // Chat window message shown to driver when sitting
 string          stand_message = ""; // Chat window message shown to driver when standing
-integer         verbose_level = 1; // 0 = no messages; 1 = display gear when shifting; 2 = display all llMessageLinked messages
-string          hud_name = ""; // HUD should be in Contents and have this name. Set to null "" to disable
-integer         HUD_CHANNEL = 19997;
 
-                // Sound variables
+// Sound variables
 integer         aggressive_gear = 3; // This gear and above play "gSoundAggressive", below this gear plays "gSoundSlow"
 integer         use_sl_sounds = FALSE;  // Whether to use free car sounds in SL. If set to TRUE this overrides sounds below.
 string          gSoundStartup = ""; // sound made when driver seated
@@ -63,7 +48,7 @@ string          gSoundRev = "";  // looped sound when driving in reverse
 string          gSoundStop = "";   // sound when the driver stands
 string          gSoundAlarm = "";   // sound if someone not authorized tries to drive car
 
-                // Simulator selection
+// Simulator selection
 
 string          notecard_name = "Config";
 
@@ -72,32 +57,28 @@ string          notecard_name = "Config";
 
 vector          startposition;
 rotation        startrot;
-integer         burnoutState = FALSE;
-integer         turnburnState = FALSE;
-integer         pipeflameState = FALSE;
-integer         cornerFXRState = FALSE;
-integer         cornerFXLState = FALSE;
 list            prim_phys_types = [ ];
 list            prims_keep_prim = [ ];
 integer         i;
 integer         primcount;
 integer         is_resetting = TRUE;
 integer         listener;
-key             hudid = NULL_KEY;
-integer         index;
-vector          sitOffset;
 key             driver = NULL_KEY;
 key             prevDriver = NULL_KEY;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
-float           lastspeed;
-string          currentanimation;
-integer         seated = 0;
+integer         seated = FALSE;
+integer            parked = FALSE;
+integer            dialogwait = FALSE;
 
 integer         gOldSound=3;   //variable for sound function
 integer         gNewSound=3;
 integer         reverse;
+list            wheels;
+list            wheelvec;
+list            fwlocalrot;
+float           spinstate;
 
 list            gTSvarList;
 float           gVLMT=1.0;               // how fast to reach max speed
@@ -116,7 +97,7 @@ float           gVHE=0;
 float           gVHT=0;
 float           gVHH=0;
 float           gVB=0;
-
+ 
 integer         gGear;
 float           gGearPower;
 float           gTurnMulti=1.012345;
@@ -134,18 +115,14 @@ list            gGearNameList             =[   "1st Gear",
                                                "11th Gear",
                                                "12th Gear"
                                          ];
-integer         gSpeed=0;
-//---------------------------------------------------------------------
+                                         
 
 //---------------------------------------------------------------------
 
 string          gTurnAngle =               "NoTurn";  // LeftTurn or RightTurn or NoTurn
 string          gNewTurnAngle =            "NoTurn";
-string          gTireSpin =                "ForwardSpin";   // ForwardSpin or BackwardSpin or NoSpin
-string          gNewTireSpin =             "ForwardSpin";
-
-integer         gTcountL; //for cornerFX
-integer         gTcountR;
+string          gTireSpin =                "NoSpin";   // ForwardSpin or BackwardSpin or NoSpin
+string          gNewTireSpin =             "NoSpin";
 
 key kQuery = NULL_KEY;
 integer iLine = 0;
@@ -159,6 +136,7 @@ menu(key user,string title,list object_list)  {
     menu_handler = llListen(menu_channel,"","",""); 
     llDialog(user,title,object_list,menu_channel); 
     llSetTimerEvent(30.0); //menu channel open for 30 seconds 
+    dialogwait = TRUE;
 } 
 
 
@@ -247,9 +225,6 @@ init_engine(){
     gRun = 0;
     llSetSitText(gSitMessage);
     llCollisionSound("", 0.0);
-    if(! useAvsitter) {
-        llSitTarget(gSitTarget_Pos + sitOffset, llEuler2Rot(DEG_TO_RAD * gSitTarget_Rot));
-    }
     gOldSound=3; 
     gNewSound=3;
     gTireSpin = "NoSpin";
@@ -260,7 +235,7 @@ init_engine(){
 
 }
 
-init_followCam(float degrees){
+init_followCam(){
     // Set camera for driver
     llSetCameraParams([
                        CAMERA_ACTIVE, 1,                 // 0=INACTIVE  1=ACTIVE
@@ -322,12 +297,8 @@ set_engine(){
 
 gearshift(integer g){
     enginesound();
-    if((hud_name != "") && (hudid != NULL_KEY)) {
-        llRegionSayTo(hudid,HUD_CHANNEL,"gear " + (string)(g+1));
-    }
-    if(verbose_level>0) {
-        llRegionSayTo(driver,0,llList2String(gGearNameList, g));
-    }
+    llRegionSayTo(driver,0,llList2String(gGearNameList, g));
+    llMessageLinked(LINK_SET, 0, "gear " + (string)(g+1), NULL_KEY);
 }
 
 enginesound(){
@@ -367,12 +338,7 @@ enginesound(){
             }
         }
     }
-    gOldSound = gNewSound;
-}
-
-SendLinkMessage(integer Lnum, string Lstr) {
-   llMessageLinked(LINK_SET, Lnum, Lstr, NULL_KEY);
-   if(verbose_level>1) { llRegionSayTo(driver,0,"llMessageLinked: num=" + (string)Lnum + ", string=" + Lstr); }
+    gOldSound = gNewSound; 
 }
 
 config_init() {
@@ -403,8 +369,6 @@ setConfig(string setting, string qval) {
     else if(setting=="gSitMessage") { gSitMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="gUrNotAllowedMessage") { gUrNotAllowedMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="useAvsitter") { if(qval=="TRUE") { useAvsitter=TRUE; } else { useAvsitter=FALSE; } }
-    else if(setting=="gSitTarget_Pos") { gSitTarget_Pos = (vector)qval; }
-    else if(setting=="gSitTarget_Rot") { gSitTarget_Rot = (vector)qval; }
     else if(setting=="maxGear") { maxGear = (integer)qval; }
     else if(setting=="lowestGear") { lowestGear = (integer)qval; }
     else if(setting=="startGear") { startGear = (integer)qval; }
@@ -422,19 +386,10 @@ setConfig(string setting, string qval) {
     else if(setting=="CamDist") { CamDist = (float)qval; }
     else if(setting=="CamPitch") { CamPitch = (float)qval; }
     else if(setting=="lookAhead") { lookAhead = (float)qval; }
-    else if(setting=="burnoutGear") { burnoutGear = (integer)qval; }
-    else if(setting=="turnburnGear") { turnburnGear = (integer)qval; }
-    else if(setting=="anim_fwd") { anim_fwd = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="anim_idle") { anim_idle = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="anim_fast") { anim_fast = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="auto_return_time") { auto_return_time = (integer)qval; }
-    else if(setting=="reset_on_rez") { if(qval=="TRUE") { reset_on_rez=TRUE; } else { reset_on_rez=FALSE; } }
     else if(setting=="click_to_park") { if(qval=="TRUE") { click_to_park=TRUE; } else { click_to_park=FALSE; } }
     else if(setting=="sit_message") { sit_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="stand_message") { stand_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="verbose_level") { verbose_level = (integer)qval; }
-    else if(setting=="hud_name") { hud_name = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="HUD_CHANNEL") { HUD_CHANNEL = (integer)qval; }
     else if(setting=="aggressive_gear") { aggressive_gear = (integer)qval; }
     else if(setting=="use_sl_sounds") { if(qval=="TRUE") { use_sl_sounds=TRUE; } else { use_sl_sounds=FALSE; } }
     else if(setting=="gSoundStartup") { gSoundStartup = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
@@ -453,17 +408,33 @@ finish() {
         startposition = llGetPos();
         startrot = llGetRot();
     }
-    llOwnerSay("   Reading physics types of child prims..");
+    llOwnerSay("   Reading wheel settings and child prims physics types..");
     prim_phys_types = [ ];
     primcount = llGetObjectPrimCount(llGetKey());
     for(i=2; i<= primcount; i++) {
-        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC]);
-        integer desc = llList2Integer(params, 0);
-        prim_phys_types += desc;
+        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC, PRIM_NAME]);
+        integer ptype = llList2Integer(params, 0);
+        prim_phys_types += ptype;
         if(llList2String(params, 1) == "prim") {
             prims_keep_prim += i;
         }
+        string primname = llList2String(params, 2);
+        if(((llSubStringIndex(primname, "rwheel")!=-1) || (llSubStringIndex(primname, "fwheel")!=-1)) && (llList2String(params, 1) != "") && (llList2String(params, 1) != "(No Description)"))  {
+            list veclist = llParseStringKeepNulls(llList2String(params, 1), ["<",">"], []);
+            if(llList2String(veclist, 1) != "") {
+                wheels += i;
+                wheelvec += (vector)llList2String(params, 1);
+                if(llSubStringIndex(primname, "fwheel")!=-1) { fwlocalrot += llList2Rot(llGetLinkPrimitiveParams(i, [PRIM_ROT_LOCAL]), 0); }
+                else { fwlocalrot += (integer)0; }
+            }
+        }
     }
+    turnwheels("NoTurn");
+    list ls = llGetLinkPrimitiveParams(LINK_THIS, [PRIM_SIT_TARGET]);
+    if(llList2Vector(ls, 1)==ZERO_VECTOR) {
+        llSitTarget(<0,0,0.5>, ZERO_ROTATION); // an arbitrary but reasonable value until the offset is fine-tuned
+    }
+    
     llOwnerSay("   Loading sounds..");
     preload_sounds();
     init_engine();
@@ -472,6 +443,58 @@ finish() {
     llOwnerSay("Initialization complete, ready to drive.");
 }
 
+spinwheels(float power, string Spin) {
+    float rate;
+    rotation rotlocal;
+    if (Spin == "ForwardSpin") { rate = 1.32 * power; }
+    else if (Spin == "BackwardSpin") { rate = -1.32 * power; }
+    else if (Spin == "NoSpin") { rate = 0; }
+    for(i=0; i<llGetListLength(wheels); i++) {
+        rotlocal = llList2Rot(llGetLinkPrimitiveParams(llList2Integer(wheels, i), [PRIM_ROT_LOCAL]), 0);
+        llSetLinkPrimitiveParamsFast(llList2Integer(wheels, i), [PRIM_OMEGA, llList2Vector(wheelvec, i) * rotlocal, rate, 1.0]);
+    }
+    spinstate = rate;
+}
+
+turnwheels(string turn) {
+    rotation rotlocal;
+    for(i=0; i<llGetListLength(wheels); i++) {
+        if(llList2String(fwlocalrot, i) != "0") {
+            rotlocal = llList2Rot(llGetLinkPrimitiveParams(llList2Integer(wheels, i), [PRIM_ROT_LOCAL]), 0);
+            rotation newrot;
+                   if(turn == "LeftTurn") { newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,30>*DEG_TO_RAD)); }
+            else if (turn == "RightTurn") { newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,-30>*DEG_TO_RAD)); }
+               else if (turn == "NoTurn") { newrot = llList2Rot(fwlocalrot, i); }
+            llSetLinkPrimitiveParamsFast(llList2Integer(wheels, i), [ PRIM_OMEGA, llList2Vector(wheelvec, i) * rotlocal, 0, 1.0,
+                                                                      PRIM_ROT_LOCAL, newrot,
+                                                                      PRIM_OMEGA, llList2Vector(wheelvec, i) * newrot, spinstate, 1.0 ]);
+        }
+    }
+}
+
+wheelcalc() {
+    //llRegionSayTo(llGetOwner(), 0, "Recalculating wheel rotations...");
+    wheels = [];
+    wheelvec = [];
+    fwlocalrot = [];
+    
+    for(i=2; i<= primcount; i++) {
+        list params = llGetLinkPrimitiveParams(i,[PRIM_DESC, PRIM_NAME]);
+        string primname = llList2String(params, 1);
+        if(((llSubStringIndex(primname, "rwheel")!=-1) || (llSubStringIndex(primname, "fwheel")!=-1)) && (llList2String(params, 0) != "") && (llList2String(params, 0) != "(No Description)"))  {
+            list veclist = llParseStringKeepNulls(llList2String(params, 0), ["<",">"], []);
+            if(llList2String(veclist, 1) != "") {
+                wheels += i;
+                wheelvec += (vector)llList2String(params, 0);
+                if(llSubStringIndex(primname, "fwheel")!=-1) { fwlocalrot += llList2Rot(llGetLinkPrimitiveParams(i, [PRIM_ROT_LOCAL]), 0); }
+                else { fwlocalrot += (integer)0; }
+            }
+        }
+    }
+    //llRegionSayTo(llGetOwner(), 0, "Finished recalculating.");
+}
+
+    
 default {
     state_entry() {
         is_resetting = TRUE;
@@ -492,18 +515,15 @@ default {
                 ++iLine;
                 kQuery = llGetNotecardLine(notecard_name, iLine);
             } else {
-                llOwnerSay("   Finished reading Config notecard.");
                 finish();
             }
         }
     }
     
     on_rez(integer param) {
-        if(reset_on_rez) { llResetScript(); }
-        else {
-           startposition = llGetPos();
-           startrot = llGetRot();
-        }
+        //startposition = llGetPos();
+        //startrot = llGetRot();
+        seated = FALSE;
     }
     
     touch_start(integer total_number) { 
@@ -514,46 +534,42 @@ default {
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
-            if((llGetObjectPrimCount(llGetKey()) != primcount) && (seated == 0) && (! is_resetting)) { // adding or removing a prim
+            if((llGetObjectPrimCount(llGetKey()) != primcount) && (! seated) && (! is_resetting)) { // adding or removing a prim
                 llOwnerSay("** Prim count changed, resetting **");
                 llResetScript();
             }
             
             driver = llAvatarOnLinkSitTarget(LINK_THIS);
-            if (driver != NULL_KEY && seated == 0) { // happens once
+            if ((driver != NULL_KEY) && (! seated)) { // happens once
                 if(is_resetting) {
                     llRegionSayTo(driver,0, "Please wait for the script to finish resetting.");
                     llUnSit(driver);
                     return;
                 }
-                seated = 1;
                 
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
                     gRun = 1;
-                    if(hud_name != "") {
-                        if ((llGetInventoryNumber(INVENTORY_OBJECT) != 0) && (llGetInventoryName(INVENTORY_OBJECT, 0) == hud_name)) {
-                            llRezObject(hud_name, llGetPos()+<0.0,0.0,5.0>,ZERO_VECTOR,ZERO_ROTATION,90);
-                            llRegionSayTo(driver,0,"Please confirm the dialog to attach the HUD");
-                        }
-                    }
                     set_engine();
                     llSetSitText("Sit");
+                    seated = TRUE;
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
-                    llSetStatus(STATUS_PHYSICS, TRUE);                  
+                    llSetStatus(STATUS_PHYSICS, TRUE);          
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
                     prevDriver = driver;
+                    if(parked) { llRegionSayTo(driver,0, "Driving resumed."); }
+                    parked = FALSE;
                 }
                 else {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
                     llUnSit(driver);
                     if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
                     llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
-                    seated = 0;
+                    
                 }
             }
-            else if (driver == NULL_KEY && seated == 1) { // If driver stood up 
-                seated = 0;       
+            else if ((driver == NULL_KEY) && seated) { // If driver stood up 
+                seated = FALSE;       
                 gRun = 0;
                 init_engine();
                 
@@ -561,11 +577,8 @@ default {
                 llStopSound();
                 llReleaseControls();  
                 llSetText("",<0,0,0>,1.0);
-                SendLinkMessage(0, "pipeflameoff");
-                SendLinkMessage(0, "burnoutoff");
-                SendLinkMessage(0, "honkoff");
-                SendLinkMessage(0, "car_stop");
-                llRegionSayTo(hudid, HUD_CHANNEL, "control poof");
+                llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
+                llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
                 llListenRemove(listener);  
                 
                 if(stand_message !="") { llRegionSayTo(prevDriver,0,stand_message); }  
@@ -582,7 +595,7 @@ default {
                         llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
                     }
                 }                   
-                if(auto_return_time>0) {
+                if((! parked) && (auto_return_time>0)) {
                     llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
                     llSetTimerEvent(auto_return_time);
                 }
@@ -590,7 +603,7 @@ default {
             } // end - no driver
             
             else if(driver !=NULL_KEY) { // someone sat or stood on another prim
-                llRequestPermissions(driver, PERMISSION_CONTROL_CAMERA | PERMISSION_TAKE_CONTROLS | PERMISSION_TRIGGER_ANIMATION);
+               if (driver != NULL_KEY) { init_followCam(); }
             }    
         }// end changed link
         
@@ -603,8 +616,8 @@ default {
     run_time_permissions(integer perm) {
         if(perm & PERMISSION_TAKE_CONTROLS){
             gGear = startGear;
-            SendLinkMessage(0, "startupflame");
-            SendLinkMessage(0, "car_start");
+            llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
+            llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
             llSleep(1.5);
             enginesound();
             llTakeControls(
@@ -614,22 +627,23 @@ default {
         }
          
         if( (perm & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
-            init_followCam(gSitTarget_Rot.z);
+            init_followCam();
         }
         
-        if((perm & PERMISSION_TRIGGER_ANIMATION) && (! useAvsitter)) {
-            string pilot_anim = llGetAnimationOverride("Sitting");
-            llStopAnimation(pilot_anim);
-             
-            if(anim_fwd != "") {
+        integer usingAnimScript = FALSE;
+        for(i=0; i<llGetInventoryNumber(INVENTORY_SCRIPT); i++) {
+            if(llGetSubString(llGetInventoryName(INVENTORY_SCRIPT, i), 0, 30) == "Supercar 2 Animation Controller") {
+                usingAnimScript = TRUE;
+                jump found;
+            }
+        }
+        @found;
+        
+        if((perm & PERMISSION_TRIGGER_ANIMATION) && (! useAvsitter) && (! usingAnimScript)) {
+            integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
+            if (count != 0) {
                 llStopAnimation("sit");
-                llStartAnimation(anim_idle);
-            } else {
-                integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
-                if (count != 0) {
-                    llStopAnimation("sit");
-                    llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
-                } // otherwise default "sit" is automatic
+                llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
             }
         }
        
@@ -639,11 +653,10 @@ default {
         if(gRun == 0){
             return;
         }
-        llSetTimerEvent(0);
+        //llSetTimerEvent(0);
         reverse=0;
         gTurnRatio = llList2Float(turnList,gGear);
-        
-        gSpeed = llRound(llVecMag(llGetVel()*2.23692912));
+        gGearPower = llList2Integer(speedList, gGear);
 
         if ((held & change & CONTROL_UP) || ((gGear >= maxGear) && (held & CONTROL_UP))){
             gGear=gGear+1;
@@ -657,51 +670,8 @@ default {
             else { gearshift(gGear); }
         }
         if (held & CONTROL_FWD){
-            if(! useAvsitter) {
-                if((anim_fwd != "") && (currentanimation != anim_fwd) && ((gGear < aggressive_gear) || ((gGear > aggressive_gear) && (anim_fast == "")))) {
-                    if(currentanimation != "") { llStopAnimation(currentanimation); }
-                    llStartAnimation(anim_fwd);
-                    currentanimation=anim_fwd;
-                } else if((anim_fast != "") && (gGear>=aggressive_gear) && (currentanimation!=anim_fast)){
-                    if(currentanimation != "") { llStopAnimation(currentanimation); }
-                    llStartAnimation(anim_fast);
-                    currentanimation=anim_fast;
-                }
-            } 
+            llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
             
-            if(gGear == 0) {
-                llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, <1.0, 2.0, 8.0>);
-            } else {
-                llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
-            }
-            if(gGear == burnoutGear) {
-                if(burnoutState == FALSE) {
-                    SendLinkMessage(0, "burnout");
-                    SendLinkMessage(0, "screechon");
-                    SendLinkMessage(0, "pipeflameon");
-                    SendLinkMessage(0, "letsburn");
-                    SendLinkMessage(0, "letsscreech");
-                    SendLinkMessage(0, "pipeflame");
-                    burnoutState = TRUE;
-                }
-            } else if(burnoutState == TRUE) {
-                SendLinkMessage(0, "burnoutoff");
-                SendLinkMessage(0, "screechoff");
-                SendLinkMessage(0, "pipeflameoff");
-                burnoutState = FALSE;
-            }
-            
-            if(gGear >= turnburnGear) {
-                if(turnburnState == FALSE) {
-                    SendLinkMessage(0, "turnburnon");
-                    turnburnState = TRUE;
-                }
-            } else if(turnburnState == TRUE) {
-                SendLinkMessage(0, "turnburnoff");
-                turnburnState = FALSE;
-            }
-            
-            gGearPower = llList2Integer(speedList, gGear);
             llSetVehicleVectorParam(VEHICLE_LINEAR_MOTOR_DIRECTION, <gGearPower,0,0>);
             gMoving=1;
             gNewTireSpin = "ForwardSpin";
@@ -720,80 +690,50 @@ default {
         if(! ((held & CONTROL_BACK) || (held & CONTROL_FWD))) { gMoving = 0;}
         
         if (~held & change & CONTROL_FWD) {
-            //llSay(0,"CONTROL_FWD:Released");
-            
-            if((anim_idle != "") && (currentanimation!=anim_idle) && (! useAvsitter)) {
-                 llStopAnimation(currentanimation);
-                 llStartAnimation(anim_idle);
-                 currentanimation=anim_idle;
-            }
-            
-            
-            if((gGear == burnoutGear) && (burnoutState == TRUE)) {
-                SendLinkMessage(0, "burnoutoff");
-                SendLinkMessage(0, "screechoff");
-                SendLinkMessage(0, "pipeflameoff");
-                burnoutState = FALSE;
-            }
-            
-            if((gGear >= turnburnGear) && (turnburnState == TRUE)) {
-                SendLinkMessage(0, "turnburnoff");
-                turnburnState = FALSE;
-            }
-                      
+            //  Released FWD button   
             gNewTireSpin = "NoSpin";
             gNewTurnAngle = "NoTurn";
             
             if (gGear > fallbackAbove) {
                 gGear = fallbackAbove;
-                if(verbose_level>0) {
-                    llRegionSayTo(driver,0,"Fallback to " + llList2String(gGearNameList, gGear));
-                }
+                llRegionSayTo(driver,0,"Fallback to " + llList2String(gGearNameList, gGear));
+                llMessageLinked(LINK_SET, 0, "gear " + (string)(gGear+1), NULL_KEY);
             }
             
-            if((hud_name != "") && (hudid != NULL_KEY)) { llSetTimerEvent(0.3); }
-
         }
         if (~held & change & CONTROL_BACK) {
             //  Released BACK button          
             gNewTireSpin = "NoSpin";
             gNewTurnAngle = "NoTurn";
+            
+            //if(! braked) { llSetTimerEvent(2.0); }
+            
             llSetCameraParams([CAMERA_FOCUS_THRESHOLD,8.0, CAMERA_POSITION_THRESHOLD, 8.0, CAMERA_FOCUS_OFFSET, <lookAhead,0,0> ]);
-            if((hud_name != "") && (hudid != NULL_KEY)) { llSetTimerEvent(0.3); }
-        }
-           
-        if((hud_name != "") && (hudid != NULL_KEY)) {
-            if(lastspeed != gSpeed) {
-                llRegionSayTo(hudid,HUD_CHANNEL,"speed " + (string)gSpeed);
-                lastspeed = gSpeed;
-            }
         }
                 
         enginesound();
  
         vector AngularMotor;
         if (held & (CONTROL_RIGHT|CONTROL_ROT_RIGHT)) {
-            if((gSpeed<1) && (turn_in_place_speed !=0)) {
-                AngularMotor.z -= PI*turn_in_place_speed;
+            if(gMoving==0) {
+                if(turn_in_place_speed !=0) { AngularMotor.z -= PI*turn_in_place_speed; }
             } else if (gGear==0) {
-                AngularMotor.z -= gSpeed / ((gTurnRatio/gTurnMulti)*1);
+                AngularMotor.z -= (gGearPower * 2.0) / ((gTurnRatio/gTurnMulti)*1);
             } else {
-                AngularMotor.z -= gSpeed / ((gTurnRatio/gTurnMulti)*gGear);
+                AngularMotor.z -= (gGearPower * 2.0) / ((gTurnRatio/gTurnMulti)*gGear);
             }
             gNewTurnAngle = "RightTurn";
-            gTcountR = 2;
         }
 
         if (held & (CONTROL_LEFT|CONTROL_ROT_LEFT)) {
-            if((gSpeed<1) && (turn_in_place_speed !=0)) {
-                AngularMotor.z += PI*turn_in_place_speed;
+            if(gMoving==0) {
+                if(turn_in_place_speed !=0) { AngularMotor.z += PI*turn_in_place_speed; }
             } else if (gGear==0) {
-                AngularMotor.z += gSpeed / ((gTurnRatio/gTurnMulti)*1);
+                AngularMotor.z += (gGearPower * 2.0)/ ((gTurnRatio/gTurnMulti)*1);
             } else {
-                AngularMotor.z += gSpeed / ((gTurnRatio/gTurnMulti)*gGear);
+                AngularMotor.z += (gGearPower * 2.0) / ((gTurnRatio/gTurnMulti)*gGear);
             }
             gNewTurnAngle = "LeftTurn";
-            gTcountL = 2;
         }
         
         if ((~held & change & CONTROL_LEFT) || (~held & change & CONTROL_ROT_LEFT) ||
@@ -802,61 +742,41 @@ default {
         }
 
         llSetVehicleVectorParam(VEHICLE_ANGULAR_MOTOR_DIRECTION, AngularMotor);
-        
-        if(gTcountL > 0) {
-            gTcountL--;
-        }
-        if(gTcountR > 0) {
-            gTcountR--;
-        }
-        
-        if(gGear>=turnburnGear) {
             
-            if((gTcountL == 1) && (! cornerFXLState)) {
-                SendLinkMessage(0, "letsburnR");
-                cornerFXLState = TRUE;
-            } else if((gTcountL != 1) && (cornerFXLState)) {
-                SendLinkMessage(0, "letsburnRstop");
-                cornerFXLState = FALSE;
-            }
-            
-            if((gTcountR == 1) && (! cornerFXRState)) {
-                SendLinkMessage(0, "letsburnL");
-                cornerFXRState = TRUE;
-            } else if((gTcountR != 1) && (cornerFXRState)) {
-                SendLinkMessage(0, "letsburnLstop");
-                cornerFXRState = FALSE;
-            }
-        }
-    
         if(gTurnAngle != gNewTurnAngle) {
             gTurnAngle = gNewTurnAngle;
-            SendLinkMessage(0, gTurnAngle);
+            if(llGetListLength(wheelvec)>0) { turnwheels(gTurnAngle); }
+            llMessageLinked(LINK_SET, 0, gTurnAngle, NULL_KEY);
         }
         if((gTireSpin != gNewTireSpin) || ((gGearPower>20) && (sentPower !=20)) || ((sentPower != llRound(gGearPower)))) {
             gTireSpin = gNewTireSpin;
             if(gGearPower<20) { sentPower =  llRound(gGearPower);}
             else { sentPower=20;} // cap wheel spin due to frame rate
-            SendLinkMessage(sentPower, gTireSpin);
+            if(llGetListLength(wheelvec)>0) { spinwheels(sentPower, gTireSpin); }
+            llMessageLinked(LINK_SET, sentPower, gTireSpin, NULL_KEY);  
+            
         }
     }
     
-    object_rez(key id) {
-        hudid = id;
-        listener = llListen(HUD_CHANNEL, "", id, "");
-        llRegionSayTo(id, HUD_CHANNEL, "avkey " + (string)driver);
-        llRegionSayTo(id, HUD_CHANNEL, "carkey " + (string)llGetKey());
-    }
-    
     link_message(integer Sender, integer Number, string msg, key Key) {
-        if((llGetSubString(msg, 0, 8)=="sitoffset") && (! useAvsitter)) {
-            sitOffset =<0,0,(float)llGetSubString(msg, 9, -1)>;
-            llSitTarget(gSitTarget_Pos + sitOffset, llEuler2Rot(DEG_TO_RAD * gSitTarget_Rot));
+        if(msg == "gear_up") {
+            gGear=gGear+1;
+            if (gGear > maxGear) { gGear = maxGear; }
+            else { gearshift(gGear); }
+        } else if(msg == "gear_down") {
+            gGear=gGear-1;
+            if (gGear < lowestGear) { gGear = lowestGear; }
+            else { gearshift(gGear); }
+        } else if(msg == "wheelcalc") {
+            wheelcalc();
         }
     }
     
     listen(integer channel, string name, key av, string message) {
-        if (channel == menu_channel) {             
+        if (channel == menu_channel) {
+            dialogwait = FALSE;  
+            llSetTimerEvent(0.0); 
+            llListenRemove(menu_handler); 
             if((message == "Park Car") && (gRun==1))  { 
                 llSetStatus(STATUS_PHYSICS, FALSE);
                 for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
@@ -867,10 +787,11 @@ default {
                 }               
                 gRun = 0;
                 gMoving = 0;
+                parked = TRUE;
                 llStopSound();
-                SendLinkMessage(0, "car_stop");
+                llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
                 if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
-                llRegionSayTo(driver, 0, "Car parked. Touch again to resume driving.");
+                llRegionSayTo(driver, 0, "Car parked. Auto-Park disabled. Touch again to resume driving.");
             } 
             else if((message == "Drive") && (gRun==0)) { 
                 if(llGetListLength(prims_keep_prim) ==0) {
@@ -884,55 +805,27 @@ default {
                 }
                 llSetStatus(STATUS_PHYSICS, TRUE);                  
                 gRun = 1;
+                parked=FALSE;
                 llStopSound();
-                SendLinkMessage(0, "car_start");
+                llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
                 if(gSoundStartup!="") { llStopSound(); llTriggerSound(gSoundStartup,1); }
                 llSleep(1.5);
                 enginesound();
                 llRegionSayTo(driver, 0, "Driving resumed.");
             } 
-            llSetTimerEvent(0.0); 
-            llListenRemove(menu_handler); 
-        } else {
-            if(message=="honk_on") { SendLinkMessage(0, "honk");  }
-            else if(message=="honk_off") { SendLinkMessage(0, "honkoff");  }
-            else if(message=="lights_on") { SendLinkMessage(0, "headlight"); }
-            else if(message=="lights_off") { SendLinkMessage(0, "headlightoff"); }
-            else if(message=="pipeflame_on") { SendLinkMessage(0, "pipeflame"); }
-            else if(message=="pipeflame_off") { SendLinkMessage(0, "pipeflameoff"); }
-            else if(message=="smoke_on") { SendLinkMessage(0, "burnout"); SendLinkMessage(0, "letsburn"); }
-            else if(message=="smoke_off") { SendLinkMessage(0, "burnoutoff");  }
-            else if(message=="gear_up") { 
-                gGear=gGear+1;
-                if (gGear > maxGear) { gGear = maxGear; }
-                else { gearshift(gGear); }
-            }
-            else if(message=="gear_down") {
-                gGear=gGear-1;
-                if (gGear < lowestGear) { gGear = lowestGear; }
-                else { gearshift(gGear); }
-            }
         }
     }
     
 
     timer() {
-        if((gRun == 1) && (hud_name != "") && (hudid != NULL_KEY)) {
-            gSpeed = llRound(llVecMag(llGetVel()*2.23692912));
-            if(gSpeed<1) {
-                if((hud_name != "") && (hudid != NULL_KEY)) { llRegionSayTo(hudid,HUD_CHANNEL,"speed 0"); }
-                llSetTimerEvent(0);
-            } else if(lastspeed != gSpeed) {
-                llRegionSayTo(hudid,HUD_CHANNEL,"speed " + (string)gSpeed);
-                lastspeed = gSpeed;
-            }
-        } else if(menu_handler>0) {
+        if(dialogwait == TRUE) {
             llListenRemove(menu_handler);
             llSetTimerEvent(0.0);  
-        } else if(auto_return_time>0) {
+            dialogwait = FALSE;
+        } else if((! parked) && (gRun == 0) && (auto_return_time>0)) {
             llSetRegionPos(startposition);
             llSetRot(startrot);
-            SendLinkMessage(0, "car_park");
+            llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
             llSetTimerEvent(0);
         }
     }

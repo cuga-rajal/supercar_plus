@@ -1,16 +1,20 @@
 // Headlight Source 1.80
-// For use with Supercar Plus script version 1.80 or higher (https://github.com/cuga-rajal/supercar_plus)
-// Place this in a prim that is supposed to be the actual headlight, not the beam
-// It will respond to link messages from the main script or HUD
+// By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
+// For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
+// This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
+
+// Configurable settings
 
 integer shine = TRUE;
 integer projector = TRUE;
-integer face = 2;
-vector color = <1,1,1>;
-float intensity = 1.0;
-float radius = 20;
-float falloff = 0.25;
-float glow = .15;
+integer face = 2; // prim face number or ALL_SIDES; used with shine setting
+float glow = .15; // glow value used with shine setting
+vector color = <1,1,1>; // used with projector setting
+float intensity = 1.0; // used with projector setting
+float radius = 20; // used with projector setting
+float falloff = 0.25; // used with projector setting
+
+// End of configurable settings
 
 lightsOn() {
     if(shine) {
