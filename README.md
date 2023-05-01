@@ -257,6 +257,15 @@ will update the speed on the other wheels but preserve the other wheels'
 rotation direction. This is so it's easy to fine-tune the wheel speed after
 initial setup.
 
+*reverse turn option*
+
+Front wheels (or any wheels that turn left-right) have an option to turn
+left-right in opposite direction of the left-right keys used. This is useful for
+vehicles that have wheels on rear of the car,  which need to turn in the
+opposite direction as when in front. To enable this on a wheel add "reverse" to
+the prim name. The prim name may contain multiple words - "fwheel", "smoke" and
+"reverse" can be in any order. 
+
 -----
 
 **Passenger Seats**
