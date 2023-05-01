@@ -1,4 +1,4 @@
-// Supercar 2 Wheel Configurator RC2
+// Supercar 2 Wheel Configurator 1.0.1
 // By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -194,14 +194,15 @@ default {
                 
             if(message == "Yes") {
                 vector thisoffset = llList2Vector(llGetLinkPrimitiveParams(LINK_THIS, [PRIM_POS_LOCAL]), 0);
-                
+                rotation thisrot = llList2Rot(llGetLinkPrimitiveParams(LINK_THIS, [PRIM_ROT_LOCAL]), 0);
                 for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
-                    list params = llGetLinkPrimitiveParams(i, [PRIM_NAME, PRIM_DESC, PRIM_POS_LOCAL]);
-                    if( ((llSubStringIndex(llList2String(params,0), "rwheel")!=-1) || (llSubStringIndex(llList2String(params,0), "fwheel")!=-1)) && (i != llGetLinkNumber())) {
+                    list params = llGetLinkPrimitiveParams(i, [PRIM_NAME, PRIM_DESC, PRIM_POS_LOCAL, PRIM_ROT_LOCAL]);
+                    if( ((llSubStringIndex(llList2String(params,0), "rwheel")!=-1) || (llSubStringIndex(llList2String(params,0), "fwheel")!=-1)) &&
+                        (i != llGetLinkNumber())) {
                         vector offsetvec = llList2Vector(params, 2);
                         integer switch = FALSE;
                         if((llList2String(params, 1)=="") || (llList2String(params, 1)=="(No Description)")) { //not yet configured, *-1 if opposite side
-                            if( ((thisoffset.y>0) && (offsetvec.y<0)) || ((thisoffset.y<0) && (offsetvec.y>0)) ) {
+                            if( (((thisoffset.y>0) && (offsetvec.y<0)) || ((thisoffset.y<0) && (offsetvec.y>0)) ) && (llList2Rot(params, 3) != thisrot)) {
                                 tryvec = tryvec * -1.0;
                                 switch = TRUE;
                             }

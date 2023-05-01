@@ -24,7 +24,7 @@ Supercar Plus is a free LSL land vehicle (car) script compatible with Opensim
 and Second Life. It supports a wide range of creative options for various car
 features and the runtime is low-impact on the server. By using a Notecard for
 settings, vehicles can be updated easily, this also helps manage a large car
-collection. The full project os available at
+collection. The full project is available at
 https://github.com/cuga-rajal/supercar_plus..
 
 Many popular features are supported, such as driver's animation, passenger
@@ -39,6 +39,16 @@ sections in this Readme have more details.
 
 **Whats New**
 
+*May 1, 2023*
+
+Version 2.0.2 has the following changes since 2.0:
+
+- Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
+- Restored original speed of 1st gear from earlier version. This was faster in v2.0.
+- Internal scripting Improvements.
+
+*April 18, 2023*
+
 Version 2.0 is a major update that brings better responsiveness, lower server
 impact and simplifies car scripting compared to previous versions.
 
@@ -49,17 +59,14 @@ opportunity to greatly reduce the script count on the car with some upgrading
 steps.
 
 The major changes from version 1.x are
+    1) The process to script a new car in-world is simpler than before.
+    2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
+    3) A new wheel configurator provides a menu-driven wheel setup without hand-editing
+    4) Racecar features and animation controllers were moved to separate scripts
+    5) There is ~25% less code, and uses much less CPU time
 
-1. There is ~25% less code, and uses much less CPU time
-    
-2. Separate wheel scripts are no longer needed (but it supports old wheel scripts)
-    
-3. A new wheel configurator provides a menu-driven wheel setup without hand-editing any numbers
-    
-4. Racecar features and animation controllers were moved to separate scripts
+Full details are listed below.
 
-The process to script a new car in-world is simpler than before. See the updated
-Quick Start section for a summary..
 
 -----
 
@@ -79,8 +86,9 @@ the Wheel Rotation section on how to do this.
 already using the Supercar script are not affected. People building new cars
 will need use a sit position system or separate sit script to set the driver's
 sit position. This only needs to be done once, unless you change the animation.
-The script does check to see if the sit offset has never been set, and if so
-changes this so that an avatar can sit on the prim to test the script.
+The script does check to see if the sit offset has never been set, 
+for example on a newly-rezzed prim, and if so,
+changes it so that an avatar can sit on the prim to test the script.
 
 The Supercar script will still manage playing a driver's animation that is
 placed in the root prim contents, unless avSitter is being used.

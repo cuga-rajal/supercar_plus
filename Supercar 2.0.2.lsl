@@ -1,4 +1,4 @@
-// Supercar 2.0 RC9
+// Supercar 2.0.2
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -274,7 +274,11 @@ set_engine(){
     llSetVehicleRotationParam(VEHICLE_REFERENCE_FRAME, <0.00000, 0.00000, 0.00000, 0.00000>); // rev 1.1 per Vegaslon's comment
     llSetVehicleFloatParam(VEHICLE_LINEAR_MOTOR_TIMESCALE, gVLMT);
     llSetVehicleFloatParam(VEHICLE_LINEAR_MOTOR_DECAY_TIMESCALE, gVLMDT);
-    llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT );
+    if(gGear == 0) {
+        llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, <1.0, 2.0, 8.0>);
+    } else {
+        llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
+    }
     llSetVehicleVectorParam(VEHICLE_ANGULAR_FRICTION_TIMESCALE, gVAFT );
     llSetVehicleFloatParam(VEHICLE_ANGULAR_MOTOR_TIMESCALE, gVAMT);
     llSetVehicleFloatParam(VEHICLE_ANGULAR_MOTOR_DECAY_TIMESCALE, gVAMDT);
@@ -293,6 +297,9 @@ set_engine(){
     llRemoveVehicleFlags(vfA);      
     llSetVehicleFlags(vfG);     
     if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
+    llSetStatus(STATUS_PHYSICS, TRUE); 
+    gRun = 1;
+    enginesound();
 }
 
 gearshift(integer g){
@@ -460,11 +467,16 @@ turnwheels(string turn) {
     rotation rotlocal;
     for(i=0; i<llGetListLength(wheels); i++) {
         if(llList2String(fwlocalrot, i) != "0") {
-            rotlocal = llList2Rot(llGetLinkPrimitiveParams(llList2Integer(wheels, i), [PRIM_ROT_LOCAL]), 0);
+            list params = llGetLinkPrimitiveParams(llList2Integer(wheels, i), [PRIM_ROT_LOCAL, PRIM_NAME]);
+            rotlocal = llList2Rot(params, 0);
             rotation newrot;
-                   if(turn == "LeftTurn") { newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,30>*DEG_TO_RAD)); }
-            else if (turn == "RightTurn") { newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,-30>*DEG_TO_RAD)); }
-               else if (turn == "NoTurn") { newrot = llList2Rot(fwlocalrot, i); }
+            integer reverse = FALSE;
+            if(llSubStringIndex(llList2String(params, 1), "reverse")!=-1) { reverse = TRUE; }
+                if( ((turn == "LeftTurn") && !reverse) || ((turn == "RightTurn") && reverse) ) {
+                    newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,30>*DEG_TO_RAD)); }
+                else if( ((turn == "RightTurn") && !reverse) || ((turn == "LeftTurn") && reverse) ) {
+                    newrot = llList2Rot(fwlocalrot, i) * (llEuler2Rot(<0,0,-30>*DEG_TO_RAD)); }
+                else if (turn == "NoTurn") { newrot = llList2Rot(fwlocalrot, i); }
             llSetLinkPrimitiveParamsFast(llList2Integer(wheels, i), [ PRIM_OMEGA, llList2Vector(wheelvec, i) * rotlocal, 0, 1.0,
                                                                       PRIM_ROT_LOCAL, newrot,
                                                                       PRIM_OMEGA, llList2Vector(wheelvec, i) * newrot, spinstate, 1.0 ]);
@@ -549,12 +561,14 @@ default {
                 
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
-                    gRun = 1;
+                    gGear = startGear;
+                    llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
+                    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
+                    llSleep(1.5);
                     set_engine();
                     llSetSitText("Sit");
                     seated = TRUE;
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
-                    llSetStatus(STATUS_PHYSICS, TRUE);          
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
                     prevDriver = driver;
                     if(parked) { llRegionSayTo(driver,0, "Driving resumed."); }
@@ -615,11 +629,6 @@ default {
     
     run_time_permissions(integer perm) {
         if(perm & PERMISSION_TAKE_CONTROLS){
-            gGear = startGear;
-            llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
-            llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
-            llSleep(1.5);
-            enginesound();
             llTakeControls(
              CONTROL_FWD | CONTROL_BACK  | CONTROL_DOWN |
              CONTROL_UP  | CONTROL_RIGHT | CONTROL_LEFT |
@@ -659,19 +668,25 @@ default {
         gGearPower = llList2Integer(speedList, gGear);
 
         if ((held & change & CONTROL_UP) || ((gGear >= maxGear) && (held & CONTROL_UP))){
-            gGear=gGear+1;
-            if (gGear > maxGear) { gGear = maxGear; }
-            else { gearshift(gGear); }
+            if(gGear < maxGear) {
+                gGear=gGear+1;
+                gearshift(gGear); 
+            }
         }
 
         if ((held & change & CONTROL_DOWN) || ((gGear <= lowestGear) && (held & CONTROL_DOWN))){
-            gGear=gGear-1;
-            if (gGear < lowestGear) { gGear = lowestGear; }
-            else { gearshift(gGear); }
+            if(gGear > lowestGear) {
+                gGear=gGear-1;
+                gearshift(gGear); 
+                if(gGear == 0) {
+                    llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, <1.0, 2.0, 8.0>);
+                } else {
+                    llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
+                }
+            }
+            
         }
         if (held & CONTROL_FWD){
-            llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
-            
             llSetVehicleVectorParam(VEHICLE_LINEAR_MOTOR_DIRECTION, <gGearPower,0,0>);
             gMoving=1;
             gNewTireSpin = "ForwardSpin";
