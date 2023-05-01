@@ -44,7 +44,7 @@ sections in this Readme have more details.
 Version 2.0.2 has the following changes since 2.0:
 
 - Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
-- v This was faster in v2.0.
+- Restored original speed of 1st gear from earlier version. This was faster in v2.0.
 - Internal scripting improvements.
 
 *April 18, 2023*
