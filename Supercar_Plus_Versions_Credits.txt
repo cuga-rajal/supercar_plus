@@ -152,6 +152,9 @@ Rev. 1.91
 
 rev 2.0 RC9  22-Apr-2023
 - Major rewrite. Numberous major changes and bug fixes. See Documentatioin for complete list.
-
+Rev. 2.0.2
+- New feature: Supports wheel option for reverse-direction left-right
+- Bug fix: Restored original speed of 1st gear from earlier version.
+- Internal scripting improvements
 
 // END OF VERSION HISTORY AND CREDITS

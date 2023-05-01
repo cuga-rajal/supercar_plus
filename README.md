@@ -10,7 +10,7 @@ This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 For version information and credits please see
-https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar\_Plus\_Versions\_Credits.txt
+https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
 
 For a history on how this script first came about please see
 https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_history.
@@ -44,8 +44,8 @@ sections in this Readme have more details.
 Version 2.0.2 has the following changes since 2.0:
 
 - Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
-- Restored original speed of 1st gear from earlier version. This was faster in v2.0.
-- Internal scripting Improvements.
+- v This was faster in v2.0.
+- Internal scripting improvements.
 
 *April 18, 2023*
 
