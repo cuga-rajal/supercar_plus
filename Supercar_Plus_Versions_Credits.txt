@@ -156,5 +156,7 @@ Rev. 2.0.2
 - New feature: Supports wheel option for reverse-direction left-right
 - Bug fix: Restored original speed of 1st gear from earlier version.
 - Internal scripting improvements
+Rev. 2.0.2.1
+- Bug fix involving original speed of 1st gear from earlier version.
 
 // END OF VERSION HISTORY AND CREDITS

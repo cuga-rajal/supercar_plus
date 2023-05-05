@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  2.0.2, May 1, 2023
+version  2.0.2.1, May 5, 2023
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -39,9 +39,9 @@ sections in this Readme have more details.
 
 **Whats New**
 
-*May 1, 2023*
+*May 5, 2023*
 
-Version 2.0.2 has the following changes since 2.0:
+Version 2.0.2.1 has the following changes since 2.0:
 
 - Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
 - Restored original speed of 1st gear from earlier version. This was faster in v2.0.

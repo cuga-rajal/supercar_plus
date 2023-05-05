@@ -1,4 +1,4 @@
-// Supercar 2.0.2
+// Supercar 2.0.2.1
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -671,6 +671,7 @@ default {
             if(gGear < maxGear) {
                 gGear=gGear+1;
                 gearshift(gGear); 
+                llSetVehicleVectorParam(VEHICLE_LINEAR_FRICTION_TIMESCALE, gVLFT);
             }
         }
 
