@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  2.0.2.1, May 5, 2023
+version  2.0.2.2, May 26, 2023
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -39,13 +39,11 @@ sections in this Readme have more details.
 
 **Whats New**
 
-*May 5, 2023*
-
-Version 2.0.2.1 has the following changes since 2.0:
+Version 2.0.2.2 has the following changes since 2.0:
 
 - Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
-- Restored original speed of 1st gear from earlier version. This was faster in v2.0.
-- Internal scripting improvements.
+- Restored original speed of 1st gear from version 1.x
+- Internal scripting improvements and bug fixes
 
 *April 18, 2023*
 
@@ -348,37 +346,56 @@ original iTec Supercar by Shin Ingen and are included here by permission.
 
 **Headlights**
 
-Headlights can be switched on and off with the provided Headlight script. It
-switches lights either at time of driving, or with an optional Supercar HUD. The
-script has two functions in one script, making the face of the prim bright like
-a light, and casting a projected light beam on the ground. Each of these
-features can be enabled or disabled in the settings.
+Headlights can be switched on and off with one of the provided headlight
+scripts. These scripts will switch  lights either at time of driving, or with an
+optional Supercar HUD. The scripts provide two separate functions -- making the
+face of the headlight prim bright like a light, and casting a projected light
+beam on the ground.
 
-To see the projector you will need to enable Advanced Lighting Model in your
-viewer graphics preferences.
+To see the headlight beam you will need to enable Advanced Lighting Model in
+your viewer graphics preferences.
 
-If you are using the projector feature to a headlight prim, you should apply a
+If you are using a headlight beam on one of your prims, you should apply a
 projector texture to the prim manually before using the script. A sample texture
-"spotlight" is included for this purpose.
+"spotlight" is included for this purpose. Apply this as follows:
 
 Select the prim, go to the Features tab in the Edit window and check the Light
 checkbox. This will temporarily turn on a point light from the prim. The two
 boxes to the right of the Light checkbox correspond to color and texture applied
 to the light. Drag and drop the Spotlight texture to the texture window. This
-will be applied to the light projector in the prim. Then move the prim to point
-the light beam where you want..When you have finished positioning the prim, you
-can un-check the Light checkbox, and drop in the Headlight script.
+will be applied to the light projector in the prim. Then rotate the prim while
+watching the projection to point the light beam where you want. When you have
+finished positioning the prim, you can un-check the Light checkbox. This
+projection setting will now be used when the light is switched on.
 
-The script has some configuration options. With the projector setting disabled
-but shine setting enabled, the script can be used to light up such things as
-rear driving lights and running lights, without projecting from them.
+The script "Supercar Headlight 1.80" is a simple script that can be placed in
+each prim that you want to light up and/or to cast a light projection when car
+lights are turned on. The script has a few configuration options where you can
+adjust lighting features. There are also settings to enable or disable the face
+light-up or projectior feature on a per-prim basis. This allows you to assign
+separate prims as the visual headlight on the car and other invisible prims that
+may be used to cast a projection. Separate prims are often needed because the
+visual prims may not be facing the right direction for the projection.
 
-With the projector setting enabled and shine setting disabled, the script can
-create a headlight beam from an invisible prim or from a prim already on the
-vehicle which you do not want to light up. Sometimes the desired angle of the
-headlight bean can not be accomplished with a visible prim on the car. This
-option lets you place an invisible prim on the car and fine-tune your headlight
-beam without affecting visible prims.
+With the projector setting disabled but shine setting enabled, the script can be
+used to light up such things as rear driving lights, visual headlights and
+running lights. With the projector setting enabled and shine setting disabled,
+the script can be used to create a headlight projection beam from an invisible
+prim.
+
+If your car has many lights, The script "Supercar all headlights 1.0" is an
+alternative method that can control all lights from one script. It requires some
+extra setup steps and has some limitations, but reduces script count and impact.
+It requires the visual lights on the car all to have the same settings and the
+projectors all to have the same settings. Settings can be adjusted from the top
+section of the script. Setup is as follows:
+
+Name each prim that you want faces to light up as "headlight" and each prim you
+want to act as a projector as "headbeam". If you want a prim to act as both of
+these you can name it "headlight headbeam". After naming the prims, drop in the
+script. If you placed the script before naming the prims, you will need to
+restart the script for it to take effect. 
+
 
 -----
 

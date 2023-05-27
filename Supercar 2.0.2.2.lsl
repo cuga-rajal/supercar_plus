@@ -1,4 +1,4 @@
-// Supercar 2.0.2.1
+// Supercar 2.0.2.2
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -593,6 +593,8 @@ default {
                 llSetText("",<0,0,0>,1.0);
                 llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
                 llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
+                spinwheels(0, "NoSpin");
+                turnwheels("NoTurn");
                 llListenRemove(listener);  
                 
                 if(stand_message !="") { llRegionSayTo(prevDriver,0,stand_message); }  
