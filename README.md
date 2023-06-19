@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  2.0.2.2, May 26, 2023
+version  2.0.3, June 19, 2023
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -39,29 +39,32 @@ sections in this Readme have more details.
 
 **Whats New**
 
-Version 2.0.2.2 has the following changes since 2.0:
+Version 2.0.3 has the following changes since 2.0:
 
 - Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
 - Restored original speed of 1st gear from version 1.x
+- A single script to manage all headlights and brake lights, optional replacement for a script per light
 - Internal scripting improvements and bug fixes
+
 
 *April 18, 2023*
 
 Version 2.0 is a major update that brings better responsiveness, lower server
-impact and simplifies car scripting compared to previous versions.
+impact and simplifies car scripting compared to previous versions. If you are
+using a version older than 2.0 we recommend updating.
 
-If you are upgrading a vehicle that is already scripted from a recent version
+If you are upgrading a vehicle that already on a recent version
 (1.80 or newer) and using a Config file for your settings, version 2.0 will work
 as a drop-in replacement without changing any settings. But there is an
-opportunity to greatly reduce the script count on the car with some upgrading
+opportunity to reduce the script count on the car with some upgrading
 steps.
 
 The major changes from version 1.x are
-    1) The process to script a new car in-world is simpler than before.
+    1) Overall process to script a new car is much simpler than before
     2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
-    3) A new wheel configurator provides a menu-driven wheel setup without hand-editing
+    3) A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
     4) Racecar features and animation controllers were moved to separate scripts
-    5) There is ~25% less code, and uses much less CPU time
+    5) There is ~25% less code in the core script, and uses much less CPU time
 
 Full details are listed below.
 

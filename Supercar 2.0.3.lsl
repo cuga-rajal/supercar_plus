@@ -1,4 +1,4 @@
-// Supercar 2.0.2.2
+// Supercar 2.0.3
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -27,9 +27,9 @@ list            speedList = [ ]; // Empty list uses default values; Override def
  
 // Camera options
 integer         enableCamera = TRUE;  // Whether or not to enable camera controls
-float           CamDist = 4; // How far back you want the camera positioned
-float           CamPitch = 8.0;  // Angle looking down. Range is -45 to 80 Degrees
-float           lookAhead = 8.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
+float           CamDist = 12; // How far back you want the camera positioned
+float           CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degrees
+float           lookAhead = 6.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
                 
 // Other options
 integer         auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
@@ -117,8 +117,6 @@ list            gGearNameList             =[   "1st Gear",
                                          ];
                                          
 
-//---------------------------------------------------------------------
-
 string          gTurnAngle =               "NoTurn";  // LeftTurn or RightTurn or NoTurn
 string          gNewTurnAngle =            "NoTurn";
 string          gTireSpin =                "NoSpin";   // ForwardSpin or BackwardSpin or NoSpin
@@ -138,9 +136,6 @@ menu(key user,string title,list object_list)  {
     llSetTimerEvent(30.0); //menu channel open for 30 seconds 
     dialogwait = TRUE;
 } 
-
-
-//---------------------------------------------------------------------
 
 init_PhysEng(){
     if(llSubStringIndex(llGetEnv("sim_channel"), "Second Life") !=-1) { // SL/Havok
@@ -188,7 +183,6 @@ init_PhysEng(){
 }
 
 preload_sounds(){
-    // SL will throw script errors if it tries to play a sound that's not in contents, but keys are ok
     if(use_sl_sounds) {
         gSoundStartup =         "84d98fd0-937f-95e9-9b71-4fdd8ba3b757";
         gSoundIdle =            "5e5bb630-40f2-582a-c49e-56fd3bb9d68d";
@@ -236,7 +230,7 @@ init_engine(){
 }
 
 init_followCam(){
-    // Set camera for driver
+    // Set camera for driver only
     llSetCameraParams([
                        CAMERA_ACTIVE, 1,                 // 0=INACTIVE  1=ACTIVE
                        CAMERA_BEHINDNESS_ANGLE, 2.0,     // (0 to 180) DEGREES
@@ -253,7 +247,6 @@ init_followCam(){
                       ]);
     
 }
-
 
 set_engine(){
     if(llGetListLength(prims_keep_prim) ==0) {
@@ -485,7 +478,6 @@ turnwheels(string turn) {
 }
 
 wheelcalc() {
-    //llRegionSayTo(llGetOwner(), 0, "Recalculating wheel rotations...");
     wheels = [];
     wheelvec = [];
     fwlocalrot = [];
@@ -503,7 +495,6 @@ wheelcalc() {
             }
         }
     }
-    //llRegionSayTo(llGetOwner(), 0, "Finished recalculating.");
 }
 
     
@@ -533,8 +524,9 @@ default {
     }
     
     on_rez(integer param) {
-        //startposition = llGetPos();
-        //startrot = llGetRot();
+        if(llGetStatus(llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==FALSE) && (auto_return_time != 0)) {
+            llOwnerSay("Auto-park is enabled but you have not set the parking location. Please place the vehicle at its parking spot and reset the script.");
+        }
         seated = FALSE;
     }
     
@@ -562,10 +554,10 @@ default {
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
                     gGear = startGear;
-                    llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
-                    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
                     llSleep(1.5);
                     set_engine();
+                    llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
+                    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
                     llSetSitText("Sit");
                     seated = TRUE;
                     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
@@ -593,8 +585,6 @@ default {
                 llSetText("",<0,0,0>,1.0);
                 llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
                 llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
-                spinwheels(0, "NoSpin");
-                turnwheels("NoTurn");
                 llListenRemove(listener);  
                 
                 if(stand_message !="") { llRegionSayTo(prevDriver,0,stand_message); }  
