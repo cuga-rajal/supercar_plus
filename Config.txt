@@ -15,8 +15,8 @@ turnList = [ ]; // Empty list uses default values; Override defaults with this l
 speedList = [ ]; // Empty list uses default values; Override defaults with this list 
 
 enableCamera = TRUE;  // Whether or not to enable camera controls
-CamDist = 12; // How far back you want the camera positioned
-CamPitch = 30.0;  // Angle looking down. Range is -45 to 80 Degrees
+CamDist = 10; // How far back you want the camera positioned
+CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degrees
 lookAhead = 5.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
 
 auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.

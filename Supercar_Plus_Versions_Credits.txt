@@ -162,5 +162,7 @@ Rev, 2.0.3
 - Added workaround for PRIM_OMEGA being reset when vehicle goes physical in Opensim. Link message "car_start" now sent after car goes physical. This resolves things such as motor fans stopping to spin after the car goes physical.
 - The configuration values in the script and Config notecard have better defaults.
 - Added a warning message to vehicle owner if rezzing a vehicle with auto-park enabled. Message reminds them to set the parking spot before using vehicle.
+Rev. 2.0.4
+- Fixed cosmetic issue of resetting wheel turn and rotation under some conditions when driver stands
 
 // END OF VERSION HISTORY AND CREDITS

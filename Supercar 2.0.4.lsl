@@ -1,4 +1,4 @@
-// Supercar 2.0.3
+// Supercar 2.0.4
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -577,6 +577,8 @@ default {
             else if ((driver == NULL_KEY) && seated) { // If driver stood up 
                 seated = FALSE;       
                 gRun = 0;
+                turnwheels("NoTurn");
+                spinwheels(0, "NoSpin");
                 init_engine();
                 
                 llSetTimerEvent(0.0);

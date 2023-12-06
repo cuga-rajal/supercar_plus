@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  2.0.3, June 19, 2023
+version  2.0.4, July 24, 2023
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -39,9 +39,9 @@ sections in this Readme have more details.
 
 **Whats New**
 
-Version 2.0.3 has the following changes since 2.0:
+Version 2.0.4 has the following changes since 2.0:
 
-- Supports wheel option for reverse-direction left-right (see Wheel Rotation section for details)
+- Supports an option for reverse-direction left-right wheel rotation (see Wheel Rotation section for details)
 - Restored original speed of 1st gear from version 1.x
 - A single script to manage all headlights and brake lights, optional replacement for a script per light
 - Internal scripting improvements and bug fixes
@@ -184,8 +184,9 @@ script settings.
 
 The driver's position is likely to be wrong. You can fix this using a Sit
 Positioner System or a sit script. Setting the driver's position only needs to
-be done once. A free Sit Positioner System is available at Burn2 from giver
-boxes in the sandbox.
+be done once. Make sure that you use the base prim when you set the sit position,
+even if there is a separate drivers seat prim. Re-test driving the car after you
+set the sit position.
 
 To get your wheels working, name any front wheel "fwheel" and any rear wheel
 "rwheel". Then drop in the Wheel Configurator to any wheel. Touch it to

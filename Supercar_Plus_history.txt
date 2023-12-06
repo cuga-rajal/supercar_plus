@@ -10,11 +10,10 @@ iTec race car effects.
 
 For the last few years I have been the custodian of a large collection (~70)
 scripted land vehicles at Burn2 in Second Life, the official Burning Man
-regional event in Second Life. I
-provide scripting kits and workshops for people building new cars. During Burn2
-art festival events, server lag is always a concern, where sometimes
-manay vehicles being used concurrently in a sim full of other scripted art
-and avatars.
+regional event in Second Life. I provide scripting kits and workshops for people
+building new cars. During Burn2 art festival events, server lag is always a
+concern, where sometimes many vehicles being used concurrently in a sim full of
+other scripted art and avatars.
 
 When I first became involved, vehicles in the collection had scripts
 of varying sources and quality, some laggy, some poorly written. Many
