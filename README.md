@@ -39,7 +39,7 @@ sections in this Readme have more details.
 
 **Whats New**
 
-March 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on script is available. It uses an improved method to manage ramp object UUIDs which works across region restarts. It fixes am issue of vehicles leaving stray ramp objects behind.
+March 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on script is available. It uses an improved method to manage ramp object UUIDs which works across region restarts. It fixes an issue of vehicles leaving stray ramp objects behind.
 
 The section "Upgrading from a 1.x version of Supercar Plus" has been moved to a separate document in this repository since 2.x is now a couple years old.
 
