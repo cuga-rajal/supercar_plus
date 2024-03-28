@@ -441,7 +441,6 @@ finish() {
     init_PhysEng();
     is_resetting = FALSE;
     llOwnerSay("Initialization complete, ready to drive.");
-    state Idle;
 }
 
 spinwheels(float power, string Spin) {
@@ -517,6 +516,7 @@ default {
     state_entry() {
         is_resetting = TRUE;
         config_init();
+        if(is_resetting == FALSE) { state Idle; }
     }
 
     dataserver(key query_id, string data) {
@@ -534,6 +534,8 @@ default {
                 kQuery = llGetNotecardLine(notecard_name, iLine);
             } else {
                 finish();
+                @myidle;
+                state Idle;
             }
         }
     }
