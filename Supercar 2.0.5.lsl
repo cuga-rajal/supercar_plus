@@ -1,4 +1,4 @@
-// Supercar 2.0.4
+// Supercar 2.0.5
 
 // By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
@@ -435,12 +435,13 @@ finish() {
         llSitTarget(<0,0,0.5>, ZERO_ROTATION); // an arbitrary but reasonable value until the offset is fine-tuned
     }
     
-    llOwnerSay("   Loading sounds..");
+    llOwnerSay("   Loading sounds.."); 
     preload_sounds();
     init_engine();
     init_PhysEng();
     is_resetting = FALSE;
     llOwnerSay("Initialization complete, ready to drive.");
+    state Idle;
 }
 
 spinwheels(float power, string Spin) {
@@ -497,7 +498,21 @@ wheelcalc() {
     }
 }
 
-    
+drivecar() {
+    gGear = startGear;
+    //llSleep(1.5); // why is this here?
+    set_engine();
+    llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
+    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
+    llSetSitText("Sit");
+    seated = TRUE;
+    if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
+    prevDriver = driver;
+    if(parked) { llRegionSayTo(driver,0, "Driving resumed."); }
+    parked = FALSE;
+}
+
+
 default {
     state_entry() {
         is_resetting = TRUE;
@@ -522,19 +537,26 @@ default {
             }
         }
     }
+}
+
+state Idle {
+    state_entry() {
     
+    }
+
     on_rez(integer param) {
-        if(llGetStatus(llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==FALSE) && (auto_return_time != 0)) {
-            llOwnerSay("Auto-park is enabled but you have not set the parking location. Please place the vehicle at its parking spot and reset the script.");
+        startposition = ZERO_VECTOR;
+        if((llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==0) && (auto_return_time != 0)) {
+            llOwnerSay("To enable Auto-Park, place your vehicle in its parking location and then touch the vehicle to open the dialog.");
         }
         seated = FALSE;
     }
     
     touch_start(integer total_number) { 
-        if(click_to_park && (llDetectedKey(0) == driver)) { 
-            menu(driver,"\nPark your car or resume driving?",["Park Car", "Drive"]); 
+        if(llDetectedKey(0) == llGetOwner()) { 
+            menu(llGetOwner(),"\nSet Auto-Park location??",["Set Location", "Cancel"]); 
         }
-    } 
+    }  
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
@@ -553,18 +575,94 @@ default {
                 
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
-                    gGear = startGear;
-                    llSleep(1.5);
-                    set_engine();
-                    llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
-                    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
-                    llSetSitText("Sit");
-                    seated = TRUE;
-                    if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
+                    state Driving;
+                    
+                }
+                else {
+                    llRegionSayTo(driver,0, gUrNotAllowedMessage);
+                    llUnSit(driver);
+                    if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
+                    llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
+                    
+                }
+            }
+             
+ 
+        }// end changed link
+        
+        if (change & CHANGED_INVENTORY) { // possible Config NC change
+            llOwnerSay("** Inventory change detected, resetting **");
+            llResetScript();
+        }
+    }
+    
+    listen(integer channel, string name, key av, string message) {
+        if ((channel == menu_channel) && (av==llGetOwner())) {
+            dialogwait = FALSE;  
+            llSetTimerEvent(0.0); 
+            llListenRemove(menu_handler); 
+            if(message == "Set Location")  { 
+                llOwnerSay("Auto-park position set");
+                startposition = llGetPos();
+                startrot = llGetRot();
+            }
+        }
+    }
+    
+
+    timer() {
+        if(dialogwait == TRUE) {
+            llListenRemove(menu_handler);
+            llSetTimerEvent(0.0);  
+            dialogwait = FALSE;
+        }
+    }
+
+}
+
+state Driving {
+
+    state_entry() {
+        drivecar();
+        llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
+    }
+    
+    on_rez(integer param) {
+        if((llGetStatus(STATUS_PHYSICS)) && (gRun==1)) {
+            llOwnerSay("** Rezzed vehicle was in powered state, disabling movement and resetting");
+            llSetStatus(STATUS_PHYSICS, FALSE); 
+            llResetScript();
+        }
+        llSetTimerEvent(0.0);  
+        llListenRemove(menu_handler);
+        dialogwait = FALSE;
+    }
+    
+    touch_start(integer total_number) { 
+        if(click_to_park && (llDetectedKey(0) == driver)) { 
+            menu(driver,"\nPark your car or resume driving?",["Park Car", "Drive"]); 
+        }
+    } 
+    
+    changed(integer change) {     
+        if (change & CHANGED_LINK) {
+            if((llGetObjectPrimCount(llGetKey()) != primcount) && (! seated) && (! is_resetting)) { // adding or removing a prim
+                llOwnerSay("** Prim count changed, resetting **");
+                llResetScript();
+            }
+            
+            driver = llAvatarOnLinkSitTarget(LINK_THIS);
+            if ((driver != NULL_KEY) && (! seated)) { // happens once
+                
+                if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
+                    || (llListFindList( driverList, [(string)driver] ) != -1)) { 
+                    
+                    if(parked && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
+                        llSay(0, "Auto-park enabled");
+                    }
+                    drivecar();
                     llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
-                    prevDriver = driver;
-                    if(parked) { llRegionSayTo(driver,0, "Driving resumed."); }
-                    parked = FALSE;
+                    
                 }
                 else {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
@@ -603,9 +701,11 @@ default {
                         llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
                     }
                 }                   
-                if((! parked) && (auto_return_time>0)) {
+                if((! parked) && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
                     llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
                     llSetTimerEvent(auto_return_time);
+                } else if(parked && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
+                    llSay(0, "Auto-park temporarily disabled");
                 }
 
             } // end - no driver
@@ -656,7 +756,6 @@ default {
         if(gRun == 0){
             return;
         }
-        //llSetTimerEvent(0);
         reverse=0;
         gTurnRatio = llList2Float(turnList,gGear);
         gGearPower = llList2Integer(speedList, gGear);
@@ -715,8 +814,6 @@ default {
             //  Released BACK button          
             gNewTireSpin = "NoSpin";
             gNewTurnAngle = "NoTurn";
-            
-            //if(! braked) { llSetTimerEvent(2.0); }
             
             llSetCameraParams([CAMERA_FOCUS_THRESHOLD,8.0, CAMERA_POSITION_THRESHOLD, 8.0, CAMERA_FOCUS_OFFSET, <lookAhead,0,0> ]);
         }
@@ -832,11 +929,12 @@ default {
             llListenRemove(menu_handler);
             llSetTimerEvent(0.0);  
             dialogwait = FALSE;
-        } else if((! parked) && (gRun == 0) && (auto_return_time>0)) {
+        } else if((! parked) && (gRun == 0) && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
             llSetRegionPos(startposition);
             llSetRot(startrot);
             llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
             llSetTimerEvent(0);
+            state Idle;
         }
     }
 

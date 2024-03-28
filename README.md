@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version  2.0.4, July 24, 2023 / Kit Update Mar 18, 2024
+version 2.0.5, Mar 27, 2024
 
 This is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -25,7 +25,7 @@ and Second Life. It supports a wide range of creative options for various car
 features and the runtime is low-impact on the server. By using a Notecard for
 settings, vehicles can be updated easily, this also helps manage a large car
 collection. The full project is available at
-https://github.com/cuga-rajal/supercar_plus..
+https://github.com/cuga-rajal/supercar_plus.
 
 Many popular features are supported, such as driver's animation, passenger
 seats, multiple gears/speeds with reverse, rotating wheels, headlights, horns,
@@ -39,16 +39,16 @@ sections in this Readme have more details.
 
 **Whats New**
 
-March 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on script is available. It uses an improved method to manage ramp object UUIDs which works across region restarts. It fixes an issue of vehicles leaving stray ramp objects behind.
+March 27, 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on script is available. It uses an improved method to manage ramp object UUIDs which works across region restarts and fixes some bugs.
 
 The section "Upgrading from a 1.x version of Supercar Plus" has been moved to a separate document in this repository since 2.x is now a couple years old.
 
-Version 2.0.4 has the following changes since 2.0:
+Version 2.0.5 has the following changes since 2.0:
 
-- Supports an option for reverse-direction left-right wheel rotation (see Wheel Rotation section for details)
-- Restored original speed of 1st gear from version 1.x
+- Improved features for Auto-Park and Boarding Ramp rezzer. Faster time to sit and drive.
+- Expanded wheel support -- option for reverse-direction left-right wheel rotation (see Wheel Rotation section for details)
 - A single script to manage all headlights and brake lights, optional replacement for a script per light
-- Internal scripting improvements and bug fixes
+- Many internal scripting improvements, bug fixes, and features to manage edge cases
 
 
 *April 18, 2023*
@@ -57,12 +57,6 @@ Version 2.0 is a major update that brings better responsiveness, lower server
 impact and simplifies car scripting compared to previous versions. If you are
 using a version older than 2.0 we recommend updating.
 
-If you are upgrading a vehicle that already on a recent version
-(1.80 or newer) and using a Config file for your settings, version 2.0 will work
-as a drop-in replacement without changing any settings. But there is an
-opportunity to reduce the script count on the car with some upgrading
-steps.
-
 The major changes from version 1.x are
     1) Overall process to script a new car is much simpler than before
     2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
@@ -70,6 +64,8 @@ The major changes from version 1.x are
     4) Racecar features and animation controllers were moved to separate scripts
     5) There is ~25% less code in the core script, and uses much less CPU time
 
+If you are upgrading a vehicle from version 1.x, please see the separate document
+"Upgrading from a 1.x version of Supercar Plus".
 
 -----
 
@@ -459,7 +455,7 @@ Controller script to manage the driver's animation.
 
 -----
 
-**Boarding Ramp Rezzer**
+**Boarding Ramp Rezzer (UPDATED!)**
 
 The script Supercar 2 Boarding Ramp Rezzer manages the rezzing and removal of a
 boarding ramp object which is typically used for larger vehicles. This allows
@@ -485,7 +481,7 @@ distance limitations on how far from an object an item can be rezzed. If the
 root prim is too far from the desired ramp location, you can select a prim
 closer to that location to hold the script and ramp object.
 
-To configure the script, position the car with angle x=y=z=0 to the sim and
+To configure the script, position the vehicle with angle x=y=z=0 to the sim and
 place the ramp object manually where you would like it to be when deployed.
 
 Check and record the <x,y,z> position of the  prim you wish to use for the
@@ -497,16 +493,10 @@ positions should be added for setting "offset" in the script.
 
 With the car still at placed with angle x=y=z=0, open the Edit window on the
 ramp and copy it's x,y,z angle into the setting "ramprot" (you can use the "C"
-button to the right of the Amgle section to copy.) These are angles in degrees.
+button to the right of the Angle section to copy.) These are angles in degrees.
 
-There is also a setting "key\_prim" setting which is the prim number on your
-object that will store the UUID of the rezzed ramp i it's Description field. The
-script does this automatically so choose a prim that doesn't require anything
-important there. Don't use the root prim or any of the wheel prims since those
-have reserved use of the Description field. Any other prims on the vehicle will
-be ok. This is required to prevent stray ramps to be remain rezzed in the
-regions after sim restarts or sim upgrades, which may cause the script to lose
-it's state. 
+That's it! You can delete the ramp you were using to calculate the settings.
+Try driving the car and testing the ramp deployment.
 
 -----
 

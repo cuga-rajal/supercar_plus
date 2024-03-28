@@ -1,4 +1,4 @@
-// Boarding Ramp Rezzer 1.5
+// Boarding Ramp Rezzer 1.6
 // By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -38,7 +38,7 @@ default {
     
     link_message(integer Sender, integer Number, string String, key Key) {
         if(String == "car_stop") {
-            rezitem();
+            if(rampkey == NULL_KEY) { rezitem(); }
         } else if(String == "car_start") {
             rampkey = (key)llLinksetDataRead("rampkey");
             llRegionSayTo(rampkey, COM_CHANNEL, "control poof");

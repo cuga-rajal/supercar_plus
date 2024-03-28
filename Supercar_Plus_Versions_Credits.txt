@@ -164,5 +164,12 @@ Rev, 2.0.3
 - Added a warning message to vehicle owner if rezzing a vehicle with auto-park enabled. Message reminds them to set the parking spot before using vehicle.
 Rev. 2.0.4
 - Fixed cosmetic issue of resetting wheel turn and rotation under some conditions when driver stands
+Rev. 2.0.5
+- Improved handling of auto-park feature by requiring owner to set auto-park location after rez. Auto-park location can now be set with touch by owner when the vehicle is idle.
+- Improved handing of edge case where vehicle is taken to inventory while auto-park timer is active. Auto-park is now deactivated on rez. Car will not move after rez.
+- Improved handing of edge case where vehicle is taken to inventory while driving. On rez a check is made to detect this condition and to reset the vehicle to the idle state.
+- Improved handing of edge case where vehicle is taken to inventory during mid-dialog. This condition is now cleared on rez.
+- The script now uses states to manage different touch handlers.
+- Eliminated a 1.5 second delay after driver sit to engage engine. This had been needed as a workaround for a past issue and no longer appears necessary.
 
 // END OF VERSION HISTORY AND CREDITS
