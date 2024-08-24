@@ -1,13 +1,13 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.0.5, Mar 27, 2024
+version 2.0.6, Aug 24, 2024
 
-This is a free LSL land vehicle (car) script by Cuga Rajal and past
+Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
 
-This work is licensed under Creative Commons BY-NC-SA 3.0:
-https://creativecommons.org/licenses/by-nc-sa/3.0/
+This work is licensed under Creative Commons BY 4.0:
+https://creativecommons.org/licenses/by/4.0/
 
 For version information and credits please see
 https://github.com/cuga-rajal/supercar_plus/blob/master/Supercar_Plus_Versions_Credits.txt
@@ -43,7 +43,7 @@ March 27, 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on scrip
 
 The section "Upgrading from a 1.x version of Supercar Plus" has been moved to a separate document in this repository since 2.x is now a couple years old.
 
-Version 2.0.5 has the following changes since 2.0:
+Version 2.0.6 has the following changes since 2.0:
 
 - Improved features for Auto-Park and Boarding Ramp rezzer. Faster time to sit and drive.
 - Expanded wheel support -- option for reverse-direction left-right wheel rotation (see Wheel Rotation section for details)

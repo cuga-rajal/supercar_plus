@@ -171,5 +171,7 @@ Rev. 2.0.5
 - Improved handing of edge case where vehicle is taken to inventory during mid-dialog. This condition is now cleared on rez.
 - The script now uses states to manage different touch handlers.
 - Eliminated a 1.5 second delay after driver sit to engage engine. This had been needed as a workaround for a past issue and no longer appears necessary.
+Rev. 2.0.6
+- Bug fix to resolve unnecessary owner dialog when touching vehicle with auto-park disabled.
 
 // END OF VERSION HISTORY AND CREDITS

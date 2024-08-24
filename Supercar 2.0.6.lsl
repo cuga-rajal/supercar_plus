@@ -1,13 +1,13 @@
-// Supercar 2.0.5
+// Supercar 2.0.6
 
-// By Cuga Rajal (Cuga_Rajal@http://rajal.org:9000, EMail: cuga@rajal.org)
-// For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
-// This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
+// By Cuga Rajal <cuga@rajal.org>
+// Latest version and more information at https://github.com/cuga-rajal/supercar_plus/ 
+// This work is licensed under the Creative Commons BY 4.0 License: https://creativecommons.org/licenses/by/4.0/
  
 //---USER-DEFINED VARIABLES--------------------------------------------------
 // * NOTE * A Config notecard placed in the same prim as this script will override settings listed below.
 // * Please see the sample Config notecard. This is the recommended method.
-// * This allows script updates to be drop-in replacements without the need to hand-edit settings.
+// * This allows future script updates to be drop-in replacements without the need to hand-edit settings.
  
 // Driver permissions and sit offsets 
 integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
@@ -555,7 +555,7 @@ state Idle {
     }
     
     touch_start(integer total_number) { 
-        if(llDetectedKey(0) == llGetOwner()) { 
+        if((auto_return_time > 0) && (llDetectedKey(0) == llGetOwner())) { 
             menu(llGetOwner(),"\nSet Auto-Park location??",["Set Location", "Cancel"]); 
         }
     }  
