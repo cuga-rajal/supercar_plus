@@ -63,8 +63,9 @@ Version 2.0 is a major update that brings better responsiveness, lower server
 impact and simplifies car scripting compared to previous versions. If you are
 using a version older than 2.0 we recommend updating.
 
-The major changes from version 1.x are
-    1) Overall process to add car scripts to a new car is much simpler than before
+The major changes from version 1.x are:
+
+	1) Overall process to add car scripts to a new car is much simpler than before
     2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
     3) A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
     4) Racecar features and animation controllers were moved to separate scripts
