@@ -65,11 +65,11 @@ using a version older than 2.0 we recommend updating.
 
 The major changes from version 1.x are:
 
-	1) Overall process to add car scripts to a new car is much simpler than before
-    2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
-    3) A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
-    4) Racecar features and animation controllers were moved to separate scripts
-    5) There is ~25% less code in the core script, and uses much less CPU time
+- Overall process to add car scripts to a new car is much simpler than before
+- Separate wheel scripts are no longer needed (but it supports old wheel scripts)
+- A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
+- Racecar features and animation controllers were moved to separate scripts
+- There is ~25% less code in the core script, and uses much less CPU time
 
 If you are upgrading a vehicle from version 1.x, please see the separate document
 "Upgrading from a 1.x version of Supercar Plus".
