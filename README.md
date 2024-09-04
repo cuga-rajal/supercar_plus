@@ -39,10 +39,6 @@ sections in this Readme have more details.
 
 **Whats New**
 
-March 27, 2024 - A new version of the Supercar Boarding Ramp Rezzer add-on script is available. It uses an improved method to manage ramp object UUIDs which works across region restarts and fixes some bugs.
-
-The section "Upgrading from a 1.x version of Supercar Plus" has been moved to a separate document in this repository since 2.x is now a couple years old.
-
 Version 2.0.6 has the following changes since 2.0:
 
 - Improved features for Auto-Park and Boarding Ramp rezzer. Faster time to sit and drive.
@@ -50,15 +46,25 @@ Version 2.0.6 has the following changes since 2.0:
 - A single script to manage all headlights and brake lights, optional replacement for a script per light
 - Many internal scripting improvements, bug fixes, and features to manage edge cases
 
+Update Notices
 
-*April 18, 2023*
+- Supercar Boarding Ramp Rezzer is an add-on script distributed with the package. A new
+version was released March 27, 2024 and people using this add-on script should update.
+The new version fixes an issue with leaving stray objects rezzed after region restarts or
+script resets. It uses newly-available scripting functions (LinksetDataStore) that solve
+this problem.
+
+- Version 2.0.6 contains a bug fix for auto-park features introduced in 2.0.5. 
+
+
+*April 18, 2023 - Version 2.0 release*
 
 Version 2.0 is a major update that brings better responsiveness, lower server
 impact and simplifies car scripting compared to previous versions. If you are
 using a version older than 2.0 we recommend updating.
 
 The major changes from version 1.x are
-    1) Overall process to script a new car is much simpler than before
+    1) Overall process to add car scripts to a new car is much simpler than before
     2) Separate wheel scripts are no longer needed (but it supports old wheel scripts)
     3) A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
     4) Racecar features and animation controllers were moved to separate scripts
@@ -112,7 +118,7 @@ To get your wheels working, name any front wheel "fwheel" and any rear wheel
 "rwheel". Then drop in the Wheel Configurator to any wheel. Touch it to
 begin the dialog process. When it asks to copy the settings to other wheels, say
 Yes. In most cases this will get all 4 wheels working correctly. If you need to
-adjust other wheels, use the Wheel Configuratopr for each individual wheel that
+adjust other wheels, use the Wheel Configurator for each individual wheel that
 needs adjusting.
 
 Many other features are detailed below.
@@ -152,7 +158,7 @@ The Wheel Configurator requires the following preparations:
 4. The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
     
 Once these steps are completed, the Wheel Configurator script can be dropped
-into any wheel. Then click on the wheel to open the dialogs. Follow the
+into any one wheel. Then click on that wheel to open the dialogs. Follow the
 instructions in the dialog that appears. The script will delete itself when
 setup is complete.
 
@@ -180,12 +186,12 @@ initial setup.
 
 *reverse turn option*
 
-Front wheels (or any wheels that turn left-right) have an option to turn
+Wheels that turn left and right in addition to rotating have an option to turn
 left-right in opposite direction of the left-right keys used. This is useful for
 vehicles that have wheels on rear of the car,  which need to turn in the
 opposite direction as when in front. To enable this on a wheel add "reverse" to
-the prim name. The prim name may contain multiple words - "fwheel", "smoke" and
-"reverse" can be in any order. 
+the prim name. The prim name may contain multiple words - for example, 
+"fwheel", "smoke" and "reverse" can be in any order. 
 
 -----
 
@@ -200,7 +206,7 @@ passenger position, then you are done.
 However if you need to play a passenger animation when seated, or trigger
 something else when they sit, such as making a poseball invisible, then a sit
 script is required in the prim. A general-purpose sit script is provided for
-this, Sit w/Animation 1.5. This works on any build, vehicle or not, and are
+this, Sit w/Animation 1.5. This works on any build, vehicle or not, and is
 not part of the Supercar system.
 
 (Alternatively, you can use sit management system like avSitter if you already
@@ -220,28 +226,29 @@ a Sit Positioner System on that prim to set the passenger position.
 Before you add the sit script Sit w/Animation 1.5, open it and check the first
 setting "setoffset". This should be set to FALSE if you are using a Sit
 Positioning System; This tells the script not to set the sit offset because it
-was already done.
+was already done. In this case, the main purpose of the sit script is to play
+the animation and/or toggle visibility of the sit prim, depending on your settings.
 
-Or, if you want to set the passenger position manually, set "setoffset" to TRUE
-and adjust the settings "sitposition" and "sitrotation". The script comments
-explain how to adjust these. The Sit Positioner System will also put its results
-in local chat, so you can copy those into the script settings if needed,
+If you want to manually adjust numbers to set the passenger position and rotation, you can
+set the "setoffset" config option to TRUE and hand-adjust the numerical values
+"sitposition" and "sitrotation". The script comments explain how to do this.
+
+If you first used the Sit Positioner System, that system prints it's settings to local
+chat. So you have the option to hand-copy those settings out of local chat and into the
+sit script, to preserve the current settings, and then switch to numerical adjustments to
+fine-tune the sit position.
 
 Either way, the script will manage playing an animation is also placed in the
-prim contents. The script settings also give options to switch visibility of the
-prim when they are sat on or to add hover text. Comments in the script describe
-these options in more detail.
+prim contents, switch visibility and/or hover text of the prim sat on.
 
-It is customary to set the "Click To" setting of any passenger prim to
-'Sitting'. You can change this from the Edit window General tab. This makes it
-more intuitive for people to find a seat by hovering their mouse over the car to
-see which prims are intended to sit on. Check the Click Action of your sit prims
-and adjust it to "Sitting" if needed.
+It is customary to set the "Click To" setting of any passenger prim to 'Sitting' so that
+it is easily recognized as a seat by end users. You can change this from the Edit window
+General tab. This causes a mouse hovering over it to display a seat icon.
 
-For vehicles with many seats, you can potentially reduce the total number of
+For vehicles with many seats, you can reduce the total number of
 running scripts on the vehicle by using a special script also provided with this
 package, "Manage Child Prim Sits" (See the Other Features section). This single
-script can manage sits and animations on all passenger seats.
+script can manage sits and animations on all passenger seats, with some limitations.
 
 Do not place sit scripts in the root prim! This causes the car not to be
 drivable.
@@ -559,35 +566,36 @@ they swap positions in avSitter.
 
 *click_to_park*
 
-The setting click\_to\_park adds the option for the driver to touch the vehicle
-for a dialog that allows them to "park" the vehicle without unseating the driver
-or affecting other passengers. This is useful for drive-in movies, or when a
-vehicle is used as a tour bus, The driver can park to let people off and allow
-others to board. The driver can touch the vehicle again for a dialog to resume
-driving.
+The setting click\_to\_park adds the option for the driver to touch the vehicle for a
+dialog that allows them to "park" the vehicle without unseating the driver or affecting
+other passengers. This is useful for drive-in movies, or when a vehicle is used as a tour
+bus, The driver can remain seated and park to let people off and allow others to board.
+The driver can touch the vehicle again for a dialog to resume driving.
 
-When "parked" the vehicle engine stops, headlights turn off, physics is turned
-off, and physics types of child prims are restored to their original values.
-This allows departing or arriving passengers to walk on the vehicle without
-falling through, in order to exit or find a place to sit.
+When "parked" the vehicle engine stops, headlights turn off, physics is turned off, and
+most importantly, physics types of child prims are restored to their original values. This
+allows departing or arriving passengers to walk on the vehicle without falling through, in
+order to exit or find a place to sit.
 
 Without putting the vehicle into "parked" mode while a driver is seated, trying
 to walk on the vehicle results in the avatar falling through the vehicle. So
-this setting is ideal when avatars are expected to board and exit.
-
-it also allows a group of people to go out on tour and temporarily disable the
-auto-park while visiting a destination.
+this setting is ideal when passengers are expected to board and exit during vehicle use.
 
 The driver can also exit the vehicle while "parked". This overrides the
 auto-park feature and the vehicle will not move back to its home position after
 a set time, if configured. When the driver resumes driving, the "parked" feature
-turns off and the next time the driver stands, auto-park will be activated.
+turns off and the next time the driver stands, auto-park will be activated 
+(unless the driver decides to "park" it again).
+
+Using this feature it allows a group of people to go out on tour and temporarily disable
+the auto-park while visiting multiple stops. Auto-park can be disabled at each stop and
+re-engaged at the end.
 
 Parking the vehicle also triggers the rezzing of a boarding ramp, if used. When
 the driver resumes driving, the ramp disappears, and the physics types of child
 prims are set to None.
 
-If the setting click\_to\_park is set to FALSE, nothing happens when the driver
+If the setting click\_to\_park is set to FALSE, nothing happens when the seated driver
 touches the car.
 
 *turnList and speedList*
