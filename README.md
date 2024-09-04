@@ -46,15 +46,15 @@ Version 2.0.6 has the following changes since 2.0:
 - A single script to manage all headlights and brake lights, optional replacement for a script per light
 - Many internal scripting improvements, bug fixes, and features to manage edge cases
 
-Update Notices
+*Update Notices*
+
+- Version 2.0.6 contains a bug fix for auto-park features introduced in 2.0.5. 
 
 - Supercar Boarding Ramp Rezzer is an add-on script distributed with the package. A new
 version was released March 27, 2024 and people using this add-on script should update.
 The new version fixes an issue with leaving stray objects rezzed after region restarts or
 script resets. It uses newly-available scripting functions (LinksetDataStore) that solve
 this problem.
-
-- Version 2.0.6 contains a bug fix for auto-park features introduced in 2.0.5. 
 
 
 *April 18, 2023 - Version 2.0 release*
