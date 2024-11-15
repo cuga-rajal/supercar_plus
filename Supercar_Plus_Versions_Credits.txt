@@ -173,5 +173,22 @@ Rev. 2.0.5
 - Eliminated a 1.5 second delay after driver sit to engage engine. This had been needed as a workaround for a past issue and no longer appears necessary.
 Rev. 2.0.6
 - Bug fix to resolve unnecessary owner dialog when touching vehicle with auto-park disabled.
+Rev. 2.1
+- [Change] The config setting useAvsitter has been removed, but avSitter is still supported.
+  Driver animation is now played by the script if there is one and only one animation in the Contents.
+  If there is more than one animation in the Contents, the Supercar script will
+  assume another animation system is being used, and not play any driver animation. The script managing multiple
+  animations can be the kit-provided script, avSitter, or others. This change allowed some leaner code.
+  See the Passenger Seats section for details on the benefits and limitations of avSitter versus
+  other systems.
+- [Usability] Improved default values for turning radius. There was a re-calibration of viewer
+  turn controls in Firestorm 7.x viewer, the new settings shuld work better on the latest viewers.
+- [Bug Fix] If the configurations turnList or speedList contain fewer entries then the number of gears you
+are using, the script no longer breaks when you gear up beyond the list; default values will be applied to higher gears.
+- [Usability] Renamed auto_return_time to auto_park_time, to avoid confusion with parcel auto return
+- [Usability] Renamed click_to_park to click_to_pause, to avoid confusion with auto-park
+- [Usability] Better handling of the case where an object is rezzed after being returned to inventory
+in a driving state, typically by going off-world while being driven.
+- [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
 
 // END OF VERSION HISTORY AND CREDITS

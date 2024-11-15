@@ -39,7 +39,7 @@ sections in this Readme have more details.
 
 **Whats New**
 
-Version 2.1 has the following changes since 2.0.x:
+Supercar Version 2.1 has the following changes since 2.0.x:
 
 - [Change] The config setting useAvsitter has been removed, but avSitter is still supported.
   Driver animation is now played by the script if there is one and only one animation in the Contents.
@@ -58,7 +58,8 @@ are using, the script no longer breaks when you gear up beyond the list; default
 in a driving state, typically by going off-world while being driven.
 - [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
 
-
+There is also an bugfix update for an add-on script Supercar 2 Racecar Effects. Versions have been updated to 1.1.
+This fixes a problem where setting 'burnoutGear = 0' did not disable the sounds.
 
 *Upgrading from a 2.0.x version of Supercar Plus*
 

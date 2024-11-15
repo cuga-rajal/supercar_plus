@@ -5,6 +5,10 @@
 
 // configurable settings 
 
+// Note: 1st gear = 0, 12th gear = 11;
+// burnoutGear setting can be in range 1-11 for gears 2-12. Set to 0 to disable.
+// turnburnGear is typically higher than burnoutGear by 1 or more gears.
+
 integer         burnoutGear = 3;
 integer         turnburnGear = 4;   // this gear and above show smoke & screech when turning.
 string          smoke_tex = "9358845b-c735-3a94-f13f-062bd464dd9a"; 
@@ -149,7 +153,7 @@ default {
             smoking = FALSE;
         } else if(llGetSubString(msg, 0, 4) == "gear ") {
             gGear = (integer)llGetSubString(msg, 5, -1);
-        } else if(gGear==burnoutGear) {
+        } else if((gGear==burnoutGear) && (burnoutGear != 0)) {
             if((msg=="ForwardSpin") || (msg=="BackwardSpin")) {
                 llLoopSound(sound_L,1.0);
                 for(i=0; i<llGetListLength(smoke_prims); i++) {
