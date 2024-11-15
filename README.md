@@ -43,8 +43,8 @@ Version 2.1 has the following changes since 2.0.x:
 
 - [Change] The config setting useAvsitter has been removed, but avSitter is still supported.
   Driver animation is now played by the script if there is one and only one animation in the Contents.
-  If there is more than one animation in the Contents then the Supercar main script will
-  assume another animation system is being used, and not play any. The script managing multiple
+  If there is more than one animation in the Contents, the Supercar script will
+  assume another animation system is being used, and not play any driver animation. The script managing multiple
   animations can be the kit-provided script, avSitter, or others. This change allowed some leaner code.
   See the Animation Controls section for details on the benefits and limitations of avSitter versus
   other systems.
