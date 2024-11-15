@@ -62,9 +62,11 @@ in a driving state, typically by going off-world while being driven.
 
 *Upgrading from a 2.0.x version of Supercar Plus*
 
-If you are using the auto_return_time or click_to_park options in your Config notecard,
-you will need to rename auto_return_time to auto_park_time, and 
-rename click_to_park to click_to_pause.
+In the Config notecard, 
+
+	- Rename auto_return_time to auto_park_time
+	- Rename click_to_park to click_to_pause
+	
 The setting useAvsitter is no longer used and can be removed.
 
 *Upgrading from a 1.x version of Supercar Plus*
