@@ -467,7 +467,7 @@ the setup process is fairly easy:
         b) set the prim Name to the word "sit",
         c) Place a copy of the seat's animation into the root prim
         d) then remove the sit script and the animation from the seat prim
-    4. Place a copy of this script in the root prim
+    3. Place a copy of this script in the root prim
     
 If you use this option, you will also need to use the Supercar 2 Animation
 Controller script to manage the driver's animation.
@@ -565,8 +565,6 @@ Settings in the Config notecard template have good default values for average
 sized cars. A number of settings can be changed to further
 enhance your vehicle. The meaning of each setting is explained in the
 notecard. The following sections detail some of these.
-
-*Auto-Park and Click-to-Pause*
 
 *Auto-Park* 
 
@@ -669,9 +667,11 @@ You can check the default values in the Supercar script and then create a list
 of adjusted values.
 
 Example 1: For a small "Cupcake Car" with a 1.5m footprint, settings that were smaller than the defaults worked best:
+
 	turnList = [ 0.5, 1.1, 1.2, 1.2 ];
 	
 Example 2: For a large bus holding 20 passengers, settings that were larger than the defauts worked best:
+
 	turnList = [ 8, 8, 8, 8 ];
 
 *turn_in_place_speed* 
@@ -682,7 +682,7 @@ The number is proportional to how fast it spins.
 
 -----
 
-**Link messages:**
+**Link messages**
 
 The Supercar Plus script sends llMessageLinked() messages to child prims for
 various event changes. Some of the add-on scripts in the kit use these messages, 
