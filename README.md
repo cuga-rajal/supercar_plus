@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.0.6, Aug 24, 2024
+version 2.1.0, Nov 14, 2024
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -23,14 +23,14 @@ txt
 Supercar Plus is a free LSL land vehicle (car) script compatible with Opensim
 and Second Life. It supports a wide range of creative options for various car
 features and the runtime is low-impact on the server. By using a Notecard for
-settings, vehicles can be updated easily, this also helps manage a large car
-collection. The full project is available at
+settings, vehicles can be updated easily by swapping out the main script without
+the need to hand-edit any settings. The full project is available at
 https://github.com/cuga-rajal/supercar_plus.
 
-Many popular features are supported, such as driver's animation, passenger
-seats, multiple gears/speeds with reverse, rotating wheels, headlights, horns,
+Many popular features are supported, such as rotating wheels, headlights, horns,
+driver's animation, passenger seats, multiple gears with reverse, 
 engine sounds, tank tred motions, and much more. A variety of add-on scripts are
-included with instructions.
+included with the package along with instructions.
 
 While most people will find everything they need in the Quick Start section, other
 sections in this Readme have more details.
@@ -39,88 +39,86 @@ sections in this Readme have more details.
 
 **Whats New**
 
-Version 2.0.6 has the following changes since 2.0:
+Version 2.1 has the following changes since 2.0.x:
 
-- Improved features for Auto-Park and Boarding Ramp rezzer. Faster time to sit and drive.
-- Expanded wheel support -- option for reverse-direction left-right wheel rotation (see Wheel Rotation section for details)
-- A single script to manage all headlights and brake lights, optional replacement for a script per light
-- Many internal scripting improvements, bug fixes, and features to manage edge cases
+- [Change] The config setting useAvsitter has been removed, but avSitter is still supported.
+  Driver animation is now played by the script if there is one and only one animation in the Contents.
+  If there is more than one animation in the Contents then the Supercar main script will
+  assume another animation system is being used, and not play any. The script managing multiple
+  animations can be the kit-provided script, avSitter, or others. This change allowed some leaner code.
+  See the Animation Controls section for details on the benefits and limitations of avSitter versus
+  other systems.
+- [Usability] Improved default values for turning radius. There was a re-calibration of viewer
+  turn controls in Firestorm 7.x viewer, the new settings shuld work better on the latest viewers.
+- [Bug Fix] If the configurations turnList or speedList contain fewer entries then the number of gears you
+are using, the script no longer breaks when you gear up beyond the list; default values will be applied to higher gears.
+- [Usability] Renamed auto_return_time to auto_park_time, to avoid confusion with parcel auto return
+- [Usability] Renamed click_to_park to click_to_pause, to avoid confusion with auto-park
+- [Usability] Better handling of the case where an object is rezzed after being returned to inventory
+in a driving state, typically by going off-world while being driven.
+- [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
 
-*Update Notices*
-
-- Version 2.0.6 contains a bug fix for auto-park features introduced in 2.0.5. 
-
-- Supercar Boarding Ramp Rezzer is an add-on script distributed with the package. A new
-version was released March 27, 2024 and people using this add-on script should update.
-The new version fixes an issue with leaving stray objects rezzed after region restarts or
-script resets. It uses newly-available scripting functions (LinksetDataStore) that solve
-this problem.
 
 
-*April 18, 2023 - Version 2.0 release*
+*Upgrading from a 2.0.x version of Supercar Plus*
 
-Version 2.0 is a major update that brings better responsiveness, lower server
-impact and simplifies car scripting compared to previous versions. If you are
-using a version older than 2.0 we recommend updating.
+If you are using the auto_return_time or click_to_park options in your Config notecard,
+you will need to rename auto_return_time to auto_park_time, and 
+rename click_to_park to click_to_pause.
+The setting useAvsitter is no longer used and can be removed.
 
-The major changes from version 1.x are:
+*Upgrading from a 1.x version of Supercar Plus*
 
-- Overall process to add car scripts to a new car is much simpler than before
-- Separate wheel scripts are no longer needed (but it supports old wheel scripts)
-- A new wheel configurator provides a menu-driven wheel setup without requiring hand-editing
-- Racecar features and animation controllers were moved to separate scripts
-- There is ~25% less code in the core script, and uses much less CPU time
-
-If you are upgrading a vehicle from version 1.x, please see the separate document
-"Upgrading from a 1.x version of Supercar Plus".
+Please see the separate document
+"Upgrading from a 1.x version of Supercar Plus". In most cases it is easier to
+start over with the latest version and transfer your settings to the new Config 
+notecard format.
 
 -----
 
 **Quick Start Instructions:**
 
-Rez a cube and set the size to x=4.0, y=2.0, z=0.5. Drop the Supercar 2.0 script 
-in it and sit on it to drive. Use your keyboard arrow keys to move. Notice
+Any object can be made a "vehicle" by attaching it to an invisible scripted prim
+that lies flat on the ground. In most cases the LI of the object should be kept under 32,
+but there are tricks to allow higher LI counts to work, described in other
+sections of these docs.
+
+Rez a cube and set the size to x=4.0, y=2.0, z=0.5. Drop the Supercar script 
+in it and then sit on it to drive. Use your keyboard arrow keys to move. Notice
 the direction of the prim when it goes forward. This will need to be aligned
 with the vehicle when you link them.
 
 Stand up and move the cube rotation back to x=y=z=0; You can do this from the
-Edit window., Object tab. The prim direction will always drift each time you
-test drive the car, so make sure set it back to be square with the sim before
+Edit window, Object tab. The prim will usually drift each time you
+test drive the car, and it's important to set it back to be square with the sim before
 adding, linking of adjusting prims.
 
-Rez your vehicle. If it has a driver's animation, save that to your inventory,
+Now, rez your vehicle. If it has a driver's animation, save that to your inventory,
 then delete everything in the root prim. Drop in the driver's animation into the
 new cube prim.  Transfer the vehicle's name to the new cube prim as well.
 
 If the vehicle already has wheel scripts or other assets from a previous car
 script system, remove those. Align your vehicle square to the sim, pointing the
-same direction forward as the cube.
+same direction as the forward direction of the cube.
 
 Now move the cube under the vehicle. Resize it to be about the size of the
 wheelbase. It doesn't have to be exact, you can do it by eye.
 
-Also add a taper in the prim shape from the Edit window Description tab, Taper x
-= -0.15. This will help it go over obstacles much easier.
+Now make a small adjustment to the shape from the Edit window Description tab.
+For Opensimulator, you can get better stability by switching the base prim shape
+to Sphere, after resizing it in the previous step. In SL, you can improve the mobility 
+by adding a taper to the prim shape by setting Taper x= -0.15. 
+This will help it go over obstacles much easier. 
 
 Now Edit your vehicle, hold down the Shift key, and select the new cube prim
-last. Link them together with the Link button. You should be able to drive your
-car!
-
-Put a copy of the Config notecard in your root prim. This will hold your car
-script settings.
+last. Link them together with the Link button. You should now be able to drive your
+car.
 
 The driver's position is likely to be wrong. You can fix this using a Sit
-Positioner System or a sit script. Setting the driver's position only needs to
+Positioner System or with a sit script. Setting the driver's position only needs to
 be done once. Make sure that you use the base prim when you set the sit position,
 even if there is a separate drivers seat prim. Re-test driving the car after you
-set the sit position.
-
-To get your wheels working, name any front wheel "fwheel" and any rear wheel
-"rwheel". Then drop in the Wheel Configurator to any wheel. Touch it to
-begin the dialog process. When it asks to copy the settings to other wheels, say
-Yes. In most cases this will get all 4 wheels working correctly. If you need to
-adjust other wheels, use the Wheel Configurator for each individual wheel that
-needs adjusting.
+set the sit position to make sure the driver's position looks correct.
 
 Many other features are detailed below.
 
@@ -142,7 +140,7 @@ Config notecard.
 
 **Wheel Rotation**
 
-Supercar 2 no longer requires separate wheel scripts! A Wheel Configurator
+Supercar no longer requires separate wheel scripts! A Wheel Configurator
 provides a dialog-based setup to configure the wheels without the need to
 hand-edit any numbers. It uses the Name and Description fields on the wheel
 prims to store wheel settings and will overwrite anything already in the
@@ -152,14 +150,14 @@ The Wheel Configurator requires the following preparations:
 
 1. For each wheel prim, remove any wheel moving script in Contents that may have been there.
 
-2. For each wheel prim, set the prim Name to "fwheel" for the front wheels (any wheels that turn left-right) and "rwheel" for the rear wheels (any wheels that stay straight)
+2. Set the prim Name to "fwheel" for the front wheels (or any wheels that turn left-right) and "rwheel" for the rear wheels (or any wheels that stay straight)
 
-3. For each wheel prim, erase anything in the Description (or it can say "(No Description)").
+3. For each wheel prim, erase anything in the Description field (or it can say "(No Description)").
 
 4. The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
     
 Once these steps are completed, the Wheel Configurator script can be dropped
-into any one wheel. Then click on that wheel to open the dialogs. Follow the
+into any _one_ wheel. Then click on that wheel to open the dialogs. Follow the
 instructions in the dialog that appears. The script will delete itself when
 setup is complete.
 
@@ -208,10 +206,16 @@ However if you need to play a passenger animation when seated, or trigger
 something else when they sit, such as making a poseball invisible, then a sit
 script is required in the prim. A general-purpose sit script is provided for
 this, Sit w/Animation 1.5. This works on any build, vehicle or not, and is
-not part of the Supercar system.
+not limited to the Supercar system.
 
-(Alternatively, you can use sit management system like avSitter if you already
-know how to implement those. See Other Features section for more details.)
+Alternatively, you can use sit management system like avSitter if you already
+know how to implement those. avSitter can work well
+for a small number of seats, but it has been
+found to cause performance problems when too many sit locations are used. Excessive scripts in
+the vehicle can cause out-of-memory conditions and problems with sim crossings.
+
+If you want to manage animations for a large number of passenger seats, avoid these
+problems by using the scripts provided with this package. 
 
 There are different styles on how to visually indicate a passenger seat.
 Sometimes the intended seat will already be it's own prim and you can just
@@ -224,18 +228,18 @@ You will need to decide what prim on the vehicle will be sittable, and if
 needed, place and link in a prim to act as the sittable prim.  Then you can use
 a Sit Positioner System on that prim to set the passenger position.
 
-Before you add the sit script Sit w/Animation 1.5, open it and check the first
+Before you add the sit script Sit w/Animation 1.5, open that script in your inventory and check the first
 setting "setoffset". This should be set to FALSE if you are using a Sit
-Positioning System; This tells the script not to set the sit offset because it
+Positioning System; This tells the script not to change the sit offset because it
 was already done. In this case, the main purpose of the sit script is to play
-the animation and/or toggle visibility of the sit prim, depending on your settings.
+the animation or make other changes, depending on your settings.
 
-If you want to manually adjust numbers to set the passenger position and rotation, you can
-set the "setoffset" config option to TRUE and hand-adjust the numerical values
+If you want to manually adjust the passenger position and rotation numerically, you can
+set the "setoffset" config option to TRUE and then hand-adjust the numerical values
 "sitposition" and "sitrotation". The script comments explain how to do this.
 
 If you first used the Sit Positioner System, that system prints it's settings to local
-chat. So you have the option to hand-copy those settings out of local chat and into the
+chat. You then have the option to hand-copy those settings out of local chat and into the
 sit script, to preserve the current settings, and then switch to numerical adjustments to
 fine-tune the sit position.
 
@@ -243,16 +247,16 @@ Either way, the script will manage playing an animation is also placed in the
 prim contents, switch visibility and/or hover text of the prim sat on.
 
 It is customary to set the "Click To" setting of any passenger prim to 'Sitting' so that
-it is easily recognized as a seat by end users. You can change this from the Edit window
-General tab. This causes a mouse hovering over it to display a seat icon.
+it is easily recognized by the mouse cursor changing to a seat icon when you hover over
+that prim. You can change this from the Edit window General tab. 
 
-For vehicles with many seats, you can reduce the total number of
-running scripts on the vehicle by using a special script also provided with this
-package, "Manage Child Prim Sits" (See the Other Features section). This single
+For vehicles with many seats, you can reduce the total script count of the vehicle
+by replacing all of them with a special script "Manage Child Prim Sits" provided in this
+package. (See the Other Features section). This single
 script can manage sits and animations on all passenger seats, with some limitations.
 
-Do not place sit scripts in the root prim! This causes the car not to be
-drivable.
+Do not place sit scripts in the root prim! This can cause problems with the the driver's
+sit position and may cause the car not to be drivable.
 
 -----
 
@@ -355,47 +359,43 @@ This script must be placed in any prim OTHER THAN THE ROOT PRIM. The
 selected prim is where the sounds will come from.
 
 There are 2 versions of this script included. The one named "w/pipesmoke" adds
-smoke from the tailpipes when they are not making flames.
+continuous smoke from the tailpipes when they are not making flames.
 
 Prims that you want to display smoke when turning left and right, typically the
 wheels, should have "smoke" included in its name. Wheel prims that are already
-named "fwheel" or "rwheel" can be named "fwheel smoke" or "rwheel smoke".
+named "fwheel" or "rwheel" can be named "fwheel smoke" or "rwheel smoke". 
 
 Prims that are meant to display exhaust pipes flame effects should be named
 "flame" or append "flame" to the existing name.
 
 When the script  is placed in the vehicle, it checks for child prims for "smoke"
 or "flame" and remembers those prims. Then the effects are triggered while
-driving.
+driving. 
 
 The particle texture settings in the script can be the particle asset name or
 it's UUID. If a asset name is used, a copy of the texture asset MUST be placed
-in the contents of each prim where that asset is expected to be used. However if
-a UUID is used in the settings, the texture assets do not need to copied to the
-object.
-
+in the same prim as the Supercar 2 Racecar Effects script.
 
 The sound settings can also be the asset name or UUID. If sound asset names are
 used, the sound assets must be placed in the same prim as the Supercar 2 Racecar
-Effects script. If the UUID is used in the settings, the sound assets do not
-need to copied to the object.
-
+Effects script.
 
 The script is pre-configured for the texture names and screech sounds provided
 in the kit. However you can use your own textures or sounds, or UUIDs, and
 update the settings.
 
-Make sure you reset the Supercar 2 Racecar Effects script if you change the prim
-names or  assets in contents.
+If you change these prim names or assets in Contents after the script is in the car, you will
+need to reset the script to recognize the changes.
 
 Other settings:
     
-    - "burnout_gear" is the gear number that will play all the effects when
-    moving forward or backward. To disable this feature set it to 0.
+    - "burnout_gear" is a specific gear that will play continuus sound and particle
+     effects when moving forward or backward. To disable this feature set it to 0.
+     Burnout in real life is to heat the tire rubber just before a race to improve
+     adhesion; and to test functioning of the engine at full RPM before the race.
 
     - "turnburnGear" - this gear and above will make smoke & screech sounds when
-    turning. Only on the side opposite the turn direction, adding realistic
-    effects.
+    turning, on the side opposite the turn direction
 
 Tailpipe flame effects are displayed for 3 seconds when the car starts up, and
 whiledriving in burnout gear.
@@ -407,7 +407,7 @@ Supercar by Shin Ingen and are included by permission.
 
 **HUD**
 
-An optional HUD is provided with the package. 􀀔
+An optional HUD is provided with the package.
 
 To include it with a car, place the HUD in the root prim of the car along with
 the script Supercar 2 HUD Manager. When the driver sits, they will get a
@@ -421,16 +421,28 @@ specified time, to prevent stray objects in the region.
 If the headlights, horn, and smokescreen are active when the driver stands, they
 will be deactivated at  that time.
 
+The HUD adds some performance overhead to the region. Don't use the HUD in heavily
+populated regions or where there is already significant time dilation.
+
 -----
 
 **Driver Animation Controller**
 
-Most people use a single animation for the driver. But there is an option to
-switch driver's animation for being idle, moving forward, or moving fast. This
-is Supercar 2 Animation Controller script. The script has instructions in the
+There are 2 situations when you will need this script. 
+
+Most people use a single animation for the driver. But there are occasions when you want
+the driver animation to change depending on if the vehicle is stopped, moving, or going fast.
+For example, a bicycle, or a hamster wheel. The Supercar 2 Animation Controller add-on script can do this.
+
+The script has instructions in the
 comments on how to set it up. You configure the script with names of the driver
 animations, then place copies of the animations into the root prim contents
-along with the script.
+along with the script. The settings anim\_idle, anim\_fwd and anim\_fast correspond
+to being stopped, moving or moving fast.
+
+You will also need to use this script if there are more than one animation in the root prim Contents,
+and you want the driver to play a specific animation when driving. Set all 3 options
+to the animation you want to use.
 
 If you were using this feature before Supercar version 2.0, the settings
 anim\_fwd, anim\_idle, or anim\_fast that were previously in the Config notecard
@@ -442,12 +454,11 @@ will need to be transfered to this script.
 
 The script Manage Child Prim Sits can manage sits for many passenger seats with
 one single script, greatly reducing the script count on the vehicle and reducing
-lag. It is easier to set up than avSitter but has some limitations and
-advantages.
+lag. It can also prevent out-of-memory conditions and lag that may occur when 
+using avSitter on a vehicle with a large number of seats.
 
-Avatars can sit directly on the prim they choose. It provides only one animation
-per seat, but you can have a mix of different animations in the seats all
-managed with one script and an easy setup process: 
+The script supports one animation per seat which can all be different, and
+the setup process is fairly easy:
 
     1. Create individual sits in child prims with individual sit scripts and
     animations Adjust the sit offsets on each sit prim for specific animations.
@@ -463,7 +474,7 @@ Controller script to manage the driver's animation.
 
 -----
 
-**Boarding Ramp Rezzer (UPDATED!)**
+**Boarding Ramp Rezzer**
 
 The script Supercar 2 Boarding Ramp Rezzer manages the rezzing and removal of a
 boarding ramp object which is typically used for larger vehicles. This allows
@@ -473,7 +484,7 @@ to fly up, adding realism and convenience.
 The ramp is deployed when the driver stands and is removed when somebody sits to
 become driver.
 
-If the click\_to\_park config option is used, the ramp is also deployed when the
+If the click\_to\_pause config option is used, the ramp is also deployed when the
 driver puts the vehicle into Park mode and then removed when resuming driving.
 
 If the settings are configured to enable auto-park after a given time, the ramp
@@ -555,69 +566,113 @@ sized cars. A number of settings can be changed to further
 enhance your vehicle. The meaning of each setting is explained in the
 notecard. The following sections detail some of these.
 
+*Auto-Park and Click-to-Pause*
 
-*useAvsitter* 
+*Auto-Park* 
 
-The setting useAvsitter adds the option to use the avSitter system (or any sit
-managing system) to manage avatar sits. With this enabled, the car script does
-not change the driver's animation. All sit offsets and animations for all seated
-avatars including the driver are controlled through avSitter or the sit managing
-system. Please note that the person driving the car will remain the same even if
-they swap positions in avSitter.
+The script has an optional feature to park the car back in it's parking spot at a
+given time after the driver stands. This built-in feature works only for a single region
+where it can not be driven to adjacent regions. 
+If there are multiple adjacent regions then this script feature should be disabled 
+and you can use the separate Multi-Sim Auto-Park script instead.
 
-*click_to_park*
+To use the single-region feature, set the config option _auto\_park\_time_ to the
+number of seconds after the driver stands that the car auto-parks. To disable
+the single-region feature set _auto\_park\_time_ to 0. If used, the parking location is set
+when the script resets, but it can be changed by owner-touching the car when it is
+not being driven. This brings up a dialog to confirm it's new park location. 
 
-The setting click\_to\_park adds the option for the driver to touch the vehicle for a
-dialog that allows them to "park" the vehicle without unseating the driver or affecting
-other passengers. This is useful for drive-in movies, or when a vehicle is used as a tour
-bus, The driver can remain seated and park to let people off and allow others to board.
-The driver can touch the vehicle again for a dialog to resume driving.
+The Multi-Sim Auto-Park script has similar settings at the top of the script for
+delay before parking. It requires some additional setup detailed in the script comments.
+It works where the adjacent regions are in a rectangular grid of A by B regions, all
+of the same size. The setup requires capturing the names of each of the regions and adding
+them to the configuration. 
 
-When "parked" the vehicle engine stops, headlights turn off, physics is turned off, and
+Like the single-region feature, the Multi-Sim Auto-Park script sets the parking location
+when the script resets, but it can be changed by owner-touching the car when it is
+not being driven. This brings up a dialog to confirm it's new park location. 
+
+When using either the single-region feature or multi-region script, both options allow you
+to set or reset the parking spot, and to configure the parking delay.
+Both options announce in local chat when auto-park countdown begins, and when it is complete. 
+Both options integrate with the Boarding Ramp Rezzer script. 
+If a boarding ramp is being rezzed when parked, that ramp will be removed just before 
+vehicle parking begins, and re-rezzed back at it's parking location. 
+
+If you rez a vehicle from Inventory that was previously configured to use auto-park
+by either method, auto-park will automatically be disabled and you will get a message in
+local chat indicating this. This is
+to prevent the vehicle being re-parked to a location from previous use that is no longer relevant. 
+To reactivate it, simply move the vehicle to it's new parking location, touch it and confirm the dialog.
+
+*click_to_pause*
+
+The setting click\_to\_pause adds some options that are useful in group situations, and
+integrates with auto-park.
+
+This option brings up a dialog to the vehicle _driver_ when they touch the vehicle while
+driving.
+
+The dialog allows them to "Pause" the vehicle without the driver standing.
+This is useful when a vehicle is used as a tour
+bus; The driver can remain seated and park to let people off and allow others to board.
+The driver can touch the vehicle again for the dialog and select "Drive" to resume driving.
+
+When "paused" the vehicle engine stops, headlights turn off, physics is turned off, and
 most importantly, physics types of child prims are restored to their original values. This
 allows departing or arriving passengers to walk on the vehicle without falling through, in
 order to exit or find a place to sit.
 
-Without putting the vehicle into "parked" mode while a driver is seated, trying
+Without putting the vehicle into "paused" mode, trying
 to walk on the vehicle results in the avatar falling through the vehicle. So
-this setting is ideal when passengers are expected to board and exit during vehicle use.
+this setting is ideal when passengers are expected to board and exit during vehicle use,
+such as public transportation.
+This can be useful for other situations such as at drive-in movies, where you want to stop the engine with
+driver and passengers still seated.
 
-The driver can also exit the vehicle while "parked". This overrides the
-auto-park feature and the vehicle will not move back to its home position after
-a set time, if configured. When the driver resumes driving, the "parked" feature
+On larger vehicles there may be a few second delay before "going solid" is noticed; This is a platform limitation.
+
+"Pausing" the vehicle also has the effect of temporarily disabling the auto-park feature.
+The driver has the option to stand and exit the vehicle while "paused" and the auto-park
+will remain temporarily disabled. If any driver resumes driving, the "paused" feature
 turns off and the next time the driver stands, auto-park will be activated 
-(unless the driver decides to "park" it again).
+(unless the driver decides to "pause" it again).
 
-Using this feature it allows a group of people to go out on tour and temporarily disable
-the auto-park while visiting multiple stops. Auto-park can be disabled at each stop and
-re-engaged at the end.
+This is useful for a group of people going on a tour with a number of
+expected stops. The auto-park can be disabled at each stop, and then re-engaged at the end.
 
-Parking the vehicle also triggers the rezzing of a boarding ramp, if used. When
-the driver resumes driving, the ramp disappears, and the physics types of child
-prims are set to None.
+The boarding ramp script included with this
+package integrates with this feature. Pausing the vehicle also triggers the rezzing of a boarding ramp, if used. When
+the driver resumes driving, the ramp disappears. 
 
-If the setting click\_to\_park is set to FALSE, nothing happens when the seated driver
+If the setting click\_to\_pause is set to FALSE, nothing happens when the seated driver
 touches the car.
 
 *turnList and speedList*
 
 The car speed and turning radius for each gear use presets that work well for an
 average sized car. If you are using this script on a very small or very big car,
-you might want to override the presets with custom speeds and turning radius
-that look more realistic.
+it's likely that you will need to override the presets with custom speeds and turning
+radius that look more realistic.
 
 speedList is a list of integers that are the forward power of the vehicle for
-the various speeds. If this list setting not blank, it will replace the default.
-You must have at least as many entries in the list as the number of gears you
-are using on the car. They correspond to gear 1, 2, etc.
+the various speeds. If this list setting not blank, it will replace the defaults.
+If there are fewer entries in the list as the number of gears you
+are using, the default values will be applied to higher gears.
 
 turnList is a list of floats that represent the turning power for various gears.
-If this list setting not blank, it will replace the default. You must have at
-least as many entries in the list as the number of gears you are using on the
-car.
+If this list setting not blank, it will replace the defaults. 
+If there are fewer entries in the list as the number of gears you
+are using, the default values will be applied to higher gears.
 
 You can check the default values in the Supercar script and then create a list
 of adjusted values.
+
+Example 1: For a small "Cupcake Car" with a 1.5m footprint, settings that were smaller than the defaults worked best:
+	turnList = [ 0.5, 1.1, 1.2, 1.2 ];
+	
+Example 2: For a large bus holding 20 passengers, settings that were larger than the defauts worked best:
+	turnList = [ 8, 8, 8, 8 ];
 
 *turn_in_place_speed* 
 
@@ -630,20 +685,22 @@ The number is proportional to how fast it spins.
 **Link messages:**
 
 The Supercar Plus script sends llMessageLinked() messages to child prims for
-various driver controls; For example, a script could turn on headlights when a
-driver sits and turn off when they stand. Custom scripts can use these link
-messages to further customize the car.
+various event changes. Some of the add-on scripts in the kit use these messages, 
+for example, headlights turning on when a
+driver sits and turning off when they stand. Custom scripts can be added to the vehicle that use these link
+messages.
 
 
 	car_start - when driver first sits to drive
+	car_stop - when the driver stands
+	car_park - if auto-park is active, just before the car parks
 	ForwardSpin - when the forward arrow key is held down
 	BackwardSpin - when the reverse arrow key is held down
 	NoSpin - when the forward or reverse arrow key is released
 	RightTurn - when the right arrow key is pressed down
 	LeftTurn - when the left arrow key is pressed down
 	NoTurn - when the left or right arrow key is released
-	car_stop - when the driver stands
-	car_park - if auto-park is active, just before the car parks
+	
 
 -----
 
@@ -659,7 +716,7 @@ script restores the original physics types of all child prims.
 If you change any child prim physics types on the vehicle, make sure you reset
 the car script *before* you drive it so that it can refresh it's list of child
 prim physics types. Otherwise you will lose your changes. There is no way for
-the script to automatically detect when child prim physics types change so the
+the script to automatically detect when child prim physics type is changed, so the
 script reset must be done manually.
 
 The script has an option to selectively keep physics shape type Prim on some

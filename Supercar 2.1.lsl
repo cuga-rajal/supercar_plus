@@ -1,4 +1,4 @@
-// Supercar 2.0.6
+// Supercar 2.1.0
 
 // By Cuga Rajal <cuga@rajal.org>
 // Latest version and more information at https://github.com/cuga-rajal/supercar_plus/ 
@@ -14,7 +14,6 @@ integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
-integer         useAvsitter = FALSE; // if TRUE the scriipt does not run animations
 
 // Gear options -- NOTE: 0=first gear, 11=12th gear
 integer         maxGear = 3;       // highest gear that can be shifted to, max 11
@@ -32,8 +31,8 @@ float           CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degr
 float           lookAhead = 6.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
                 
 // Other options
-integer         auto_return_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
-integer         click_to_park = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
+integer         auto_park_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
+integer         click_to_pause = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 string          sit_message = ""; // Chat window message shown to driver when sitting
 string          stand_message = ""; // Chat window message shown to driver when standing
 
@@ -147,13 +146,11 @@ init_PhysEng(){
         llOwnerSay("   Tuned for Opensim");
     }
     
-    if(llGetListLength(turnList)==0) {
-            
-        turnList        = [   1.1,    //1st Gear
-                                    2.5,    //2nd Gear
-                                    2.3,    //3rd Gear
-                                    2.1,    //4th Gear
-                                    3.0,    //5th Gear
+    list newturnList        = [   3,    //1st Gear
+                                    3.5,    //2nd Gear
+                                    3.5,    //3rd Gear
+                                    3.5,    //4th Gear
+                                    3.5,    //5th Gear
                                     4.0,    //6th Gear
                                     4.1,    //7th Gear
                                     4.5,    //8th Gear
@@ -162,10 +159,14 @@ init_PhysEng(){
                                     10.0,   //11th Gear
                                     10.0    //12th Gear
                                 ];
+                                
+    if(llGetListLength(turnList)==0) {
+        turnList = newturnList;
+    } else {
+        turnList = llListReplaceList(newturnList, turnList, 0, llGetListLength(turnList)-1);
     }
-        
-    if(llGetListLength(speedList)==0) {
-        speedList        = [   4,    //1st Gear
+    
+    list newspeedList         = [   4,    //1st Gear
                                     8,    //2nd Gear
                                     16,    //3rd Gear
                                     32,    //4th Gear
@@ -178,6 +179,11 @@ init_PhysEng(){
                                     210,    //11th Gear
                                     256     //12th Gear
                                 ];
+                                
+    if(llGetListLength(speedList)==0) {
+        speedList = newspeedList;
+    } else {
+        speedList = llListReplaceList(newspeedList, speedList, 0, llGetListLength(speedList)-1);
     }
 
 }
@@ -368,7 +374,6 @@ setConfig(string setting, string qval) {
     }
     else if(setting=="gSitMessage") { gSitMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="gUrNotAllowedMessage") { gUrNotAllowedMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="useAvsitter") { if(qval=="TRUE") { useAvsitter=TRUE; } else { useAvsitter=FALSE; } }
     else if(setting=="maxGear") { maxGear = (integer)qval; }
     else if(setting=="lowestGear") { lowestGear = (integer)qval; }
     else if(setting=="startGear") { startGear = (integer)qval; }
@@ -386,8 +391,8 @@ setConfig(string setting, string qval) {
     else if(setting=="CamDist") { CamDist = (float)qval; }
     else if(setting=="CamPitch") { CamPitch = (float)qval; }
     else if(setting=="lookAhead") { lookAhead = (float)qval; }
-    else if(setting=="auto_return_time") { auto_return_time = (integer)qval; }
-    else if(setting=="click_to_park") { if(qval=="TRUE") { click_to_park=TRUE; } else { click_to_park=FALSE; } }
+    else if(setting=="auto_park_time") { auto_park_time = (integer)qval; }
+    else if(setting=="click_to_pause") { if(qval=="TRUE") { click_to_pause=TRUE; } else { click_to_pause=FALSE; } }
     else if(setting=="sit_message") { sit_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="stand_message") { stand_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
     else if(setting=="aggressive_gear") { aggressive_gear = (integer)qval; }
@@ -403,7 +408,7 @@ setConfig(string setting, string qval) {
 }
 
 finish() {
-    if(auto_return_time>0) {
+    if(auto_park_time>0) {
         llOwnerSay("   Setting auto-park position...");
         startposition = llGetPos();
         startrot = llGetRot();
@@ -548,14 +553,14 @@ state Idle {
 
     on_rez(integer param) {
         startposition = ZERO_VECTOR;
-        if((llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==0) && (auto_return_time != 0)) {
+        if((llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==0) && (auto_park_time != 0)) {
             llOwnerSay("To enable Auto-Park, place your vehicle in its parking location and then touch the vehicle to open the dialog.");
         }
         seated = FALSE;
     }
     
     touch_start(integer total_number) { 
-        if((auto_return_time > 0) && (llDetectedKey(0) == llGetOwner())) { 
+        if((auto_park_time > 0) && (llDetectedKey(0) == llGetOwner())) { 
             menu(llGetOwner(),"\nSet Auto-Park location??",["Set Location", "Cancel"]); 
         }
     }  
@@ -630,19 +635,35 @@ state Driving {
     }
     
     on_rez(integer param) {
-        if((llGetStatus(STATUS_PHYSICS)) && (gRun==1)) {
-            llOwnerSay("** Rezzed vehicle was in powered state, disabling movement and resetting");
-            llSetStatus(STATUS_PHYSICS, FALSE); 
-            llResetScript();
-        }
-        llSetTimerEvent(0.0);  
+        seated = FALSE;       
+        gRun = 0;
+        turnwheels("NoTurn");
+        spinwheels(0, "NoSpin");
+        init_engine();
+                
+        llSetTimerEvent(0.0);
+        llStopSound();
+        llReleaseControls();  
+        llSetText("",<0,0,0>,1.0);
+        llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
+        llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
+        llListenRemove(listener);  
+
+        llSetStatus(STATUS_PHYSICS, FALSE); 
+        for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
+            list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
+            if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
+                llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
+            }
+        }                   
         llListenRemove(menu_handler);
         dialogwait = FALSE;
+        state Idle;
     }
     
     touch_start(integer total_number) { 
-        if(click_to_park && (llDetectedKey(0) == driver)) { 
-            menu(driver,"\nPark your car or resume driving?",["Park Car", "Drive"]); 
+        if(click_to_pause && (llDetectedKey(0) == driver)) { 
+            menu(driver,"\nPause your car or resume driving?",["Pause Car", "Drive"]); 
         }
     } 
     
@@ -659,7 +680,7 @@ state Driving {
                 if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
                     || (llListFindList( driverList, [(string)driver] ) != -1)) { 
                     
-                    if(parked && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
+                    if(parked && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
                         llSay(0, "Auto-park enabled");
                     }
                     drivecar();
@@ -691,9 +712,8 @@ state Driving {
                 
                 if(stand_message !="") { llRegionSayTo(prevDriver,0,stand_message); }  
                 if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
-                if((llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) && (! useAvsitter)) {                    
-                    integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
-                    if (count != 0) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
+                if(llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) {                    
+                    if (llGetInventoryNumber(INVENTORY_ANIMATION) == 1) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
                     else { llStopAnimation("sit"); }
                 }   
                 llSetStatus(STATUS_PHYSICS, FALSE); 
@@ -703,10 +723,10 @@ state Driving {
                         llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
                     }
                 }                   
-                if((! parked) && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
-                    llSay(0, "The vehicle will auto-park in " + (string)auto_return_time + " seconds, unless a new driver takes control.");
-                    llSetTimerEvent(auto_return_time);
-                } else if(parked && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
+                if((! parked) && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
+                    llSay(0, "The vehicle will auto-park in " + (string)auto_park_time + " seconds, unless a new driver takes control.");
+                    llSetTimerEvent(auto_park_time);
+                } else if(parked && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
                     llSay(0, "Auto-park temporarily disabled");
                 }
 
@@ -735,21 +755,9 @@ state Driving {
             init_followCam();
         }
         
-        integer usingAnimScript = FALSE;
-        for(i=0; i<llGetInventoryNumber(INVENTORY_SCRIPT); i++) {
-            if(llGetSubString(llGetInventoryName(INVENTORY_SCRIPT, i), 0, 30) == "Supercar 2 Animation Controller") {
-                usingAnimScript = TRUE;
-                jump found;
-            }
-        }
-        @found;
-        
-        if((perm & PERMISSION_TRIGGER_ANIMATION) && (! useAvsitter) && (! usingAnimScript)) {
-            integer count = llGetInventoryNumber(INVENTORY_ANIMATION);
-            if (count != 0) {
-                llStopAnimation("sit");
-                llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
-            }
+        if((perm & PERMISSION_TRIGGER_ANIMATION) && (llGetInventoryNumber(INVENTORY_ANIMATION) == 1)) {
+            llStopAnimation("sit");
+            llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
         }
        
     }
@@ -886,7 +894,7 @@ state Driving {
             dialogwait = FALSE;  
             llSetTimerEvent(0.0); 
             llListenRemove(menu_handler); 
-            if((message == "Park Car") && (gRun==1))  { 
+            if((message == "Pause Car") && (gRun==1))  { 
                 llSetStatus(STATUS_PHYSICS, FALSE);
                 for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
                     list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
@@ -931,7 +939,7 @@ state Driving {
             llListenRemove(menu_handler);
             llSetTimerEvent(0.0);  
             dialogwait = FALSE;
-        } else if((! parked) && (gRun == 0) && (auto_return_time>0) && (startposition != ZERO_VECTOR)) {
+        } else if((! parked) && (gRun == 0) && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
             llSetRegionPos(startposition);
             llSetRot(startrot);
             llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
