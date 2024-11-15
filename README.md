@@ -46,7 +46,7 @@ Version 2.1 has the following changes since 2.0.x:
   If there is more than one animation in the Contents, the Supercar script will
   assume another animation system is being used, and not play any driver animation. The script managing multiple
   animations can be the kit-provided script, avSitter, or others. This change allowed some leaner code.
-  See the Animation Controls section for details on the benefits and limitations of avSitter versus
+  See the Passenger Seats section for details on the benefits and limitations of avSitter versus
   other systems.
 - [Usability] Improved default values for turning radius. There was a re-calibration of viewer
   turn controls in Firestorm 7.x viewer, the new settings shuld work better on the latest viewers.
