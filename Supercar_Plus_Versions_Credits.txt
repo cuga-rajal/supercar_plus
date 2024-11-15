@@ -190,5 +190,8 @@ are using, the script no longer breaks when you gear up beyond the list; default
 - [Usability] Better handling of the case where an object is rezzed after being returned to inventory
 in a driving state, typically by going off-world while being driven.
 - [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
+- [Add-on script bugfix] Also an update for add-on scripts in Supercar 2 Racecar Effects. Versions have been updated to 1.1.
+This fixes a problem where setting 'burnoutGear = 0' did not disable the sounds.
+
 
 // END OF VERSION HISTORY AND CREDITS

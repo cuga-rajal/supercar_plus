@@ -1,4 +1,4 @@
-// Supercar 2 Racecar Effects 1.0
+// Supercar 2 Racecar Effects 1.1
 // By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/

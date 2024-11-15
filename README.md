@@ -49,7 +49,7 @@ Supercar Version 2.1 has the following changes since 2.0.x:
   See the Passenger Seats section for details on the benefits and limitations of avSitter versus
   other systems.
 - [Usability] Improved default values for turning radius. There was a re-calibration of viewer
-  turn controls in Firestorm 7.x viewer, the new settings shuld work better on the latest viewers.
+  turn controls in Firestorm 7.x viewer, the new settings should work better on the latest viewers.
 - [Bug Fix] If the configurations turnList or speedList contain fewer entries then the number of gears you
 are using, the script no longer breaks when you gear up beyond the list; default values will be applied to higher gears.
 - [Usability] Renamed auto_return_time to auto_park_time, to avoid confusion with parcel auto return
@@ -57,9 +57,8 @@ are using, the script no longer breaks when you gear up beyond the list; default
 - [Usability] Better handling of the case where an object is rezzed after being returned to inventory
 in a driving state, typically by going off-world while being driven.
 - [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
-
-There is also an bugfix update for an add-on script Supercar 2 Racecar Effects. Versions have been updated to 1.1.
-This fixes a problem where setting 'burnoutGear = 0' did not disable the sounds.
+- [Add-on Script Bugfix] Also an update for add-on scripts in Supercar 2 Racecar Effects. Versions have been updated to 1.1.
+This fixes a problem where setting 'burnoutGear = 0' did not disable the sounds. 
 
 *Upgrading from a 2.0.x version of Supercar Plus*
 
