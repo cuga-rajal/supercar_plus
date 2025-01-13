@@ -1,4 +1,4 @@
-// Trak script by Xiija Anju, adapted for the Supercar Plus by Cuga Rajal, version 1.0
+// Trak script by Xiija Anju, adapted for the Supercar Plus by Cuga Rajal, version 1.1
 // This script can be used as a companion to the Supercar Plus script to trigger texture animations
 // typically used for belts or treds of a tank, for example. It supports forward and backward motion.
 // Texture animation is triggered by signals from the Supercar Plus script.
@@ -8,27 +8,31 @@
 
 list traks;
 
-getTraks() {
-	integer prims=llGetNumberOfPrims();  
-	for(integer x = 2; x <= prims; ++x) {
-		string lName = llGetLinkName(x);       
+getTraks()
+{
+     integer prims=llGetNumberOfPrims();  
+      integer x;
+      for(x = 2; x <= prims;++x)
+      { string lName = llGetLinkName(x);       
         list my_list = llParseString2List(lName,[" "],[","]);       
-		if (llList2String(my_list,0) == "trak") {
-			traks += x;          
-		} 
-	}  
+         if ( llList2String(my_list,0) == "trak")
+         {  traks += x;          
+         } 
+        
+      }  
 }
-
-doTraks(integer k) {
+doTraks( integer k ) {
     if( k==1 ) {
         integer len = llGetListLength(traks);
-        for(integer n = 0; n < len; n++) {
+        integer n;
+        for(; n < len;++n) {
             integer i = llList2Integer(traks,n);
             llSetLinkTextureAnim( i , ANIM_ON | SMOOTH | LOOP , ALL_SIDES, 1, 1, 1, 1, 0.25);    
         }
     } else if(k==2) {
         integer len = llGetListLength(traks);
-        for(integer n = 0; n < len; n++) {
+        integer n;
+        for(; n < len;++n) {
             integer i = llList2Integer(traks,n);
             llSetLinkTextureAnim( i , ANIM_ON | SMOOTH | LOOP , ALL_SIDES, 1, 1, 1, 1, -0.25);    
         }

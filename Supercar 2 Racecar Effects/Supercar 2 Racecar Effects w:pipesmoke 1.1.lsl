@@ -11,10 +11,18 @@
 
 integer         burnoutGear = 3;
 integer         turnburnGear = 4;   // this gear and above show smoke & screech when turning.
-string          smoke_tex = "9358845b-c735-3a94-f13f-062bd464dd9a"; 
-string          pipeflame_tex = "6cbe1bee-c770-ce9d-ca44-d736280332d0";
-string          sound_L = "57f23e25-ff01-1c33-4fc2-81a937c36825";
-string          sound_R = "456c5568-73b2-cec4-e2bc-36c642427a4a";
+
+// SL assets
+//string          smoke_tex = "9358845b-c735-3a94-f13f-062bd464dd9a"; // texture name or UUID. If name is used tex must be placed in each child prim producing smoke particles.
+//string          pipeflame_tex = "6cbe1bee-c770-ce9d-ca44-d736280332d0"; // texture name or UUID. If name is used tex must be placed in each child prim producing flame particles.
+//string          sound_L = "57f23e25-ff01-1c33-4fc2-81a937c36825"; // sound asset name or UUID. If name is used, sound asset must be placed in root prim.
+//string          sound_R = "456c5568-73b2-cec4-e2bc-36c642427a4a"; // sound asset name or UUID. If name is used, sound asset must be placed in root prim.
+
+// OS assets
+string          smoke_tex = "4e4b5c91-dc47-44b7-9936-bd5f521050cd";
+string          pipeflame_tex = "e2fe5df5-63e3-4122-acf4-b65f0271a997"; 
+string          sound_L = "cfa733ca-ec42-44b9-912a-1e41c599280c";
+string          sound_R = "05c49e32-5a10-4d37-a89d-f8704981dbe9"; 
 
 // end of configurable parameters
 

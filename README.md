@@ -144,7 +144,9 @@ Config notecard.
 
 Supercar no longer requires separate wheel scripts! A Wheel Configurator
 provides a dialog-based setup to configure the wheels without the need to
-hand-edit any numbers. It uses the Name and Description fields on the wheel
+hand-edit any numbers. Once set up, the wheels are managed by the main script. 
+
+The scriptt uses the Name and Description fields on the wheel
 prims to store wheel settings and will overwrite anything already in the
 Description. 
 
@@ -156,7 +158,7 @@ The Wheel Configurator requires the following preparations:
 
 3. For each wheel prim, erase anything in the Description field (or it can say "(No Description)").
 
-4. The Supercar 2 car script should be placed in the car and tested before using the wheel configurator
+4. The Supercar 2 car script should already be placed in the car and tested before using the wheel configurator
     
 Once these steps are completed, the Wheel Configurator script can be dropped
 into any _one_ wheel. Then click on that wheel to open the dialogs. Follow the
@@ -201,80 +203,92 @@ the prim name. The prim name may contain multiple words - for example,
 Any child prim on the vehicle can be made into a sittable passenger seat.
 
 Sittable prims do not need a sit script if the default avatar sits are
-sufficient; In this case, you can use a sit positioner system to set the
-passenger position, then you are done.
+sufficient; In this case, you can use a Sit Positioner System to set the
+passenger position, then you are done. You could also set it using a sit script
+and then remove the script when the desired position has been set.
 
-However if you need to play a passenger animation when seated, or trigger
+If you need to play an animation when a passenger is seated, or trigger
 something else when they sit, such as making a poseball invisible, then a sit
-script is required in the prim. A general-purpose sit script is provided for
-this, Sit w/Animation 1.5. This works on any build, vehicle or not, and is
-not limited to the Supercar system.
+script needs to be placed in that prim. A general-purpose sit script is provided for
+this, Sit w/Animation 1.5. This sit script works with any build, vehicle or not.
 
 Alternatively, you can use sit management system like avSitter if you already
 know how to implement those. avSitter can work well
-for a small number of seats, but it has been
-found to cause performance problems when too many sit locations are used. Excessive scripts in
-the vehicle can cause out-of-memory conditions and problems with sim crossings.
+for a small number of seats, such as a couples car with couples animations.
+But it has been
+found not to work well with larger number of sit locations. avSitter requires 1 to 2
+scripts per sit location, and more than 6-8 seats can cause out-of-memory conditions
+and problems at sim crossings and sims under heavy load.
 
-If you want to manage animations for a large number of passenger seats, avoid these
-problems by using the scripts provided with this package. 
+Cars with a small number of seats can use a sit script in each passenger seat. 
+The visible passenger seat may
+be it's own prim, in which case you can script that specific prim. Other times
+it is easier to accomplish with an invisible prim placed on top of a visibly intuitive seat;
+And then placing the sit script in that.
 
-There are different styles on how to visually indicate a passenger seat.
-Sometimes the intended seat will already be it's own prim and you can just
-script that prim directly. In cases where there isn't a 1-to-1 correspondence
-between a prim and seat location, you can add an invisible prim to be sittable
-in an intuitive location, or add a small poseball as a visual indicator that it
-can be sat on. There are different styles of doing this.
+Either way, the final step is to set the Click To property of each passenger prim to Sitting.
+Then, when hovering your mouse cursor over thie passenger seat, the cursor will change to a seat
+icon, making it easy for people to identify the seat being available.
 
-You will need to decide what prim on the vehicle will be sittable, and if
-needed, place and link in a prim to act as the sittable prim.  Then you can use
-a Sit Positioner System on that prim to set the passenger position.
+Cars with a large number of passenger seats and different animations can all be managed
+with one script provided with this package, Manage Child Prim Sits 2.0. This converts
+a vehicle that has multiple individual sits initially set up as described above to run
+funcionally equivalent with one script. See the following section for details.
 
-Before you add the sit script Sit w/Animation 1.5, open that script in your inventory and check the first
+If you are using the provided sit script Sit w/Animation 1.5, open that script in your
+inventory before using it in an object, and check the configuration
 setting "setoffset". This should be set to FALSE if you are using a Sit
 Positioning System; This tells the script not to change the sit offset because it
 was already done. In this case, the main purpose of the sit script is to play
-the animation or make other changes, depending on your settings.
+the animation when the passenger is seated.
 
-If you want to manually adjust the passenger position and rotation numerically, you can
+If you want to manually adjust the passenger sit offset numerically, you can
 set the "setoffset" config option to TRUE and then hand-adjust the numerical values
 "sitposition" and "sitrotation". The script comments explain how to do this.
+Note this will override any sit positioning previously set.
 
-If you first used the Sit Positioner System, that system prints it's settings to local
+Another option is to transfer your settings from the Sit Positioner System to the
+script, so that you can keep the original settings and make fine adjustments manually.
+When you use the Sit Positioner System, at the end of the process it prints it's settings
+to local
 chat. You then have the option to hand-copy those settings out of local chat and into the
-sit script, to preserve the current settings, and then switch to numerical adjustments to
-fine-tune the sit position.
-
-Either way, the script will manage playing an animation is also placed in the
-prim contents, switch visibility and/or hover text of the prim sat on.
-
-It is customary to set the "Click To" setting of any passenger prim to 'Sitting' so that
-it is easily recognized by the mouse cursor changing to a seat icon when you hover over
-that prim. You can change this from the Edit window General tab. 
-
-For vehicles with many seats, you can reduce the total script count of the vehicle
-by replacing all of them with a special script "Manage Child Prim Sits" provided in this
-package. (See the Other Features section). This single
-script can manage sits and animations on all passenger seats, with some limitations.
+sit script, to preserve the current settings, and then make numerical adjustments in the
+script to fine-tune it.
 
 Do not place sit scripts in the root prim! This can cause problems with the the driver's
 sit position and may cause the car not to be drivable.
 
 -----
 
+**Manage All Child Prim Sits With One Script**
+
+The script Manage Child Prim Sits can manage sits for many passenger seats with
+one single script, greatly reducing the script count on the vehicle and reducing
+lag. The script supports one animation per seat, and
+the setup process is fairly easy:
+
+    1. Create individual sits in child prims with individual sit scripts and
+    animations Adjust the sit offsets on each sit prim for specific animations.
+    2. For each seat prim,
+        a) copy the exact name of the animation to the prim Description,
+        b) set the prim Name to the word "sit",
+        c) Place a copy of the seat's animation into the root prim
+        d) then remove the sit script and the animation from the seat prim
+    3. Place a copy of this script in the root prim
+    
+If you use this option, you will also need to use the Driver Animation
+Controller script to manage the driver's animation.
+
+-----
+
 **Engine Sounds**
 
-You can add your own engine sounds or use sounds provided.
+You can use your own car sounds. Just drop them into the root prim and
+update the Config notecard with your sound names. Alternatively, you can use
+sound UUIDs in the Config without needing to place sounds in the root prim.
 
-In Second Life the is a config option "use\_sl\_sounds" that plays a series of car sounds
-available on that grid. 
-This a simple way to play engine sounds from your car in SL without having
-individual sound files. If you use this option you don't need to configure
-individual sounds.
-
-You can also use your own car sounds. Just drop them into the root prim and
-update this Config section with your sound names. Alternatively, you can use
-sound UUIDs in the configs without needing to place sounds in the root prim.
+In Second Life the config option "use\_sl\_sounds" can be set to TRUE to play
+a series of preselected car sounds available on that grid. 
 
 Race car sounds are also provided in the repository.  These came with from
 original iTec Supercar by Shin Ingen and are included here by permission. 
@@ -284,7 +298,7 @@ original iTec Supercar by Shin Ingen and are included here by permission.
 **Headlights**
 
 Headlights can be switched on and off with one of the provided headlight
-scripts. These scripts will switch  lights either at time of driving, or with an
+scripts. These scripts will switch lights either at time of driving, or with an
 optional Supercar HUD. The scripts provide two separate functions -- making the
 face of the headlight prim bright like a light, and casting a projected light
 beam on the ground.
@@ -305,13 +319,13 @@ watching the projection to point the light beam where you want. When you have
 finished positioning the prim, you can un-check the Light checkbox. This
 projection setting will now be used when the light is switched on.
 
-The script "Supercar Headlight 1.80" is a simple script that can be placed in
+The script "Supercar Headlight 1.80" can be placed in
 each prim that you want to light up and/or to cast a light projection when car
-lights are turned on. The script has a few configuration options where you can
+lights are turned on. The script has a few configurations where you can
 adjust lighting features. There are also settings to enable or disable the face
-light-up or projectior feature on a per-prim basis. This allows you to assign
-separate prims as the visual headlight on the car and other invisible prims that
-may be used to cast a projection. Separate prims are often needed because the
+light-up or projectior feature on a per-prim basis. It is often necessary to assign
+some prims displaying as visual headlight and other invisible prims 
+used for casting a projection. Separate prims are often needed because the
 visual prims may not be facing the right direction for the projection.
 
 With the projector setting disabled but shine setting enabled, the script can be
@@ -391,13 +405,14 @@ need to reset the script to recognize the changes.
 
 Other settings:
     
-    - "burnout_gear" is a specific gear that will play continuus sound and particle
+    - "burnout_gear" is a specific gear that will play continuous sound and particle
      effects when moving forward or backward. To disable this feature set it to 0.
      Burnout in real life is to heat the tire rubber just before a race to improve
-     adhesion; and to test functioning of the engine at full RPM before the race.
+     traction, and to test functioning of the engine at full RPM before a race.
 
     - "turnburnGear" - this gear and above will make smoke & screech sounds when
-    turning, on the side opposite the turn direction
+    turning, on the side opposite the turn direction, simulating the expected effects
+    at high speed
 
 Tailpipe flame effects are displayed for 3 seconds when the car starts up, and
 whiledriving in burnout gear.
@@ -432,7 +447,7 @@ populated regions or where there is already significant time dilation.
 
 There are 2 situations when you will need this script. 
 
-Most people use a single animation for the driver. But there are occasions when you want
+In most cases a single animation is sufficient for the driver. But there are occasions when you want
 the driver animation to change depending on if the vehicle is stopped, moving, or going fast.
 For example, a bicycle, or a hamster wheel. The Supercar 2 Animation Controller add-on script can do this.
 
@@ -440,39 +455,11 @@ The script has instructions in the
 comments on how to set it up. You configure the script with names of the driver
 animations, then place copies of the animations into the root prim contents
 along with the script. The settings anim\_idle, anim\_fwd and anim\_fast correspond
-to being stopped, moving or moving fast.
+to being stopped, moving forward or moving fast.
 
 You will also need to use this script if there are more than one animation in the root prim Contents,
 and you want the driver to play a specific animation when driving. Set all 3 options
 to the animation you want to use.
-
-If you were using this feature before Supercar version 2.0, the settings
-anim\_fwd, anim\_idle, or anim\_fast that were previously in the Config notecard
-will need to be transfered to this script.
-
------
-
-**Manage All Child Prim Sits With One Script**
-
-The script Manage Child Prim Sits can manage sits for many passenger seats with
-one single script, greatly reducing the script count on the vehicle and reducing
-lag. It can also prevent out-of-memory conditions and lag that may occur when 
-using avSitter on a vehicle with a large number of seats.
-
-The script supports one animation per seat which can all be different, and
-the setup process is fairly easy:
-
-    1. Create individual sits in child prims with individual sit scripts and
-    animations Adjust the sit offsets on each sit prim for specific animations.
-    2. For each seat prim,
-        a) copy the exact name of the animation to the prim Description,
-        b) set the prim Name to the word "sit",
-        c) Place a copy of the seat's animation into the root prim
-        d) then remove the sit script and the animation from the seat prim
-    3. Place a copy of this script in the root prim
-    
-If you use this option, you will also need to use the Supercar 2 Animation
-Controller script to manage the driver's animation.
 
 -----
 
