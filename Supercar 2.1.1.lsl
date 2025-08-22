@@ -1,7 +1,7 @@
 // Supercar 2.1.1
  
 // By Cuga Rajal <cuga@rajal.org>
-// Latest version and more information at https://github.com/cuga-rajal/supercar_plus/ 
+// Latest version and more information at https://github.com/cuga-rajal/supercar_plus/
 // This work is licensed under the Creative Commons BY 4.0 License: https://creativecommons.org/licenses/by/4.0/
  
 //---USER-DEFINED VARIABLES--------------------------------------------------
@@ -32,7 +32,7 @@ float           CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degr
 float           lookAhead = 6.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
                 
 // Other options
-integer         auto_park_time = 300;  // Delay before auto-return in seconds. Set to 0 to disable.
+integer         auto_park_time = 0;  // Delay before auto-return in seconds. Set to 0 to disable.
 integer         click_to_pause = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 string          sit_message = ""; // Chat window message shown to driver when sitting
 
@@ -73,7 +73,7 @@ list            wheels;
 list            wheelvec;
 list            fwlocalrot;
 float           spinstate;
-string			currSound;
+string            currSound;
 
 float           gVAMT=0.35;              // how fast turning force is applied
 vector          gVLFT=<80.0,3000.0,8.0>;   // XYZ linear friction   gVLFT=<8.0,3000.0,8.0>
@@ -260,6 +260,7 @@ set_engine(){
     if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
     llSetStatus(STATUS_PHYSICS, TRUE); 
     gRun = 1;
+    gMoving==0;
     llSleep(2);
     enginesound();
 }
@@ -273,25 +274,25 @@ gearshift(integer g){
 enginesound(){
     if (gMoving==0) {
         if((gSoundIdle != "") && (currSound != gSoundIdle)) {
-        	llStopSound();
+            llStopSound();
             llLoopSound(gSoundIdle,1.0);
             currSound = gSoundIdle;
         }
     } else if (reverse) {
         if((gSoundRev != "") && (currSound != gSoundRev)) {
-        	llStopSound();
+            llStopSound();
             llLoopSound(gSoundRev,1.0);
             currSound = gSoundRev;
         }
     } else if ((gSoundAggressive != "") && (gGear >= aggressive_gear) && (gSoundSlow != gSoundAggressive)) {
         if(currSound != gSoundAggressive) {
-        	llStopSound();
+            llStopSound();
             llLoopSound(gSoundAggressive,1.0);
             currSound = gSoundAggressive;
         }
     } else {
         if((gSoundSlow != "") && (currSound != gSoundSlow)) {
-        	llStopSound();
+            llStopSound();
             llLoopSound(gSoundSlow,1.0);
             currSound = gSoundSlow;
         }
@@ -394,7 +395,7 @@ finish() {
     preload_sounds();
     init_engine();
     init_PhysEng();
-    llOwnerSay("   Free memory: " + (string)(llGetFreeMemory()) + " bytes"; 
+    //llOwnerSay("   Free memory: " + (string)(llGetFreeMemory()) + " bytes"); 
     llOwnerSay("Initialization complete, ready to drive.");
 }
 
