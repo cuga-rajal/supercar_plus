@@ -4,25 +4,24 @@ gSitMessage = "Drive";  // replaces "Sit" in the right-click menu
 gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
 
 maxGear = 3;        // highest gear that can be shifted to, max 11  *note* 0=1st gear, 11=12th gear
-lowestGear = 0;     // lowest gear that can be shifted to, min 0
+lowestGear = 0;     // lowest gear that can be shifted to, min 0 *note* 0=1st gear
 startGear = 0;      // gear selected on sit 
-fallbackAbove = 6;  // releasing forward button when gear higher than this falls back to this
-turn_in_place_speed = 2; // Rotation speed if rotating in place. Set to 0 to disable.
+fallbackAbove = 6;  // releasing forward button when higher than this gear falls back to this
+turn_in_place_speed = 2; // left-right rotation speed when not moving forward. Set to 0 to disable.
 turnList = [ ]; // Empty list uses default values; Override defaults with this list 
 speedList = [ ]; // Empty list uses default values; Override defaults with this list 
+bank = FALSE;  // whether the vehicle should lean in the direction of turns like a motorcycle
 
 enableCamera = TRUE;  // Whether or not to enable camera controls
 CamDist = 10; // How far back you want the camera positioned. Typically 2x lookAhead
 CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degrees
 lookAhead = 5.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
 
-auto_return_time = 0;  // Delay before auto-return in seconds. Set to 0 to disable.
-click_to_park = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
+auto_park_time = 0;  // Delay before auto-return in seconds. Set to 0 to disable.
+click_to_pause = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
 sit_message = "The car has 4 gears. Use up/down controls to change gears."; // Chat window message shown to driver when sitting
-stand_message = ""; // Chat window message shown to driver when standing
 
 aggressive_gear = 3; // This gear and above play "gSoundAggressive", below this gear plays "gSoundSlow"
-use_sl_sounds = FALSE;  // Whether to use free car sounds in SL. If set to TRUE this overrides sounds below.
 gSoundStartup = ""; // sound made when driver seated
 gSoundIdle = "";  // looped sound when not moving
 gSoundSlow = "";   // looped sound when driving forward and gear below aggresive_gear

@@ -192,6 +192,18 @@ in a driving state, typically by going off-world while being driven.
 - [Added] Multi-sim auto-park script added to the package; See new detail section on auto-park.
 - [Add-on script bugfix] Also an update for add-on scripts in Supercar 2 Racecar Effects. Versions have been updated to 1.1.
 This fixes a problem where setting 'burnoutGear = 0' did not disable the sounds.
-
+Rev. 2.1.1
+- [New feature] Added an option to tilt or bank the vehicle when turning, such as on a motorcycle.
+  This is an early implementation; The bank angle is not currently adjustable.
+  This option can be added to the Config notecard (see example)
+- [Add-on script update] Sit script "Sit w/Animation" updated to 2.0, now includes touch to adjust sitter position
+- [Add-on script update] Sit script "Manage Child Prim Sits" updated to 2.1, now includes touch to adjust sitter position
+- Removed config option "stand_message" which nobody appeared to be using
+- Removed config option "use_sl_sounds". The sounds are still supported but must be configured with individual sound settings.
+- [Usability] Better handling of the case when the script is reset while car is active, now resetting wheels, particles, sound, permissions, physics
+- [Memory reduced] Removed several global variables to reduce memory requirements.
+  These were mainly in the vehicle physics settings and are now embedded with physics calls.
+- [Code Cleanup] Removed code to manage someone who sat while the script was still resetting
+- [Bug Fix] Dialog timeout feature was removed because it prevented auto-park from operating in some conditions
 
 // END OF VERSION HISTORY AND CREDITS
