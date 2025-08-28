@@ -1,4 +1,4 @@
-// Supercar 2.1.1
+// Supercar 2.1.2
  
 // By Cuga Rajal <cuga@rajal.org>
 // Latest version and more information at https://github.com/cuga-rajal/supercar_plus/
@@ -508,7 +508,7 @@ default {
 
 state Idle {
     state_entry() {
-    
+        currSound = "";
     }
 
     on_rez(integer param) {
@@ -642,6 +642,7 @@ state Driving {
             else if ((driver == NULL_KEY) && seated) { // If driver stood up 
                 seated = FALSE;       
                 gRun = 0;
+                currSound = "";
                 turnwheels("NoTurn");
                 spinwheels(0, "NoSpin");
                 init_engine();

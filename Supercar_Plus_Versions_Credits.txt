@@ -205,5 +205,9 @@ Rev. 2.1.1
   These were mainly in the vehicle physics settings and are now embedded with physics calls.
 - [Code Cleanup] Removed code to manage someone who sat while the script was still resetting
 - [Bug Fix] Dialog timeout feature was removed because it prevented auto-park from operating in some conditions
-
+Rev. 2.1.2
+- [Bug Fix] Under some conditions the engine idle sound did not play properly.
+- [Bug Fix] Add-on script "Supercar 2 Racecar Effects w/pipesmoke" now version 1.2.
+  Under some conditions the tailpipe smoke did not stop when the driver stood up.
+  
 // END OF VERSION HISTORY AND CREDITS

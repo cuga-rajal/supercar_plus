@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.1.1, August 21, 2025
+version 2.1.2, August 27, 2025
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -38,6 +38,11 @@ sections in this Readme have more details.
 -----
 
 **Whats New**
+
+Supercar Version 2.1.2:
+- [Bug Fix] Fixed a condition where the engine idle sound did not play properly when the driver first sits
+- [Bug Fix] Add-on script "Supercar 2 Racecar Effects w/pipesmoke" updated
+  Under some conditions the tail pipe smoke did not stop when the driver stood up
 
 Supercar Version 2.1.1 has the following changes since 2.1:
 - [New feature] Added an option to tilt or bank the vehicle when turning, such as on a motorcycle.
@@ -196,78 +201,37 @@ the prim name. The prim name may contain multiple words - for example,
 
 *Use a Sit Positioner System to Calibrate Your Passenger Seats*
 
-Any prim on the vehicle can be made into a sittable passenger seat. The easiest way to do
-this is to use a Sit Positioner System, with visual tools to calibrate a sit position for
-each prim that you want to be sittable. This is the same tool you used to set the
-driver position.
+Any prim on the vehicle can be made into a sittable passenger seat. The easiest way to do this is to use a Sit Positioner System, with visual tools to calibrate a sit position for each prim that you want to be sittable. This is the same tool you used to set the driver position. 
 
 *If a passenger seat doesn't need to trigger animations or other actions*
 
-Once you use the Sit Positioner System to set the passenger position, the next step is to
-decide if you want to have a custom animation play for the passenger, or if their default sit
-animation is sufficient. If their default sit is sufficient, no further scripting is needed.
+Once you use the Sit Positioner System to set the passenger position, the next step is to decide if you want to have a custom animation play for the passenger, or if their default sit animation is sufficient. If their default sit is sufficient, no further scripting is needed. 
 
 *If a passenger seat needs to trigger animations or other actions*
 
-If you need to play an animation when a passenger is seated, or trigger something else
-when they sit, such as making a poseball invisible, then a script will need to be placed in
-that prim to accomplish this. A general-purpose sit script, Sit w/Animation 2.0, is
-provided for this. This script works with any build, vehicle or not.
-The script hosts a number of other options. Check the the notes at the top of
-the script for more details.
+If you need to play an animation when a passenger is seated, or trigger something else when they sit, such as making a poseball invisible, then a script will need to be placed in that prim to accomplish this. A general-purpose sit script, Sit w/Animation 2.0, is provided for this. This script works with any build, vehicle or not. The script hosts a number of other options. Check the the notes at the top of the script for more details. 
 
-The main change with version 2.0 is the addition of a touch menu to adjust the avatar
-position. Even if you do not have an animation to play, adding this script to the
-passenger prim will add this touch adjust feature.
+The main change with version 2.0 is the addition of a touch menu to adjust the avatar position. Even if you do not have an animation to play, adding this script to the passenger prim will add this touch adjust feature. 
 
 *Better option for managing a large number of seats*
 
-This kit provides another script option for passenger seats that is useful when you have a
-vehicle with a large number of seats. Instead of using a separate script in each passenger
-prim, which can cause memory mroblems for a large vehicle, you can manage all the
-passenger sits with one script. This can help reduce script memory on the vehicle and help
-it be more responsive to driving controls. The script "Manage Child Prim Sits 2.1.lsl"
-can be set up as described in the following section.
+This kit provides another script option for passenger seats that is useful when you have a vehicle with a large number of seats. Instead of using a separate script in each passenger prim, which can cause memory mroblems for a large vehicle, you can manage all the passenger sits with one script. This can help reduce script memory on the vehicle and help it be more responsive to driving controls. The script "Manage Child Prim Sits 2.1.lsl" can be set up as described in the following section. 
 
 *Pros and cons of avSitter*
 
-If you are already using another sit management system such as avSitter, this is
-compatible with the Supercar script, however, there can be memory issues when used with a
-large number of seats. We found that avSitter works well for a couples car up to about 10
-singles sits or 5 couples sits. But it has been found to cause script out-of-memory
-conditions if more than 10 singles sits or more than 5 couples sits are used. particularly
-at sim crossings and in sims under heavy load. Vehicles with more than 10 singles sits or
-5 couples sits should not use avSitter and use a different sit scripting system instead.
-Working options are included with the kit.
+If you are already using another sit management system such as avSitter, this is compatible with the Supercar script, however, there can be memory issues when used with a large number of seats. We found that avSitter works well for a couples car up to about 10 singles sits or 5 couples sits. But it has been found to cause script out-of-memory conditions if more than 10 singles sits or more than 5 couples sits are used. particularly at sim crossings and in sims under heavy load. Vehicles with more than 10 singles sits or 5 couples sits should not use avSitter and use a different sit scripting system instead. Working options are included with the kit. 
 
 *Other options provided by sit script*
 
-The most common approach for most vehicles is to use a separate script in each passenger
-prim. If you are using the provided sit script "Sit w/Animation 2.0", it's default
-settings simply play an animation in the contents of the same prim. But it has a number of
-optional features that can also be enabled, for example: adjusting the alpha of the seat
-prim, playing a hover text when not seated, sending a message to the sitter, etc. Check
-the comments at the top of the script for details.
+The most common approach for most vehicles is to use a separate script in each passenger prim. If you are using the provided sit script "Sit w/Animation 2.0", it's default settings simply play an animation in the contents of the same prim. But it has a number of optional features that can also be enabled, for example: adjusting the alpha of the seat prim, playing a hover text when not seated, sending a message to the sitter, etc. Check the comments at the top of the script for details. 
 
 *Adjusting the sit offset by editing numbers manually*
 
-One option is to adjust the sit position by manually editing numbers in the script
-contents. Some like this option, some don't. If you want to do this, you can use the
-following steps. Open that script in your prim and set the "sitposition" and "sitrotation"
-options to the values set by your Sit Positioning System. In most cases thos settings will
-be printed out in local chat and you can transfer them to the script. Once you are sure
-thos are correct, change the "setoffset" config option to TRUE and then hand-adjust the
-numerical values "sitposition" and "sitrotation". The script comments explain how to do
-this in more detail. Note this will override any sit positioning previously set.
+One option is to adjust the sit position by manually editing numbers in the script contents. Some like this option, some don't. If you want to do this, you can use the following steps. Open that script in your prim and set the "sitposition" and "sitrotation" options to the values set by your Sit Positioning System. In most cases thos settings will be printed out in local chat and you can transfer them to the script. Once you are sure thos are correct, change the "setoffset" config option to TRUE and then hand-adjust the numerical values "sitposition" and "sitrotation". The script comments explain how to do this in more detail. Note this will override any sit positioning previously set. 
 
 *Don't add a sit script to the root prim unless you need to*
 
-The main car script manages the sits for the driver. A separate sit script is not needed.
-However the main car script does not provide an option to adjust the driver position when
-seated. If you want to add a touch dialog to adjust their position after being seated, you
-can add the general purpose script Sit w/Animation 2.0 to the root prim. Before adding
-this script, make sure "setoffset" config option is set to FALSE.
-
+The main car script manages the sits for the driver. A separate sit script is not needed. However the main car script does not provide an option to adjust the driver position when seated. If you want to add a touch dialog to adjust their position after being seated, you can add the general purpose script Sit w/Animation 2.0 to the root prim. Before adding this script, make sure "setoffset" config option is set to FALSE. 
 -----
 
 **Manage All Child Prim Sits With One Script**
@@ -563,7 +527,7 @@ sized cars. A number of settings can be changed to further
 enhance your vehicle. The meaning of each setting is explained in the
 notecard. The following sections detail some of these.
 
-*Auto-Park* 
+*auto\_park\_time* 
 
 The script has an optional feature to park the car back in it's parking spot at a
 given time after the driver stands. This built-in feature works only for a single region
@@ -600,7 +564,7 @@ local chat indicating this. This is
 to prevent the vehicle being re-parked to a location from previous use that is no longer relevant. 
 To reactivate it, simply move the vehicle to it's new parking location, touch it and confirm the dialog.
 
-*click_to_pause*
+*click\_to\_pause*
 
 The setting click\_to\_pause adds some options that are useful in group situations, and
 integrates with auto-park.

@@ -232,8 +232,10 @@ default {
     }
     
     timer() {
+    	list tsm = [];
+    	if(llGetStatus(STATUS_PHYSICS)) { tsm = tailsmoke; }
         for(i=0; i<llGetListLength(flame_prims); i++) {
-            llLinkParticleSystem(llList2Integer(flame_prims, i), tailsmoke);
+            llLinkParticleSystem(llList2Integer(flame_prims, i), tsm);
         }
         llSetTimerEvent(0.0);
     }
