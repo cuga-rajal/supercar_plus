@@ -1,4 +1,4 @@
-// Supercar 2.1.2
+// Supercar 2.2
  
 // By Cuga Rajal <cuga@rajal.org>
 // Latest version and more information at https://github.com/cuga-rajal/supercar_plus/
@@ -23,7 +23,7 @@ integer         fallbackAbove = 6;  // releasing forward button when gear higher
 float           turn_in_place_speed = 2; // Rotation speed if rotating in place. Set to 0 to disable.
 list            turnList = [ ]; // Empty list uses default values; Override defaults with this list 
 list            speedList = [ ]; // Empty list uses default values; Override defaults with this list 
-integer         bank = FALSE;  // whether the vehicle should lean in the direction of turns like a motorcycle
+float           tilt_push = 0;  // side force pushing into the turn, typical range 5-20, 0 to disable
  
 // Camera options
 integer         enableCamera = TRUE;  // Whether or not to enable camera controls
@@ -61,7 +61,6 @@ integer         i;
 integer         primcount;
 integer         listener;
 key             driver = NULL_KEY;
-key             prevDriver = NULL_KEY;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
@@ -73,7 +72,7 @@ list            wheels;
 list            wheelvec;
 list            fwlocalrot;
 float           spinstate;
-string            currSound;
+string          currSound;
 
 float           gVAMT=0.35;              // how fast turning force is applied
 vector          gVLFT=<80.0,3000.0,8.0>;   // XYZ linear friction   gVLFT=<8.0,3000.0,8.0>
@@ -120,8 +119,8 @@ init_PhysEng(){
         gTurnMulti=2;
         llOwnerSay("   Tuned for SL/Havok");
     } else {  // Opensim/Bullet/ODE
-        gTurnMulti=0.987654;
-        gVAMT=0.50; // adjustment for turn speed
+        gTurnMulti=0.987654; // adjustment for tire rotation
+        gVAMT=0.50; // adjustment for turn speed/force
         llOwnerSay("   Tuned for Opensim");
     }
     
@@ -260,7 +259,7 @@ set_engine(){
     if(gSoundStartup!="") { llTriggerSound(gSoundStartup,1.0); }
     llSetStatus(STATUS_PHYSICS, TRUE); 
     gRun = 1;
-    gMoving==0;
+    gMoving=0;
     llSleep(2);
     enginesound();
 }
@@ -339,7 +338,7 @@ setConfig(string setting, string qval) {
         qval = llStringTrim(llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0), STRING_TRIM);
         if(qval!="") { speedList = llParseString2List(qval,[","],[""]); }
     }
-    else if(setting=="bank") { if(qval=="TRUE") { bank=TRUE; } else { bank=FALSE; } }
+    else if(setting=="tilt_push") { tilt_push = (float)qval; }
     else if(setting=="enableCamera") { if(qval=="TRUE") { enableCamera=TRUE; } else { enableCamera=FALSE; } }
     else if(setting=="CamDist") { CamDist = (float)qval; }
     else if(setting=="CamPitch") { CamPitch = (float)qval; }
@@ -457,11 +456,10 @@ drivecar() {
     gGear = startGear;
     set_engine();
     llMessageLinked(LINK_SET, 0, "car_start", NULL_KEY);
-    llMessageLinked(LINK_SET, 0, "gear " + (string)startGear, NULL_KEY);
+    llMessageLinked(LINK_SET, 0, "gear " + (string)(startGear + 1), NULL_KEY);
     llSetSitText("Sit");
     seated = TRUE;
     if(sit_message !="") { llRegionSayTo(driver,0,sit_message); }
-    prevDriver = driver;
     if(parked) { llRegionSayTo(driver,0, "Driving resumed."); }
     parked = FALSE;
 }
@@ -473,11 +471,9 @@ default {
         gRun = 0;
         llSetTimerEvent(0.0);
         llStopSound();
-        llReleaseControls();  
         llSetText("",<0,0,0>,1.0);
         llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
         llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
-        llListenRemove(listener);  
         llSetStatus(STATUS_PHYSICS, FALSE); 
         config_init();
         turnwheels("NoTurn");
@@ -499,7 +495,6 @@ default {
                 kQuery = llGetNotecardLine(notecard_name, iLine);
             } else {
                 finish();
-                @myidle;
                 state Idle;
             }
         }
@@ -608,6 +603,8 @@ state Driving {
     touch_start(integer total_number) { 
         if(click_to_pause && (llDetectedKey(0) == driver)) { 
             menu(driver,"\nPause your car or resume driving?",["Pause Car", "Drive"]); 
+        } else if((auto_park_time > 0) && (llDetectedKey(0) == llGetOwner()) && (gRun==0)) { // if touched in countdown mode
+            menu(llGetOwner(),"\nVehicle is currently in countdown for auto-park. Stop countdown and set Auto-Park location??",["Set Location", "Cancel"]); 
         }
     } 
     
@@ -781,7 +778,7 @@ state Driving {
             } else {
                 AngularMotor.z -= (gGearPower * 2.0) / ((gTurnRatio/gTurnMulti)*gGear);
             }
-            if(bank) { AngularMotor.x = 20; }
+            if(tilt_push!=0) { AngularMotor.x = tilt_push; }
             gNewTurnAngle = "RightTurn";
         }
 
@@ -793,7 +790,7 @@ state Driving {
             } else {
                 AngularMotor.z += (gGearPower * 2.0) / ((gTurnRatio/gTurnMulti)*gGear);
             }
-            if(bank) { AngularMotor.x = -20; }
+            if(tilt_push!=0) { AngularMotor.x = -tilt_push; }
             gNewTurnAngle = "LeftTurn";
         }
         
@@ -837,7 +834,15 @@ state Driving {
         if (channel == menu_channel) {
             llSetTimerEvent(0.0); 
             llListenRemove(menu_handler); 
-            if((message == "Pause Car") && (gRun==1))  { 
+            if(message == "Set Location")  { 
+                llOwnerSay("Auto-park position set");
+                startposition = llGetPos();
+                startrot = llGetRot();
+                llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
+            	llSetTimerEvent(0);
+            	state Idle;
+            }
+            else if((message == "Pause Car") && (gRun==1))  { 
                 llSetStatus(STATUS_PHYSICS, FALSE);
                 for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
                     list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);

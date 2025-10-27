@@ -209,5 +209,17 @@ Rev. 2.1.2
 - [Bug Fix] Under some conditions the engine idle sound did not play properly.
 - [Bug Fix] Add-on script "Supercar 2 Racecar Effects w/pipesmoke" now version 1.2.
   Under some conditions the tailpipe smoke did not stop when the driver stood up.
-  
+Rev. 2.1.3
+- [Change] Tilt/bank feature now allows configurable side push. This is to
+  acommodate a greater range of vehicle sizes. The config option "bank" [boolean] that became
+  available in V2.1.1 has been changed to "tilt_push" [float] with typical values 5-20.
+  Set to 0 to disable. Disabled by default. If you used the "bank" feature introduced in the last version you will need to update you Config.
+  I don't expect this config option to change again. 
+- [Bug Fix] Auto-park location can now be updated while it is in countdown mode.
+- [Bug Fix] Misc bug fixes and optimizations
+- [HUD Update] Speed now shown in metric and English units by request; Bug fixes; HUD version now 2.1.
+- [Add-on script update] Multi-sim auto-park script updated, passenger standing will no longer trigger park.
+  Add-on script version now 2.3. Name changed to Supercar 2 Auto-Park as it is no longer limited to multi-sim.
+- Readme includes details on upcoming changes in version 2.2.
+
 // END OF VERSION HISTORY AND CREDITS

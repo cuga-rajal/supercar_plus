@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.1.2, August 27, 2025
+version 2.1.3, Oct 25, 2025
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -39,41 +39,52 @@ sections in this Readme have more details.
 
 **Whats New**
 
-Supercar Version 2.1.2:
-- [Bug Fix] Fixed a condition where the engine idle sound did not play properly when the driver first sits
-- [Bug Fix] Add-on script "Supercar 2 Racecar Effects w/pipesmoke" updated
-  Under some conditions the tail pipe smoke did not stop when the driver stood up
+Supercar Version 2.1.3 has a number of enhancements and bug fixes.
 
-Supercar Version 2.1.1 has the following changes since 2.1:
-- [New feature] Added an option to tilt or bank the vehicle when turning, such as on a motorcycle.
-  This option can be added to the Config notecard (see example)
-- [Add-on script update] Sit script "Sit w/Animation" updated to 2.0, now includes touch to adjust sitter position
-- [Add-on script update] Sit script "Manage Child Prim Sits" updated to 2.1, now includes touch to adjust sitter position
-- Removed config option "stand_message" which nobody appeared to be using
-- Removed config option "use_sl_sounds". The sounds are still supported but must be configured with individual sound settings
-- [Usability] Better handling of the case when the script is reset while car is active, now resetting wheels, particles, sound, permissions, physics
-- [Memory reduced] Removed several global variables and other changes to reduce memory requirements.
-- [Bug Fix] Dialog timeout feature was removed because it prevented auto-park from operating in some conditions
+- [Change] Tilt/bank feature now allows configurable side push. This is to accommodate a greater range of vehicle sizes. The config option "bank" [boolean] that became
+  available in V2.1.1 has been changed to "tilt_push" [float] with typical values 5-20.
+  Set to 0 to disable. Disabled by default.
+  If you used the "bank" option introduced in V2.1.1 you will need to update you Config.
+  I don't expect this config option to change again. 
+- [Bug Fix] Auto-park location can now be updated while it is in countdown mode.
+- [Bug Fix] Several bug fixes and optimizations
+- [HUD Update] By request, speed now shown in metric and English units; Bug fixes; HUD version now 2.1.
+- [Add-on script update] Multi-sim auto-park script updated, passenger standing will no longer trigger park.
+  "Multi-Sim" has been removed from its name as it now supports single sim auto park.
+  Auto-Park script version is now version 2.3.
 
+Supercar Version 2.2 in the Works
+
+With script memory becoming a concern in SL (getting close to the max 64k) I'm working on
+a major update for Supercar version 2.2 that will split off some functions into separate
+scripts.
+
+I am planning to decouple auto-park from the main car script. The separate Auto-Park script
+included with this package,
+previously used only for multi-sim auto-parking, can now support single-sim layouts.
+I removed "Multi-Sim" from its name. 
+The Config setting "auto\_park\_time" in the main script and Config notecard will be removed in version 2.2.
+
+Also, the reading in of the Config notecard settings will be handled by a separate script.
+This change helps reduce memory but also introduces the possibility of a future version using dialogs instead of a NC reader
+to set configs, which could be useful for vehicles distributed without full perms. 
 
 To see complete lists of changes for each version, please see the file Supercar_Plus_Versions_Credits.txt.
 
-*Upgrading from a 2.0.x version of Supercar Plus*
+*Upgrading from an earlier version of Supercar Plus*
 
-In the Config notecard, 
+The whole purpose of using the Config notecard to store settings is so that script updates
+(bug fixes, etc) can be a drop-in replacement, without having to hand-edit any settings.
+This holds true most of the time.
 
-	- Rename auto_return_time to auto_park_time
-	- Rename click_to_park to click_to_pause
-	- Remove useAvsitter, stand_message, use_sl_sounds - these are no longer used
-	  See documentation if you need any of these options
-	- If the new bank feature is used, add this option as shown in the sample file Config.txt
-	
-*Upgrading from a 1.x version of Supercar Plus*
+However, depending on the old version you are upgrading from, some settings may have changed names, been added, or been removed.
+If you are upgrading,
+please compare your Config notecard to the one provided in this package, and update it accordingly.
+Delete any settings no longer used, and add any new ones not previously in the NC.
 
-Please see the separate document
-"Upgrading from a 1.x version of Supercar Plus". In most cases it is easier to
-start over with the latest version and transfer your settings to the new Config 
-notecard format.
+My general goal is not to make changes to the the list of settings in the Config notecard,
+but a numer of recent changes to the main script
+has required this. I'm hoping not to make any more changes with version 2.2.
 
 -----
 
@@ -135,17 +146,17 @@ preferred method because it allows script updates to be dropped into the prim,
 replacing the old one, without needing to hand-edit any settings.
 
 The file Config.txt provided with this package is a working template for the
-Config notecard.
+Config notecard, and provides reasonable values for average-sized cars.
 
 -----
 
 **Wheel Rotation**
 
-Supercar no longer requires separate wheel scripts! A Wheel Configurator
-provides a dialog-based setup to configure the wheels without the need to
+Supercar manages wheel rotation without separate wheel scripts! A Wheel Configurator
+script provides a one-time dialog-based setup to configure the wheels, without the need to
 hand-edit any numbers. Once set up, the wheels are managed by the main script. 
 
-The scriptt uses the Name and Description fields on the wheel
+The script uses the Name and Description fields on the wheel
 prims to store wheel settings and will overwrite anything already in the
 Description. 
 
@@ -215,7 +226,7 @@ The main change with version 2.0 is the addition of a touch menu to adjust the a
 
 *Better option for managing a large number of seats*
 
-This kit provides another script option for passenger seats that is useful when you have a vehicle with a large number of seats. Instead of using a separate script in each passenger prim, which can cause memory mroblems for a large vehicle, you can manage all the passenger sits with one script. This can help reduce script memory on the vehicle and help it be more responsive to driving controls. The script "Manage Child Prim Sits 2.1.lsl" can be set up as described in the following section. 
+This kit provides another script option for passenger seats that is useful when you have a vehicle with a large number of seats. Instead of using a separate script in each passenger prim, which can cause memory problems for a large vehicle, you can manage all the passenger sits with one script. This can help reduce script memory on the vehicle and help it be more responsive to driving controls. The script "Manage Child Prim Sits 2.1.lsl" can be set up as described in the following section. 
 
 *Pros and cons of avSitter*
 
@@ -227,11 +238,12 @@ The most common approach for most vehicles is to use a separate script in each p
 
 *Adjusting the sit offset by editing numbers manually*
 
-One option is to adjust the sit position by manually editing numbers in the script contents. Some like this option, some don't. If you want to do this, you can use the following steps. Open that script in your prim and set the "sitposition" and "sitrotation" options to the values set by your Sit Positioning System. In most cases thos settings will be printed out in local chat and you can transfer them to the script. Once you are sure thos are correct, change the "setoffset" config option to TRUE and then hand-adjust the numerical values "sitposition" and "sitrotation". The script comments explain how to do this in more detail. Note this will override any sit positioning previously set. 
+One option is to adjust the sit position by manually editing numbers in the script contents. Some like this option, some don't. If you want to do this, you can use the following steps. Open that script in your prim and set the "sitposition" and "sitrotation" options to the values set by your Sit Positioning System. In most cases those settings will be printed out in local chat and you can transfer them to the script. Once you are sure thos are correct, change the "setoffset" config option to TRUE and then hand-adjust the numerical values "sitposition" and "sitrotation". The script comments explain how to do this in more detail. Note this will override any sit positioning previously set. 
 
 *Don't add a sit script to the root prim unless you need to*
 
-The main car script manages the sits for the driver. A separate sit script is not needed. However the main car script does not provide an option to adjust the driver position when seated. If you want to add a touch dialog to adjust their position after being seated, you can add the general purpose script Sit w/Animation 2.0 to the root prim. Before adding this script, make sure "setoffset" config option is set to FALSE. 
+The main car script manages the sits for the driver. A separate sit script is not needed. However the main car script does not provide an option to adjust the driver position when seated. If you want to add a touch dialog to adjust their position after being seated, you can add the general purpose sit script "Sit with Animation 2.0" to the root prim. Before adding this script, make sure "setoffset" config option in the sit script is set to FALSE. 
+
 -----
 
 **Manage All Child Prim Sits With One Script**
@@ -295,7 +307,7 @@ The script "Supercar Headlight 1.80" can be placed in
 each prim that you want to light up and/or to cast a light projection when car
 lights are turned on. The script has a few configurations where you can
 adjust lighting features. There are also settings to enable or disable the face
-light-up or projectior feature on a per-prim basis. It is often necessary to assign
+light-up or projector feature on a per-prim basis. It is often necessary to assign
 some prims displaying as visual headlight and other invisible prims 
 used for casting a projection. Separate prims are often needed because the
 visual prims may not be facing the right direction for the projection.
@@ -387,7 +399,7 @@ Other settings:
     at high speed
 
 Tailpipe flame effects are displayed for 3 seconds when the car starts up, and
-whiledriving in burnout gear.
+while driving in burnout gear.
 
 The textures and sounds provided in this kit came from the original iTec
 Supercar by Shin Ingen and are included by permission.
@@ -530,28 +542,34 @@ notecard. The following sections detail some of these.
 *auto\_park\_time* 
 
 The script has an optional feature to park the car back in it's parking spot at a
-given time after the driver stands. This built-in feature works only for a single region
+given time after the driver stands. This feature works only for a single region
 where it can not be driven to adjacent regions. 
-If there are multiple adjacent regions then this script feature should be disabled 
-and you can use the separate Multi-Sim Auto-Park script instead.
+If there are multiple adjacent regions, this feature should be disabled 
+and you can use the separate Auto-Park script instead, included with the package.
 
-To use the single-region feature, set the config option _auto\_park\_time_ to the
+(Note: This auto\_park\_time setting will be removed in Version 2.2. You can optionally use
+the Supercar Auto-Park script now for auto-park in a single region. This will provide
+forward compatibility when upgrading to future version 2.2.)
+
+To use the built-in auto-park feature, set the config option _auto\_park\_time_ to the
 number of seconds after the driver stands that the car auto-parks. To disable
 the single-region feature set _auto\_park\_time_ to 0. If used, the parking location is set
 when the script resets, but it can be changed by owner-touching the car when it is
 not being driven. This brings up a dialog to confirm it's new park location. 
 
-The Multi-Sim Auto-Park script has similar settings at the top of the script for
-delay before parking. It requires some additional setup detailed in the script comments.
-It works where the adjacent regions are in a rectangular grid of A by B regions, all
+The Supercar Auto-Park script has similar settings at the top of the script for
+delay before parking. If there are no adjacent regions the vehicle can be driven off to,
+then only the parkDelay setting is required; However, if there are adjacent regions that the vehile may
+be driven to, some additional setup detailed in the script comments is required.
+It is designed to work where there is a rectangular grid of A by B regions, all
 of the same size. The setup requires capturing the names of each of the regions and adding
 them to the configuration. 
 
-Like the single-region feature, the Multi-Sim Auto-Park script sets the parking location
+Like the single-region feature, the Supercar Auto-Park script sets the parking location
 when the script resets, but it can be changed by owner-touching the car when it is
 not being driven. This brings up a dialog to confirm it's new park location. 
 
-When using either the single-region feature or multi-region script, both options allow you
+Whether using the built-in feature or separate script, both options allow you
 to set or reset the parking spot, and to configure the parking delay.
 Both options announce in local chat when auto-park countdown begins, and when it is complete. 
 Both options integrate with the Boarding Ramp Rezzer script. 
@@ -560,48 +578,36 @@ vehicle parking begins, and re-rezzed back at it's parking location.
 
 If you rez a vehicle from Inventory that was previously configured to use auto-park
 by either method, auto-park will automatically be disabled and you will get a message in
-local chat indicating this. This is
-to prevent the vehicle being re-parked to a location from previous use that is no longer relevant. 
+local chat reminding you to set the auto-park location. Disabling the feature when a vehicle is first
+rezzed is required
+to prevent the vehicle being re-parked to a location from previous use that may no longer be relevant. 
 To reactivate it, simply move the vehicle to it's new parking location, touch it and confirm the dialog.
 
 *click\_to\_pause*
 
-The setting click\_to\_pause adds some options that are useful in group situations, and
-integrates with auto-park.
+This option allows the driver to "Pause" the vehicle without the driver standing.
+Useful when a vehicle is used as a tour bus making multiple stops.
+The driver can remain seated and park to let people off and on.
+The driver can touch the vehicle again and select "Drive" to resume driving.
 
-This option brings up a dialog to the vehicle _driver_ when they touch the vehicle while
-driving.
+"Pausing" turns off the engine sound, lights, and deploys any boarding ramp if that option is used.
+It also sets the child prims' physics types to their original state so that avatars can walk
+onto the vehicle to find a seat. Without "pausing", child prims remain physics type "None" and
+avatars trying to walk on it will fall through.
 
-The dialog allows them to "Pause" the vehicle without the driver standing.
-This is useful when a vehicle is used as a tour
-bus; The driver can remain seated and park to let people off and allow others to board.
-The driver can touch the vehicle again for the dialog and select "Drive" to resume driving.
-
-When "paused" the vehicle engine stops, headlights turn off, physics is turned off, and
-most importantly, physics types of child prims are restored to their original values. This
-allows departing or arriving passengers to walk on the vehicle without falling through, in
-order to exit or find a place to sit.
-
-Without putting the vehicle into "paused" mode, trying
-to walk on the vehicle results in the avatar falling through the vehicle. So
-this setting is ideal when passengers are expected to board and exit during vehicle use,
-such as public transportation.
-This can be useful for other situations such as at drive-in movies, where you want to stop the engine with
-driver and passengers still seated.
-
-On larger vehicles there may be a few second delay before "going solid" is noticed; This is a platform limitation.
+On larger vehicles there may be a few second delay before the physics change ("going solid") is noticed; This is a platform limitation.
 
 "Pausing" the vehicle also has the effect of temporarily disabling the auto-park feature.
 The driver has the option to stand and exit the vehicle while "paused" and the auto-park
-will remain temporarily disabled. If any driver resumes driving, the "paused" feature
+will remain temporarily disabled. If anyone resumes driving, the "paused" feature
 turns off and the next time the driver stands, auto-park will be activated 
 (unless the driver decides to "pause" it again).
 
-This is useful for a group of people going on a tour with a number of
-expected stops. The auto-park can be disabled at each stop, and then re-engaged at the end.
+This is also useful for a group of people doing a tour with a number of
+expected stops. "Pausing" can be selected at each stop, to disable auto-park.
 
-The boarding ramp script included with this
-package integrates with this feature. Pausing the vehicle also triggers the rezzing of a boarding ramp, if used. When
+click\_to\_pause is integrated with the boarding ramp script included with this
+package. Pausing the vehicle triggers the rezzing of a boarding ramp, if used. When
 the driver resumes driving, the ramp disappears. 
 
 If the setting click\_to\_pause is set to FALSE, nothing happens when the seated driver
@@ -631,7 +637,7 @@ Example 1: For a small "Cupcake Car" with a 1.5m footprint, settings that were s
 
 	turnList = [ 0.5, 1.1, 1.2, 1.2 ];
 	
-Example 2: For a large bus holding 20 passengers, settings that were larger than the defauts worked best:
+Example 2: For a large bus holding 20 passengers, settings that were larger than the defaults worked best:
 
 	turnList = [ 8, 8, 8, 8 ];
 

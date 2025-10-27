@@ -3,7 +3,6 @@
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
 
-
 integer RACECAR_HUD_CHANNEL = 19997;
 integer listener;
 key carkey = NULL_KEY;
@@ -18,7 +17,7 @@ integer DISPLAY_STRING      = 204000;
 default {
     state_entry() {
         listener = llListen(RACECAR_HUD_CHANNEL, "", NULL_KEY, "");
-        llSetText("0 mph",<1,1,.6>,1.0);
+        llSetText("0 kph\n0 mph",<1,1,.6>,1.0);
         llSetLinkAlpha(2, 1, ALL_SIDES);
         llSetLinkAlpha(3, 0, ALL_SIDES);
         llSetLinkPrimitiveParamsFast(4, [PRIM_ROT_LOCAL, llEuler2Rot(DEG_TO_RAD*<90,331,-90>)] );
@@ -54,7 +53,7 @@ default {
                     llSetLinkAlpha(2, 1, ALL_SIDES);
                     fastdial=0;
                 }
-                llSetText((string)llRound(speed) + "mph",<1,1,.6>,1.0);
+                llSetText((string)llRound(speed * 1.60934) + "kph\n" + (string)llRound(speed) + "mph",<1,1,.6>,1.0);
                 if(fastdial) {
                     llSetLinkPrimitiveParamsFast(4, [PRIM_ROT_LOCAL, llEuler2Rot(DEG_TO_RAD*<90,331-(0.6*speed),-90>)] );
                 } else {
@@ -120,7 +119,7 @@ default {
             llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_ROT_LOCAL, llEuler2Rot(DEG_TO_RAD*<0, 270,270>)] );
             llSetLinkPrimitiveParamsFast(5, [PRIM_COLOR, 0, <0.8, 0.8, 0.8>, 1.0, PRIM_GLOW, 0.0]);
             llSetLinkPrimitiveParamsFast(6, [PRIM_COLOR, 0, <0.8, 0.8, 0.8>, 1.0, PRIM_GLOW, 0.0]);
-            llSetLinkPrimitiveParamsFast(7, [PRIM_COLOR, 0, <0.8, 0.8, 0.8>, 1.0, PRIM_GLOW, 0.0]);
+            llSetLinkPrimitiveParamsFast(7, [PRIM_COLOR, 0, <1.0,1.0,1.0>, 1.0, PRIM_GLOW, 0.28]);
             llSetTimerEvent(0);
         } else {
             //llDie();

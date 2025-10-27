@@ -1,47 +1,45 @@
 Supercar Plus - History
 
 The Supercar Plus project is the continued development of a land vehicle script originally
-written by Shin Ingen for a race track application in Opensim in 2014. He decided not to
+by Shin Ingen for a race track application in Opensim in 2014. He decided not to
 continue development and published the assets as open source, which is when this project
 picked it up. Much of the underlying code has changed since then but the overall framework
 is based on the original work. This project also redistributes by permission some of the
 original assets for the iTec race car effects.
 
-For the last few years I have been the custodian of a large collection (~70) scripted land
-vehicles at Burn2 in Second Life, the official Burning Man regional event in Second Life.
-I provide scripting kits and workshops for people building new cars. During Burn2 events,
-server lag is always a concern, where sometimes many vehicles are being used concurrently
-in a sim full of other scripted art and avatars. 
+For the last few years I have been the custodian of a large collection (~70) of scripted
+land vehicles at Burn2, the official Burning Man regional event in Second
+Life. I provide scripting kits and workshops for people building new art cars. During Burn2
+events, server lag is always a concern, when many vehicles are often used
+concurrently in a sim full of other scripted art and avatars. 
 
-Vehicles in the collection had scripts of varying sources and quality, some laggy, some
-poorly written. Many didn't have desired features. We wanted one vehicle script that could
-merge the best features of all of the scripts, fix the bugs, and be low lag as possible
-for the server. We also wanted a way to install updates into the entire collection with
-minimal hassle, ideally without having to hand-transfer settings between scripts.
+When the project began, vehicles in the collection had scripts of varying sources and quality, some
+laggy, some poorly written, some lacking desired features. We wanted one vehicle
+script that could merge the best features of all of the scripts, fix the bugs, and be low
+lag as possible for the server. We also wanted a way to install updates into the entire
+collection with minimal hassle, ideally without needing to hand-edit settings between
+scripts.
 
 The new fork of the Supercar script was developed to satisfy these requirements. Since the
 script was originally developed for compatibility across Opensim and SL, I was able to
 maintain this compatibility through its development.
 
-The first step was to convert all the cars to a common script and place all the
-user-definable settings in a single block at the top of the script. Features were also
-vetted for usefulness and effects on server lag. The result was the initial release of the
-script.
+Over the years, features were periodically vetted for usefulness and effects on server lag.
 
-In 2017 I added a feature to put all configuration settings in a notecard. The script
+In 2017, an option was added to put all configuration settings in a notecard. The script
 checks to see if the Config notecard is present, and if so it will use configs in the
-notecard at reset time and ignore settings within the script itself. This way, updates can
-be made by deleting the old script, and dropping in the new script, without having to
+notecard at script reset time and ignore settings within the script itself. This way, script updates can
+be made by replacing the old script, without having to
 hand-edit any settings.
 
-Many features and bug fixes have been added since then based on what was needed or
-requested by builders. Feature usefulness and effects on server lag continue to be
-monitored. I continually try to find ways to simplify the script, to keep it compatible
-across grids, and to add new features wanted by car builders. This is a work in progress.
+Many features and bug fixes have been added since then. Some were
+requested by builders, others to solve practical problems of managing vehicles for others to use.
+Feature usefulness and effects on server lag continue to be
+monitored. This is a work in progress.
 Please notify me of bugs or feature requests.
 
 Cuga Rajal (Second Life and OSGrid)
-cugarajal@gmail.com
+cuga@rajal.org
 Opensim: http://rajal.org:9000
 
 https://github.com/cuga-rajal/supercar_plus/
