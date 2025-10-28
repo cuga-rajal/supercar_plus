@@ -53,7 +53,7 @@ Supercar Version 2.1.3 has a number of enhancements and bug fixes.
   "Multi-Sim" has been removed from its name as it now supports single sim auto park.
   Auto-Park script version is now version 2.3.
 
-Supercar Version 2.2 in the Works
+*Supercar Version 2.2 in the Works*
 
 With script memory becoming a concern in SL (getting close to the max 64k) I'm working on
 a major update for Supercar version 2.2 that will split off some functions into separate
@@ -82,8 +82,8 @@ If you are upgrading,
 please compare your Config notecard to the one provided in this package, and update it accordingly.
 Delete any settings no longer used, and add any new ones not previously in the NC.
 
-My general goal is not to make changes to the the list of settings in the Config notecard,
-but a numer of recent changes to the main script
+My general goal is not to make changes to the Config notecard,
+but a number of recent changes to the main script
 has required this. I'm hoping not to make any more changes with version 2.2.
 
 -----

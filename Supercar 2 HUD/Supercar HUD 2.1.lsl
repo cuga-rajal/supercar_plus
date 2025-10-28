@@ -119,7 +119,7 @@ default {
             llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_ROT_LOCAL, llEuler2Rot(DEG_TO_RAD*<0, 270,270>)] );
             llSetLinkPrimitiveParamsFast(5, [PRIM_COLOR, 0, <0.8, 0.8, 0.8>, 1.0, PRIM_GLOW, 0.0]);
             llSetLinkPrimitiveParamsFast(6, [PRIM_COLOR, 0, <0.8, 0.8, 0.8>, 1.0, PRIM_GLOW, 0.0]);
-            llSetLinkPrimitiveParamsFast(7, [PRIM_COLOR, 0, <1.0,1.0,1.0>, 1.0, PRIM_GLOW, 0.28]);
+            llSetLinkPrimitiveParamsFast(7, [PRIM_COLOR, 0, <1.0,1.0,1.0>, 1.0, PRIM_GLOW, 0.28]); // lights are already on when HUD worn
             llSetTimerEvent(0);
         } else {
             //llDie();
