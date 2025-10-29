@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.1.3, Oct 25, 2025
+version 2.1.3, Oct 29, 2025
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -51,7 +51,7 @@ Supercar Version 2.1.3 has a number of enhancements and bug fixes.
 - [HUD Update] By request, speed now shown in metric and English units; Bug fixes; HUD version now 2.1.
 - [Add-on script update] Multi-sim auto-park script updated, passenger standing will no longer trigger park.
   "Multi-Sim" has been removed from its name as it now supports single sim auto park.
-  Auto-Park script version is now version 2.3.
+  Auto-Park script version is now version 2.4, updated on Oct 29.
 
 *Supercar Version 2.2 in the Works*
 

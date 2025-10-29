@@ -82,9 +82,7 @@ Park() {
         return;
     }
     
-    currentPosition = llGetPos();
-    regioncode = (string)llList2Integer(codes, llListFindList( simnames, [region]));
-    if(regioncode == "-1") {
+    if(llListFindList(simnames, [region]) == -1) {
         llInstantMessage(llGetOwner(),
         llGetScriptName() + " failed to return your car \"" + llGetObjectName() +
         "\". It is located in region \"" + region + "\" at location " +
@@ -92,6 +90,8 @@ Park() {
         return;
     }
     
+    currentPosition = llGetPos();
+    regioncode = (string)llList2Integer(codes, llListFindList( simnames, [region]));
     homecode = (string)llList2Integer(codes, llListFindList( simnames, [HomeRegion]));
     
     if((integer)llGetSubString(regioncode, 1, 1) < (integer)llGetSubString(homecode, 1, 1)) {
