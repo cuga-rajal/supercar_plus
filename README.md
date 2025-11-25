@@ -225,10 +225,10 @@ instead. Working options are included with the kit.
 
 *Large cars with many passengers*
 
-In most cases you can use a separate script in each passenger prim. If you have a large
-number of seats, you can reduce script memory by replacing the separate scripts with one
-single script that manages all the passenger sits. "Sit w/Animation 2.0" is provided for
-this. Check the comments at the top of the script for details. It provides some additional
+In most cases you can use a separate script in each passenger seat. If you have a large
+number of seats, you can reduce overall vehicle script memory by replacing the separate scripts with one
+single script that manages all the passenger sits. "Manage Child Prim Sits" script is provided for
+this. Check the comments at the top of the script for setup details. It provides some additional
 options, such as managing alpha of the sit prims.
 
 *Adjusting the sit offset by editing numbers manually*
