@@ -1,71 +1,62 @@
-// Supercar 2.1.3
+// Supercar 2.2
  
 // By Cuga Rajal <cuga@rajal.org>
 // Latest version and more information at https://github.com/cuga-rajal/supercar_plus/
 // This work is licensed under the Creative Commons BY 4.0 License: https://creativecommons.org/licenses/by/4.0/
  
 //---USER-DEFINED VARIABLES--------------------------------------------------
-// * NOTE * A Config notecard placed in the same prim as this script will override settings listed below.
-// * Please see the sample Config notecard. This is the recommended method.
+// * NOTE * There is an option to use a Config notecard to hold settings and thereby ignore those listed below.
 // * This allows future script updates to be drop-in replacements without the need to hand-edit settings.
+// * To use this option place a Config notecard and Supercar Config NC Reader script along with this script in the Contents
+// * Please see the sample Config notecard. This is the recommended method.
  
 // Permissions
-integer         gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
+integer         gDrivePermit = 1; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=group member
 list            driverList = [ ]; // list of UUIDs allowed to drive (whitelist), comma delimited, no spaces
 string          gSitMessage = "Drive";  // Appears in the pie menu
 string          gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
 
 // Gear options -- NOTE: 0=first gear, 11=12th gear
-integer         maxGear = 3;       // highest gear that can be shifted to, max 11
-integer         lowestGear = 0;     // lowest gear that can be shifted to, min 0
-integer         startGear = 0;      // gear selected on sit 
-integer         fallbackAbove = 6;  // releasing forward button when gear higher than this falls back to this
-float           turn_in_place_speed = 2; // Rotation speed if rotating in place. Set to 0 to disable.
-list            turnList = [ ]; // Empty list uses default values; Override defaults with this list 
-list            speedList = [ ]; // Empty list uses default values; Override defaults with this list 
-float           tilt_push = 0;  // side force pushing into the turn, typical range 5-20, 0 to disable
+integer         maxGear = 4;       // highest gear that can be shifted to, max 11
+integer         startGear = 0;      // gear selected on sit
+integer         fallbackAbove = 6;  // racecar feature; releasing forward button when gear higher than this falls back to this
+list            turnList = [ 3, 3.5, 3.5, 3.5, 3.5, 4.0, 4.1, 4.5, 10.0, 10.0, 10.0, 10.0];
+list            speedList = [ 4, 8, 16, 32, 56, 80, 100, 130, 156, 185, 210, 256 ];
+float           turn_in_place_speed = 1; // Rotation speed if rotating in place. Set to 0 to disable.
+float           tilt_push = 0;  // side force pushing the vehicle into the turn like a motorcycle, typically 5-20
  
 // Camera options
 integer         enableCamera = TRUE;  // Whether or not to enable camera controls
-float           CamDist = 12; // How far back you want the camera positioned
+float           CamDist = 16; // How far back you want the camera positioned
 float           CamPitch = 20.0;  // Angle looking down. Range is -45 to 80 Degrees
-float           lookAhead = 6.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
+float           lookAhead = 8.0;  // How far in front of avatar to focus camera. Range is -10 to 10 meters
                 
 // Other options
-integer         auto_park_time = 0;  // Delay before auto-return in seconds. Set to 0 to disable.
 integer         click_to_pause = FALSE; // If TRUE will allow driver to click vehicle to toggle engine and lights
-string          sit_message = ""; // Chat window message shown to driver when sitting
+string          sit_message = "The car has 5 gears. Use up/down controls to change gears."; // Chat window message shown to driver when sitting
 
 // Sound variables
 integer         aggressive_gear = 3; // This gear and above play "gSoundAggressive", below this gear plays "gSoundSlow"
-string          gSoundStartup = ""; // sound made when driver seated
-string          gSoundIdle = "";  // looped sound when not moving
-string          gSoundSlow = "";   // looped sound when driving forward and gear below aggresive_gear
-string          gSoundAggressive = "";  // looped sound when driving forward and gear at or above aggresive_gear
-string          gSoundRev = "";  // looped sound when driving in reverse
-string          gSoundStop = "";   // sound when the driver stands
+string          gSoundStartup = "Truck Start"; // sound made when driver seated
+string          gSoundIdle = "Truck Idle";  // looped sound when not moving
+string          gSoundSlow = "Truck Drive";   // looped sound when driving forward and gear below aggresive_gear
+string          gSoundAggressive = "Truck High Gear";  // looped sound when driving forward and gear at or above aggresive_gear
+string          gSoundRev = "Truck Drive";  // looped sound when driving in reverse
+string          gSoundStop = "Truck Off";   // sound when the driver stands
 string          gSoundAlarm = "";   // sound if someone not authorized tries to drive car
-
-// Simulator selection
-
-string          notecard_name = "Config";
-
 
 //---INTERNAL VARIABLES--------------------------------------------------
 
-vector          startposition;
-rotation        startrot;
 list            prim_phys_types = [ ];
 list            prims_keep_prim = [ ];
 integer         i;
 integer         primcount;
-integer         listener;
 key             driver = NULL_KEY;
 integer         gRun;     //ENGINE RUNNING
 integer         gMoving;  //VEHICLE MOVING
 integer         sentPower;
 integer         seated = FALSE;
-integer            parked = FALSE;
+integer         parked = FALSE;
 
 integer         reverse;
 list            wheels;
@@ -101,12 +92,9 @@ string          gNewTurnAngle =            "NoTurn";
 string          gTireSpin =                "NoSpin";   // ForwardSpin or BackwardSpin or NoSpin
 string          gNewTireSpin =             "NoSpin";
 
-key kQuery = NULL_KEY;
-integer iLine = 0;
-key notecard_key = NULL_KEY;
-
 integer menu_handler; 
 integer menu_channel;
+integer do_preload = FALSE; 
 
 menu(key user,string title,list object_list)  { 
     menu_channel = (integer)(llFrand(99999.0) * -1); //random channel 
@@ -122,46 +110,6 @@ init_PhysEng(){
         gTurnMulti=0.987654; // adjustment for tire rotation
         gVAMT=0.50; // adjustment for turn speed/force
         llOwnerSay("   Tuned for Opensim");
-    }
-    
-    list newturnList        = [   3,    //1st Gear
-                                    3.5,    //2nd Gear
-                                    3.5,    //3rd Gear
-                                    3.5,    //4th Gear
-                                    3.5,    //5th Gear
-                                    4.0,    //6th Gear
-                                    4.1,    //7th Gear
-                                    4.5,    //8th Gear
-                                    10.0,   //9th Gear
-                                    10.0,   //10th Gear
-                                    10.0,   //11th Gear
-                                    10.0    //12th Gear
-                                ];
-                                
-    if(llGetListLength(turnList)==0) {
-        turnList = newturnList;
-    } else {
-        turnList = llListReplaceList(newturnList, turnList, 0, llGetListLength(turnList)-1);
-    }
-    
-    list newspeedList         = [   4,    //1st Gear
-                                    8,    //2nd Gear
-                                    16,    //3rd Gear
-                                    32,    //4th Gear
-                                    56,    //5th Gear
-                                    80,    //6th Gear
-                                    100,    //7th Gear
-                                    130,    //8th Gear
-                                    156,    //9th Gear
-                                    185,    //10th Gear
-                                    210,    //11th Gear
-                                    256     //12th Gear
-                                ];
-                                
-    if(llGetListLength(speedList)==0) {
-        speedList = newspeedList;
-    } else {
-        speedList = llListReplaceList(newspeedList, speedList, 0, llGetListLength(speedList)-1);
     }
 
 }
@@ -188,18 +136,6 @@ preload_sounds(){
     if((index == -1) && (llStringLength(gSoundAlarm) != 36)) { gSoundAlarm=""; } else if(gSoundAlarm != "") { llPreloadSound(gSoundAlarm); }
     index = llListFindList(InventoryList, [gSoundStop]);
     if((index == -1) && (llStringLength(gSoundStop) != 36)) { gSoundStop=""; } else if(gSoundStop != "") { llPreloadSound(gSoundStop); }
-}
-
-init_engine(){
-    gRun = 0;
-    llSetSitText(gSitMessage);
-    llCollisionSound("", 0.0);
-    gTireSpin = "NoSpin";
-    gTurnAngle = "NoTurn";
-
-    llMessageLinked(LINK_ALL_OTHERS, 0, gTireSpin, NULL_KEY);      // NO SPIN
-    llMessageLinked(LINK_ALL_OTHERS, 0, gTurnAngle, NULL_KEY);     // NO TURN
-
 }
 
 init_followCam(){
@@ -299,70 +235,84 @@ enginesound(){
 }
 
 config_init() {
-    llOwnerSay("Initializing Supercar Plus script, please wait...");
-    if(llGetInventoryNumber(INVENTORY_NOTECARD)==0) { finish(); state Idle; return; }
-    integer nFound = FALSE;
-    for (i=0; i<llGetInventoryNumber(INVENTORY_NOTECARD);i++) {
-        if(notecard_name==llGetInventoryName(INVENTORY_NOTECARD, i)) { nFound=TRUE; }
+    llOwnerSay("Initializing Supercar Pro script, please wait...");
+    llOwnerSay("   Reading wheel settings and child prims physics types..");
+    prim_phys_types = [ ];
+    primcount = llGetObjectPrimCount(llGetKey());
+    for(i=2; i<= primcount; i++) { 
+        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE, PRIM_DESC, PRIM_NAME]);
+        integer ptype = llList2Integer(params, 0);
+        prim_phys_types += ptype;
+        if(llList2String(params, 1) == "prim") {
+            prims_keep_prim += i;
+        }
+        string primname = llList2String(params, 2);
+        if(((llSubStringIndex(primname, "rwheel")!=-1) || (llSubStringIndex(primname, "fwheel")!=-1)) && (llList2String(params, 1) != "") && (llList2String(params, 1) != "(No Description)"))  {
+            list veclist = llParseStringKeepNulls(llList2String(params, 1), ["<",">"], []);
+            if(llList2String(veclist, 1) != "") {
+                wheels += i;
+                wheelvec += (vector)llList2String(params, 1);
+                if(llSubStringIndex(primname, "fwheel")!=-1) { fwlocalrot += llList2Rot(llGetLinkPrimitiveParams(i, [PRIM_ROT_LOCAL]), 0); }
+                else { fwlocalrot += (integer)0; }
+            }
+        }
     }
-    if(! nFound) {
-        llOwnerSay("Error reading Config notecard, using configs from script");
-        finish();
-        return;
-    }
-    //if (notecard_key == llGetInventoryKey(notecard_name)){  finish(); return; }
-    llOwnerSay("   Reading Config notecard...");
-    notecard_key = llGetInventoryKey(notecard_name);
-    iLine = 0;
-    kQuery = llGetNotecardLine(notecard_name, iLine);
+    llCollisionSound("", 0.0);
+    preload_sounds();
+    init_PhysEng();
+    llOwnerSay("Initialization complete, ready to drive.");
 }
 
-setConfig(string setting, string qval) {
+setConfig(string setting, string qval) { 
     if(setting=="gDrivePermit") { gDrivePermit = (integer)qval; }
     else if(setting=="driverList") { 
-        qval = llStringTrim(llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0), STRING_TRIM);
         if(qval!="") { driverList = llParseString2List(qval,[","],[""]); }
     }
-    else if(setting=="gSitMessage") { gSitMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gUrNotAllowedMessage") { gUrNotAllowedMessage = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
+    else if(setting=="gSitMessage") { gSitMessage = qval; }
+    else if(setting=="gUrNotAllowedMessage") { gUrNotAllowedMessage = qval; }
     else if(setting=="maxGear") { maxGear = (integer)qval; }
-    else if(setting=="lowestGear") { lowestGear = (integer)qval; }
     else if(setting=="startGear") { startGear = (integer)qval; }
     else if(setting=="fallbackAbove") { fallbackAbove = (integer)qval; }
     else if(setting=="turn_in_place_speed") { turn_in_place_speed = (float)qval; }
-    else if(setting=="turnList") {
-        qval = llStringTrim(llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0), STRING_TRIM);
-        if(qval!="") { turnList = llParseString2List(qval,[","],[""]); }
+    else if((setting=="turnList")  && (qval!="")) {
+        list oldturnList = turnList;
+        turnList = llParseString2List(qval,[","],[""]);
+        for(i=0; i<llGetListLength(turnList); i++) {
+            turnList = llListReplaceList(turnList, [(float)llList2String(turnList,i)], i, i);
+        }
+        if(llGetListLength(turnList)<llGetListLength(oldturnList)) {
+            turnList += llList2List(oldturnList, llGetListLength(turnList), -1);
+        }
     }
-    else if(setting=="speedList") {
-        qval = llStringTrim(llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0), STRING_TRIM);
-        if(qval!="") { speedList = llParseString2List(qval,[","],[""]); }
+    else if((setting=="speedList") && (qval!="")) {
+        list oldspeedList = speedList;
+        speedList = llParseString2List(qval,[","],[""]);
+        for(i=0; i<llGetListLength(speedList); i++) {
+            speedList = llListReplaceList(speedList, [(integer)llList2String(speedList,i)], i, i);
+        }
+        if(llGetListLength(speedList)<llGetListLength(oldspeedList)) {
+            speedList += llList2List(oldspeedList, llGetListLength(speedList), -1);
+        }
     }
     else if(setting=="tilt_push") { tilt_push = (float)qval; }
     else if(setting=="enableCamera") { if(qval=="TRUE") { enableCamera=TRUE; } else { enableCamera=FALSE; } }
     else if(setting=="CamDist") { CamDist = (float)qval; }
     else if(setting=="CamPitch") { CamPitch = (float)qval; }
     else if(setting=="lookAhead") { lookAhead = (float)qval; }
-    else if(setting=="auto_park_time") { auto_park_time = (integer)qval; }
     else if(setting=="click_to_pause") { if(qval=="TRUE") { click_to_pause=TRUE; } else { click_to_pause=FALSE; } }
-    else if(setting=="sit_message") { sit_message = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
+    else if(setting=="sit_message") { sit_message = qval; }
     else if(setting=="aggressive_gear") { aggressive_gear = (integer)qval; }
-    else if(setting=="gSoundStartup") { gSoundStartup = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundIdle") { gSoundIdle = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundSlow") { gSoundSlow = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundAggressive") { gSoundAggressive = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundRev") { gSoundRev = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundStop") { gSoundStop = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
-    else if(setting=="gSoundAlarm") { gSoundAlarm = llDeleteSubString(llDeleteSubString(qval, llStringLength(qval)-1, llStringLength(qval)-1),0,0); }
+    else if(setting=="gSoundStartup") { gSoundStartup = qval; }
+    else if(setting=="gSoundIdle") { gSoundIdle = qval; }
+    else if(setting=="gSoundSlow") { gSoundSlow = qval; }
+    else if(setting=="gSoundAggressive") { gSoundAggressive = qval; }
+    else if(setting=="gSoundRev") { gSoundRev = qval; }
+    else if(setting=="gSoundStop") { gSoundStop = qval; }
+    else if(setting=="gSoundAlarm") { gSoundAlarm = qval; }
     
 }
 
 finish() {
-    if(auto_park_time>0) {
-        llOwnerSay("   Setting auto-park position...");
-        startposition = llGetPos();
-        startrot = llGetRot();
-    }
     llOwnerSay("   Reading wheel settings and child prims physics types..");
     prim_phys_types = [ ];
     primcount = llGetObjectPrimCount(llGetKey());
@@ -390,9 +340,8 @@ finish() {
         llSitTarget(<0,0,0.5>, ZERO_ROTATION); // an arbitrary but reasonable value until the offset is fine-tuned
     }
     
-    llOwnerSay("   Loading sounds.."); 
+    llOwnerSay("   Preloading sounds.."); 
     preload_sounds();
-    init_engine();
     init_PhysEng();
     //llOwnerSay("   Free memory: " + (string)(llGetFreeMemory()) + " bytes"); 
     llOwnerSay("Initialization complete, ready to drive.");
@@ -464,61 +413,65 @@ drivecar() {
     parked = FALSE;
 }
 
+reset_car() {
+    seated = FALSE;
+    gRun = 0;
+    turnwheels("NoTurn");
+    spinwheels(0, "NoSpin");
+    currSound = "";
+    gTireSpin = "NoSpin";
+    gTurnAngle = "NoTurn";
+    llMessageLinked(LINK_ALL_OTHERS, 0, gTireSpin, NULL_KEY);      // NO SPIN
+    llMessageLinked(LINK_ALL_OTHERS, 0, gTurnAngle, NULL_KEY);     // NO TURN
+    llSetSitText(gSitMessage);
+    llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
+    llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
+    llSetStatus(STATUS_PHYSICS, FALSE); 
+    for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
+        list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
+        if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
+            llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
+        }
+    }
+    llListenRemove(menu_handler);
+    llStopSound();
+}
 
 default {
     state_entry() {
-        seated = FALSE;       
-        gRun = 0;
-        llSetTimerEvent(0.0);
-        llStopSound();
-        llSetText("",<0,0,0>,1.0);
-        llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
-        llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
-        llSetStatus(STATUS_PHYSICS, FALSE); 
         config_init();
-        turnwheels("NoTurn");
-        spinwheels(0, "NoSpin");
+        
+        reset_car();
+        
+        list l = llGetLinkPrimitiveParams(LINK_THIS, [PRIM_SIT_TARGET]);
+        if(llList2Vector(l, 1)==ZERO_VECTOR) {
+            llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_SIT_TARGET, TRUE,  <0, 0, 0.5>, ZERO_ROTATION ]);
+        }
+        
+        llMessageLinked(LINK_THIS, 0, "readConfig", NULL_KEY);
+        
+        state Idle;
     }
-
-    dataserver(key query_id, string data) {
-        if (query_id == kQuery) {
-            if (data != EOF)  {
-                if(llStringTrim(data, STRING_TRIM)=="") { jump break; }
-                list tmp = llParseString2List(data, [";"], []);
-                string conf = llList2String(tmp,0);
-                tmp = llParseString2List(conf, ["="], []);
-                string setting = llStringTrim(llList2String(tmp,0), STRING_TRIM);
-                string qval = llStringTrim(llList2String(tmp,1), STRING_TRIM);
-                setConfig(setting, qval);
-                @break;
-                ++iLine;
-                kQuery = llGetNotecardLine(notecard_name, iLine);
-            } else {
-                finish();
-                state Idle;
-            }
+    
+    link_message(integer Sender, integer Number, string msg, key Key) {
+        if(Number == 999) {
+            list tmp = llParseString2List(msg, ["="], []);
+            setConfig(llList2String(tmp,0), llList2String(tmp,1));
         }
     }
+
 }
 
 state Idle {
     state_entry() {
         currSound = "";
+        llSetSitText(gSitMessage);
+        //llOwnerSay("Free memory: " + (string)llGetFreeMemory());
     }
 
     on_rez(integer param) {
-        startposition = ZERO_VECTOR;
-        if((llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==0) && (auto_park_time != 0)) {
-            llOwnerSay("To enable Auto-Park, place your vehicle in its parking location and then touch the vehicle to open the dialog.");
-        }
-        seated = FALSE;
+
     }
-    
-    touch_start(integer total_number) { 
-        if((auto_park_time > 0) && (llDetectedKey(0) == llGetOwner())) { 
-            menu(llGetOwner(),"\nSet Auto-Park location??",["Set Location", "Cancel"]); 
-        }
-    }  
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
@@ -539,13 +492,10 @@ state Idle {
                     llRegionSayTo(driver,0, gUrNotAllowedMessage);
                     llUnSit(driver);
                     if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
-                    llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
                     
                 }
             }
-             
- 
-        }// end changed link
+        }
         
         if (change & CHANGED_INVENTORY) { // possible Config NC change
             llOwnerSay("** Inventory change detected, resetting **");
@@ -553,14 +503,17 @@ state Idle {
         }
     }
     
-    listen(integer channel, string name, key av, string message) {
-        if ((channel == menu_channel) && (av==llGetOwner())) {
-            llSetTimerEvent(0.0); 
-            llListenRemove(menu_handler); 
-            if(message == "Set Location")  { 
-                llOwnerSay("Auto-park position set");
-                startposition = llGetPos();
-                startrot = llGetRot();
+    link_message(integer Sender, integer Number, string msg, key Key) {
+        if(Number == 999) {
+            list tmp = llParseString2List(msg, ["="], []);
+            setConfig(llList2String(tmp,0), llList2String(tmp,1));
+            if(llSubStringIndex(llList2String(tmp,0), "Sound") !=-1) { do_preload = TRUE; }
+        } else if(Number == 1000) {
+            if(do_preload) {
+                llOwnerSay("Preloading sounds..");
+                preload_sounds();
+                llOwnerSay("Preloading complete");
+                do_preload = FALSE; 
             }
         }
     }
@@ -571,132 +524,71 @@ state Driving {
 
     state_entry() {
         llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
+        
+        if((llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) && (llGetInventoryNumber(INVENTORY_ANIMATION) == 1)) {
+            llStopAnimation("sit");
+            llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
+        }
+        
+        llSetSitText("Sit as Passenger");
+        llListenRemove(menu_handler); 
+        
         drivecar();
     }
     
     on_rez(integer param) {
-        seated = FALSE;       
-        gRun = 0;
-        turnwheels("NoTurn");
-        spinwheels(0, "NoSpin");
-        init_engine();
-                
-        llSetTimerEvent(0.0);
-        llStopSound();
-        llReleaseControls();  
-        llSetText("",<0,0,0>,1.0);
-        llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
-        llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
-        llListenRemove(listener);  
-
-        llSetStatus(STATUS_PHYSICS, FALSE); 
-        for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
-            list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
-            if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
-                llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
-            }
-        }                   
-        llListenRemove(menu_handler);
+        reset_car();
         state Idle;
     }
     
     touch_start(integer total_number) { 
         if(click_to_pause && (llDetectedKey(0) == driver)) { 
             menu(driver,"\nPause your car or resume driving?",["Pause Car", "Drive"]); 
-        } else if((auto_park_time > 0) && (llDetectedKey(0) == llGetOwner()) && (gRun==0)) { // if touched in countdown mode
-            menu(llGetOwner(),"\nVehicle is currently in countdown for auto-park. Stop countdown and set Auto-Park location??",["Set Location", "Cancel"]); 
-        }
+        } 
     } 
     
     changed(integer change) {     
         if (change & CHANGED_LINK) {
-            if((llGetObjectPrimCount(llGetKey()) != primcount) && (! seated)) { // adding or removing a prim
+            if(llGetObjectPrimCount(llGetKey()) != primcount) { // adding or removing a prim
                 llOwnerSay("** Prim count changed, resetting **");
                 llResetScript();
             }
             
             driver = llAvatarOnLinkSitTarget(LINK_THIS);
-            if ((driver != NULL_KEY) && (! seated)) { // happens once
-                
-                if((gDrivePermit == 0) || ((gDrivePermit == 1) && (driver == llGetOwner())) || ((gDrivePermit == 2) && (llSameGroup(driver)==TRUE))
-                    || (llListFindList( driverList, [(string)driver] ) != -1)) { 
-                    
-                    if(parked && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
-                        llSay(0, "Auto-park enabled");
-                    }
-                    drivecar();
-                    llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION ); 
-                    
-                }
-                else {
-                    llRegionSayTo(driver,0, gUrNotAllowedMessage);
-                    llUnSit(driver);
-                    if(gSoundAlarm !="") { llPlaySound(gSoundAlarm,1.0); }
-                    llPushObject(driver, <0,0,20>, ZERO_VECTOR, FALSE);
-                    
-                }
-            }
-            else if ((driver == NULL_KEY) && seated) { // If driver stood up 
-                seated = FALSE;       
-                gRun = 0;
-                currSound = "";
-                turnwheels("NoTurn");
-                spinwheels(0, "NoSpin");
-                init_engine();
-                llSetSitText("Drive");
-                llSetTimerEvent(0.0);
-                llStopSound();
-                llReleaseControls();  
-                llSetText("",<0,0,0>,1.0);
-                llMessageLinked(LINK_SET, 0, "honkoff", NULL_KEY);
-                llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
-                llListenRemove(listener);  
-                
-                if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
-                if(llGetPermissions() & PERMISSION_TRIGGER_ANIMATION) {                    
-                    if (llGetInventoryNumber(INVENTORY_ANIMATION) == 1) { llStopAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0)); }
-                }   
-                llSetStatus(STATUS_PHYSICS, FALSE); 
-                for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
-                    list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
-                    if(llList2Integer(prim_phys_types, i-2) != llList2Integer(params, 0)) {
-                        llSetLinkPrimitiveParamsFast(i,[ PRIM_PHYSICS_SHAPE_TYPE,llList2Integer(prim_phys_types, i-2) ] );
-                    }
-                }                   
-                if((! parked) && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
-                    llSay(0, "The vehicle will auto-park in " + (string)auto_park_time + " seconds, unless a new driver takes control.");
-                    llSetTimerEvent(auto_park_time);
-                } else if(parked && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
-                    llSay(0, "Auto-park temporarily disabled");
-                }
+            if ((driver == NULL_KEY) && seated) { // If driver stood up 
+                llReleaseControls(); 
+                reset_car();
+                if(gSoundStop!="") { llTriggerSound(gSoundStop,1); }
+                                
+                state Idle;
 
             } // end - no driver
             
             else if(driver !=NULL_KEY) { // someone sat or stood on another prim
-               init_followCam();
+                llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION );
+                if( (llGetPermissions() & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
+                    init_followCam();
+                }
             }    
         }// end changed link
         
-        if (change & CHANGED_INVENTORY) { // possible Config NC change
-            llOwnerSay("** Inventory change detected, resetting **");
-            llResetScript();
+        else if (change & CHANGED_REGION) {
+            llRequestPermissions(driver,  PERMISSION_TAKE_CONTROLS | PERMISSION_CONTROL_CAMERA | PERMISSION_TRIGGER_ANIMATION );
+            if( (llGetPermissions() & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
+                init_followCam();
+            }
         }
     }
     
     run_time_permissions(integer perm) {
-        if((perm & PERMISSION_TRIGGER_ANIMATION) && (llGetInventoryNumber(INVENTORY_ANIMATION) == 1)) {
-            llStopAnimation("sit");
-            llStartAnimation(llGetInventoryName(INVENTORY_ANIMATION, 0));
-        }
-        
         if(perm & PERMISSION_TAKE_CONTROLS){
             llTakeControls(
-             CONTROL_FWD | CONTROL_BACK  | CONTROL_DOWN |
-             CONTROL_UP  | CONTROL_RIGHT | CONTROL_LEFT |
-             CONTROL_ROT_RIGHT | CONTROL_ROT_LEFT, TRUE, FALSE);            
+                CONTROL_FWD | CONTROL_BACK  | CONTROL_DOWN |
+                CONTROL_UP  | CONTROL_RIGHT | CONTROL_LEFT |
+                CONTROL_ROT_RIGHT | CONTROL_ROT_LEFT, TRUE, FALSE);            
         }
          
-        if( (perm & PERMISSION_CONTROL_CAMERA) && (enableCamera) ) {
+        if((perm & PERMISSION_CONTROL_CAMERA) && (enableCamera)) {
             init_followCam();
         }
     }
@@ -709,7 +601,7 @@ state Driving {
         gTurnRatio = llList2Float(turnList,gGear);
         gGearPower = llList2Integer(speedList, gGear);
 
-        if ((held & change & CONTROL_UP) || ((gGear >= maxGear) && (held & CONTROL_UP))){
+        if (held & change & CONTROL_UP){
             if(gGear < maxGear) {
                 gGear=gGear+1;
                 gearshift(gGear); 
@@ -717,8 +609,8 @@ state Driving {
             }
         }
 
-        if ((held & change & CONTROL_DOWN) || ((gGear <= lowestGear) && (held & CONTROL_DOWN))){
-            if(gGear > lowestGear) {
+        if (held & change & CONTROL_DOWN) {
+            if(gGear > 0) {
                 gGear=gGear-1;
                 gearshift(gGear); 
                 if(gGear == 0) {
@@ -823,10 +715,21 @@ state Driving {
             else { gearshift(gGear); }
         } else if(msg == "gear_down") {
             gGear=gGear-1;
-            if (gGear < lowestGear) { gGear = lowestGear; }
+            if (gGear < 0) { gGear = 0; }
             else { gearshift(gGear); }
         } else if(msg == "wheelcalc") {
             wheelcalc();
+        } else if(Number == 999) {
+            list tmp = llParseString2List(msg, ["="], []);
+            setConfig(llList2String(tmp,0), llList2String(tmp,1));
+            if(llSubStringIndex(llList2String(tmp,0), "Sound") !=-1) { do_preload = TRUE; }
+        } else if(Number == 1000) {
+            if(do_preload) {
+                llOwnerSay("Preloading sounds..");
+                preload_sounds();
+                llOwnerSay("Preloading complete");
+                do_preload = FALSE; 
+            }
         }
     }
     
@@ -834,15 +737,7 @@ state Driving {
         if (channel == menu_channel) {
             llSetTimerEvent(0.0); 
             llListenRemove(menu_handler); 
-            if(message == "Set Location")  { 
-                llOwnerSay("Auto-park position set");
-                startposition = llGetPos();
-                startrot = llGetRot();
-                llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
-            	llSetTimerEvent(0);
-            	state Idle;
-            }
-            else if((message == "Pause Car") && (gRun==1))  { 
+            if((message == "Pause Car") && (gRun==1))  { 
                 llSetStatus(STATUS_PHYSICS, FALSE);
                 for(i=2; i<= llGetObjectPrimCount(llGetKey()); i++) {
                     list params = llGetLinkPrimitiveParams(i,[PRIM_PHYSICS_SHAPE_TYPE]);
@@ -856,7 +751,7 @@ state Driving {
                 llStopSound();
                 llMessageLinked(LINK_SET, 0, "car_stop", NULL_KEY);
                 if(gSoundStop!="") { llStopSound(); llTriggerSound(gSoundStop,1); }
-                llRegionSayTo(driver, 0, "Car parked. Auto-Park disabled. Touch again to resume driving.");
+                llRegionSayTo(driver, 0, "Car paused. Auto-Park disabled. Touch again to resume driving.");
             } 
             else if((message == "Drive") && (gRun==0)) { 
                 if(llGetListLength(prims_keep_prim) ==0) {
@@ -880,19 +775,10 @@ state Driving {
             } 
         }
     }
-    
-
-    timer() {
-        if((! parked) && (gRun == 0) && (auto_park_time>0) && (startposition != ZERO_VECTOR)) {
-            llSetRegionPos(startposition);
-            llSetRot(startrot);
-            llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
-            llSetTimerEvent(0);
-            state Idle;
-        }
-    }
 
 }
 
 // END
+
+
 

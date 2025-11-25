@@ -71,7 +71,7 @@ Home() {
     llSetStatus( STATUS_PHANTOM, FALSE);
     llMessageLinked(LINK_SET, 0, "park_done", NULL_KEY);
     llSay(0,"Auto-Park Complete!");
-    llResetScript(); // just in case a listener was left open
+    llListenRemove(menu_handler); // just in case a listener was left open
 }
 
 Park() {
@@ -140,6 +140,7 @@ default {
     
     state_entry(){
         init();
+        llOwnerSay("Auto-park position set");
     }
     
     changed(integer change) {       

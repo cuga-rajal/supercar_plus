@@ -221,5 +221,10 @@ Rev. 2.1.3
 - [Add-on script update] Multi-sim auto-park script updated, passenger standing will no longer trigger park.
   Add-on script version now 2.3. Name changed to Supercar 2 Auto-Park as it is no longer limited to multi-sim.
 - Readme includes details on upcoming changes in version 2.2.
+Rev. 2.2
+- Major rewrite with ~20% less memory usage. Many bug fixes.
+- Config notecard settings reader moved to a separate script. Auto-park moved to a separate script.
+- Racecar effects consolidated into one script with options to enable/disable features. Prims to
+  display Exhaust pipe particle effects must be named "tailpipe".
 
 // END OF VERSION HISTORY AND CREDITS

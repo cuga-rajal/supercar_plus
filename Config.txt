@@ -1,5 +1,5 @@
 gDrivePermit = 0; // Who is allowed to drive car: 0=everyone, 1=owner only, 2=rez group
-driverList = [ ]; // list of UUIDs allowed to drive (whitelist), in quotes, comma delimited, no spaces
+driverList = [ ]; // list of UUIDs allowed to drive (whitelist), in double-quotes, comma delimited
 gSitMessage = "Drive";  // replaces "Sit" in the right-click menu. Note this goes back to "Sit" after driver sits.
 gUrNotAllowedMessage = "Vehicle is Locked";  // Message to chat window if not allowed
 

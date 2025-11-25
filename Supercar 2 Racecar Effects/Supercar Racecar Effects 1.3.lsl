@@ -1,4 +1,4 @@
-// Supercar 2 Racecar Effects w/tailsmoke 1.0
+// Supercar Racecar Effects 1.3
 // By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -6,23 +6,13 @@
 // configurable settings 
 
 // Note: 1st gear = 0, 12th gear = 11;
-// burnoutGear setting can be in range 1-11 for gears 2-12. Set to 0 to disable.
-// turnburnGear is typically higher than burnoutGear by 1 or more gears.
 
-integer         burnoutGear = 3;
-integer         turnburnGear = 4;   // this gear and above show smoke & screech when turning.
-
-// SL assets
-//string          smoke_tex = "9358845b-c735-3a94-f13f-062bd464dd9a"; // texture name or UUID. If name is used tex must be placed in each child prim producing smoke particles.
-//string          pipeflame_tex = "6cbe1bee-c770-ce9d-ca44-d736280332d0"; // texture name or UUID. If name is used tex must be placed in each child prim producing flame particles.
-//string          sound_L = "57f23e25-ff01-1c33-4fc2-81a937c36825"; // sound asset name or UUID. If name is used, sound asset must be placed in root prim.
-//string          sound_R = "456c5568-73b2-cec4-e2bc-36c642427a4a"; // sound asset name or UUID. If name is used, sound asset must be placed in root prim.
-
-// OS assets
-string          smoke_tex = "4e4b5c91-dc47-44b7-9936-bd5f521050cd";
-string          pipeflame_tex = "e2fe5df5-63e3-4122-acf4-b65f0271a997"; 
-string          sound_L = "cfa733ca-ec42-44b9-912a-1e41c599280c";
-string          sound_R = "05c49e32-5a10-4d37-a89d-f8704981dbe9"; 
+integer         burnoutGear = 3; // This gear plays smoke & screech when moving forward. Set to 0 to disable
+integer         turnburnGear = 4;   // this gear and above plays smoke & screech when turning. Set to 0 to disable
+string          smoke_tex = "smoke-01.png"; 
+string          pipeflame_tex = "particle_flame.png";
+string          sound_L = "screech1.wav";
+string          sound_R = "screech2.wav";
 
 // end of configurable parameters
 
@@ -33,8 +23,8 @@ integer         makePower = FALSE;
 integer         burnout = FALSE;
 integer         smoking = FALSE;
 
-list            smoke_prims;
-list            flame_prims;
+list            smoke_prims;  // for smoke under the tires during turns. Prim names should contain "smoke"
+list            exhaust_prims;  // for smoke from exhaust pipes. Prim names should contain "tailpipe"
 integer i;
 
 list smoke;
@@ -47,7 +37,7 @@ default {
         for(i=2; i<= primcount; i++) {
             string primname = llList2String(llGetLinkPrimitiveParams(i,[PRIM_NAME]), 0);
             if(llSubStringIndex(primname, "smoke")!=-1) { smoke_prims += i; }
-            else if(llSubStringIndex(primname, "flame")!=-1) { flame_prims += i; }
+            else if(llSubStringIndex(primname, "tailpipe")!=-1) { exhaust_prims += i; }
         }
         
         smoke = [
@@ -137,8 +127,8 @@ default {
     
     link_message(integer Sender, integer Number, string msg, key Key) {
         if(msg=="car_start") {
-            for(i=0; i<llGetListLength(flame_prims); i++) {
-                llLinkParticleSystem(llList2Integer(flame_prims, i), flame);
+            for(i=0; i<llGetListLength(exhaust_prims); i++) {
+                llLinkParticleSystem(llList2Integer(exhaust_prims, i), flame);
             }
             llSetTimerEvent(3.0);
         } else if(msg=="smoke_on") {
@@ -155,8 +145,8 @@ default {
             for(i=0; i<llGetListLength(smoke_prims); i++) {
                 llLinkParticleSystem(llList2Integer(smoke_prims, i), []);
             }
-            for(i=0; i<llGetListLength(flame_prims); i++) {
-                llLinkParticleSystem(llList2Integer(flame_prims, i), []);
+            for(i=0; i<llGetListLength(exhaust_prims); i++) {
+                llLinkParticleSystem(llList2Integer(exhaust_prims, i), []);
             }
             smoking = FALSE;
         } else if(llGetSubString(msg, 0, 4) == "gear ") {
@@ -167,8 +157,8 @@ default {
                 for(i=0; i<llGetListLength(smoke_prims); i++) {
                     llLinkParticleSystem(llList2Integer(smoke_prims, i), smoke);
                 }
-                for(i=0; i<llGetListLength(flame_prims); i++) {
-                    llLinkParticleSystem(llList2Integer(flame_prims, i), flame);
+                for(i=0; i<llGetListLength(exhaust_prims); i++) {
+                    llLinkParticleSystem(llList2Integer(exhaust_prims, i), flame);
                 }
                 burnout = TRUE;
             } else if(msg == "NoSpin") {
@@ -177,8 +167,8 @@ default {
                         llLinkParticleSystem(llList2Integer(smoke_prims, i), []);
                     }
                 }
-                for(i=0; i<llGetListLength(flame_prims); i++) {
-                    llLinkParticleSystem(llList2Integer(flame_prims, i), tailsmoke);
+                for(i=0; i<llGetListLength(exhaust_prims); i++) {
+                    llLinkParticleSystem(llList2Integer(exhaust_prims, i), tailsmoke);
                 }
                 llStopSound();
                 burnout = FALSE;
@@ -189,13 +179,13 @@ default {
                     llLinkParticleSystem(llList2Integer(smoke_prims, i), []);
                 }
             }
-            for(i=0; i<llGetListLength(flame_prims); i++) {
-                llLinkParticleSystem(llList2Integer(flame_prims, i), tailsmoke);
+            for(i=0; i<llGetListLength(exhaust_prims); i++) {
+                llLinkParticleSystem(llList2Integer(exhaust_prims, i), tailsmoke);
             }
             llStopSound();
             burnout = FALSE;
         }
-        if(gGear >= turnburnGear) {
+        if((gGear >= turnburnGear) && (turnburnGear !=0)) {
             if((msg=="ForwardSpin") || (msg=="BackwardSpin")) { makePower = TRUE; }
             else if(msg == "NoSpin") { makePower = FALSE; }
             if(makePower && (msg == "RightTurn") || (msg == "LeftTurn")) {
@@ -232,10 +222,10 @@ default {
     }
     
     timer() {
-    	list tsm = [];
-    	if(llGetStatus(STATUS_PHYSICS)) { tsm = tailsmoke; }
-        for(i=0; i<llGetListLength(flame_prims); i++) {
-            llLinkParticleSystem(llList2Integer(flame_prims, i), tsm);
+        list tsm = [];
+        if(llGetStatus(STATUS_PHYSICS)) { tsm = tailsmoke; }
+        for(i=0; i<llGetListLength(exhaust_prims); i++) {
+            llLinkParticleSystem(llList2Integer(exhaust_prims, i), tsm);
         }
         llSetTimerEvent(0.0);
     }

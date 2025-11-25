@@ -7,35 +7,30 @@ picked it up. Much of the underlying code has changed since then but the overall
 is based on the original work. This project also redistributes by permission some of the
 original assets for the iTec race car effects.
 
-For the last few years I have been the custodian of a large collection (~70) of scripted
+For several years I have been the custodian of a large collection (~70) of scripted
 land vehicles at Burn2, the official Burning Man regional event in Second
 Life. I provide scripting kits and workshops for people building new art cars. During Burn2
 events, server lag is always a concern, when many vehicles are often used
 concurrently in a sim full of other scripted art and avatars. 
 
 When the project began, vehicles in the collection had scripts of varying sources and quality, some
-laggy, some poorly written, some lacking desired features. We wanted one vehicle
+laggy, some poorly written, some lacking desired features. We needed one vehicle
 script that could merge the best features of all of the scripts, fix the bugs, and be low
-lag as possible for the server. We also wanted a way to install updates into the entire
+lag as possible for the server. We also needed a way to install updates into the entire
 collection with minimal hassle, ideally without needing to hand-edit settings between
 scripts.
 
-The new fork of the Supercar script was developed to satisfy these requirements. Since the
-script was originally developed for compatibility across Opensim and SL, I was able to
-maintain this compatibility through its development.
-
+The new fork of the Supercar script was developed in 2015 to satisfy these requirements.
+The Config notecard option was added in 2017.
 Over the years, features were periodically vetted for usefulness and effects on server lag.
-
-In 2017, an option was added to put all configuration settings in a notecard. The script
-checks to see if the Config notecard is present, and if so it will use configs in the
-notecard at script reset time and ignore settings within the script itself. This way, script updates can
-be made by replacing the old script, without having to
-hand-edit any settings.
-
-Many features and bug fixes have been added since then. Some were
+Many new features and bug fixes have been added. Some were
 requested by builders, others to solve practical problems of managing vehicles for others to use.
 Feature usefulness and effects on server lag continue to be
-monitored. This is a work in progress.
+monitored.
+
+The script remains compatible with Opensim and SL. 
+
+This is a work in progress.
 Please notify me of bugs or feature requests.
 
 Cuga Rajal (Second Life and OSGrid)
