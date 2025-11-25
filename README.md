@@ -492,7 +492,8 @@ positions should be added for setting "offset" in the script.
 
 With the car still at placed with angle x=y=z=0, open the Edit window on the
 ramp and copy it's x,y,z angle into the setting "ramprot" (you can use the "C"
-button to the right of the Angle section to copy.) These are angles in degrees.
+button to the right of the Angle section to copy, then paste the value into the script.)
+These are angles in degrees.
 
 That's it! You can delete the ramp you were using to calculate the settings.
 Try driving the car and testing the ramp deployment.
@@ -542,9 +543,10 @@ customized fairly easily to move more than one prim.
 **Auto-Park**
 
 There is an optional add-on script to park the car back in it's parking spot at a given
-time after the driver stands.  􀀙The default settings work for a single region when there
-are no adjacent regions, such as events at Burn2 other than Octoburn. The script can also
-be configured to work across multiple adjacent regions. See the script notes for details.
+time after the driver stands. The default settings work for a single region when there
+are no adjacent regions. The script can also
+work across multiple adjacent regions with additional configuration steps.
+See the script notes for details.
 
 To use, set the "parkDelay" to the number of seconds after the driver stands that the car
 auto-parks. The parking location is set when the script resets, but it can also be changed
@@ -626,11 +628,11 @@ are using, the default values will be applied to higher gears.
 You can check the default values in the Supercar script and then create a list
 of adjusted values.
 
-Example 1: For a small "Cupcake Car" with a 1.5m footprint, settings that were smaller than the defaults worked best:
+Example 1: For a small "Cupcake Car" with a 1.5m footprint, turning radius settings that were smaller than the defaults worked best:
 
 	turnList = [ 0.5, 1.1, 1.2, 1.2 ];
 	
-Example 2: For a large bus holding 20 passengers, settings that were larger than the defaults worked best:
+Example 2: For a large bus holding 20 passengers, turning radius settings that were larger than the defaults worked best:
 
 	turnList = [ 8, 8, 8, 8 ];
 
