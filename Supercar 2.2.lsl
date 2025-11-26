@@ -37,12 +37,12 @@ string          sit_message = "The car has 5 gears. Use up/down controls to chan
 
 // Sound variables
 integer         aggressive_gear = 3; // This gear and above play "gSoundAggressive", below this gear plays "gSoundSlow"
-string          gSoundStartup = "Truck Start"; // sound made when driver seated
-string          gSoundIdle = "Truck Idle";  // looped sound when not moving
-string          gSoundSlow = "Truck Drive";   // looped sound when driving forward and gear below aggresive_gear
-string          gSoundAggressive = "Truck High Gear";  // looped sound when driving forward and gear at or above aggresive_gear
-string          gSoundRev = "Truck Drive";  // looped sound when driving in reverse
-string          gSoundStop = "Truck Off";   // sound when the driver stands
+string          gSoundStartup = ""; // sound made when driver seated
+string          gSoundIdle = "";  // looped sound when not moving
+string          gSoundSlow = "";   // looped sound when driving forward and gear below aggresive_gear
+string          gSoundAggressive = "";  // looped sound when driving forward and gear at or above aggresive_gear
+string          gSoundRev = "";  // looped sound when driving in reverse
+string          gSoundStop = "";   // sound when the driver stands
 string          gSoundAlarm = "";   // sound if someone not authorized tries to drive car
 
 //---INTERNAL VARIABLES--------------------------------------------------
