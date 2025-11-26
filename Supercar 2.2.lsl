@@ -235,7 +235,7 @@ enginesound(){
 }
 
 config_init() {
-    llOwnerSay("Initializing Supercar Pro script, please wait...");
+    llOwnerSay("Initializing Supercar script, please wait...");
     llOwnerSay("   Reading wheel settings and child prims physics types..");
     prim_phys_types = [ ];
     primcount = llGetObjectPrimCount(llGetKey());
