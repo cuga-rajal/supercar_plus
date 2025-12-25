@@ -1,7 +1,7 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-version 2.2, Nov 25, 2025
+Version 2.2, Nov 25, 2025 & Sit Script Update, Dec 23, 2025
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -63,6 +63,13 @@ check the settings in your Config to match the current version. For upgrading fr
 versions it is easier to transfer your settings to the new Config notecard format.
 
 To see complete lists of changes for each version, please see the file Supercar_Plus_Versions_Credits.txt.
+
+Sit Scripts Update, December 23, 2025
+
+Sit scripts added a sitter touch adjust menu in summer 2025 as part of the Supercar 2.1.1 package.
+
+December 2025 the sit scripts added a feature to remember sitter adjustments and to automatically
+reapply them on future sits by the same avatar.
 
 -----
 
@@ -197,7 +204,7 @@ needed.
 
 If you need to play an animation when a passenger is seated, or trigger something else
 when they sit, such as making a poseball invisible, then a script will need to be placed
-in that prim to accomplish this. A general-purpose sit script, Sit w/Animation 2.0, is
+in that prim to accomplish this. A general-purpose sit script, Sit w/Animation 2.1, is
 provided for this. This script works with any build, vehicle or not. The sit script has
 a number of other options that you can read about in the notes at the top.
 
@@ -210,7 +217,7 @@ This kit provides another script option for passenger seats that is useful when 
 vehicle with a large number of seats. Instead of using a separate script in each passenger
 prim, you can manage all the passenger sits with one script. This can help reduce script
 memory on the vehicle and help it be more responsive to driving controls. The script
-"Manage Child Prim Sits 2.1.lsl" can be set up as described in the following section. 􀀎
+"Manage Child Prim Sits 2.2" can be set up as described in the following section. 
 
 *Pros and cons of avSitter*
 
@@ -242,13 +249,15 @@ point, then manually adjust the numbers to make further changes.
 *Sit adjust provided with touch menu*
 
 The passenger sit scripts allow passengers to touch the vehicle to adjust their position. 
+Sit scripts remember adjustments made and automatically reapply the adjustments on
+future sits by the same avatar.
 
 *Options for Driver Sits*
 
 If there is exactly one animation placed in the Contents, the driver will play the
 animation when the driver sits. A sit script is not needed for the driver.
 
-Optionally, the Sit w/Animation 2.0 script can be placed in the root prim to allow the
+Optionally, the Sit w/Animation 2.1 script can be placed in the root prim to allow the
 driver to touch the vehicle and adjust their position.
 
 If there is more than one animation in the Contents, the car script will not play a
