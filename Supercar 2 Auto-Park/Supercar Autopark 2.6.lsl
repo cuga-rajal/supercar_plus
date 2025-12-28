@@ -1,4 +1,4 @@
-// Supercar Multi-Sim Autopark v2.3, Oct 26, 2025
+// Supercar Autopark v2.6, Dec 19, 2025
 // By Cuga Rajal (cuga@rajal.org) - An accessory script for the Supercar Plus package
 // For the latest version and more information visit https://github.com/cuga-rajal/supercar_plus/ 
 // This work is licensed under the Creative Commons BY-NC-SA 3.0 License: https://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -7,7 +7,7 @@
 // after a configurable delay.
 //
 // To use in a single region without neighboring regions, you only need to configure
-// the delay after the driver stands before it parks.
+// "parkDelay" - the delay after the driver stands before it parks.
 //
 // To use it for parking in places with multiple adjacent regions, additional configurations
 // are required. Details in the following section.
@@ -124,7 +124,7 @@ init() {
 }
 
 menu(key user,string title,list object_list)  { 
-	llListenRemove(menu_handler);
+    llListenRemove(menu_handler);
     menu_channel = (integer)(llFrand(99999.0) * -1); //random channel 
     menu_handler = llListen(menu_channel,"","",""); 
     llDialog(user,title,object_list,menu_channel); 
@@ -132,6 +132,7 @@ menu(key user,string title,list object_list)  {
 
 default {
     on_rez(integer param) {
+        llSetTimerEvent(0);
         HomePos = ZERO_VECTOR;
         if((llList2Integer(llGetObjectDetails(llGetLinkKey(LINK_THIS), [ OBJECT_TEMP_ON_REZ ]), 0)==0)) { 
             llOwnerSay("To enable Auto-Park, place your vehicle in its parking location and then touch the vehicle to open the dialog.");
@@ -196,6 +197,10 @@ default {
     }
                 
     timer() {
+        if(HomePos == ZERO_VECTOR) {
+            llSetTimerEvent(0);
+            return;
+        }
         llSay(0,"Vehicle self-parking now.");  
         llMessageLinked(LINK_SET, 0, "car_park", NULL_KEY);
         waitingToPark = FALSE;    

@@ -1,7 +1,11 @@
 # supercar_plus
 Supercar Plus - Open-Source LSL Car Script
 
-Version 2.2, Nov 25, 2025 & Sit Script Update, Dec 23, 2025
+Engine Version 2.2, Nov 25, 2025
+
+Sit Script Update, Dec 23, 2025
+
+Auto-Park Update, Dec 27, 2025
 
 Supercar Plus is a free LSL land vehicle (car) script by Cuga Rajal and past
 contributors, compatible with Opensim and Second Life.
@@ -40,7 +44,7 @@ Features section provides more details.
 Supercar 2.2 is a major rewrite that improves a number of things, and uses about 20% less
 memory than 2.1.x.
 
-The main script and many add-ons received bug fixes and improvements. If you are
+The main script and many add-ons received bug fixes and improvements as part of the release. If you are
 upgrading, check the version numbers of the main script and add-on scripts in your vehicle
 and update to any new versions. If there are issues, check documentation on the script or
 add-on.
@@ -60,16 +64,24 @@ Auto-Park feature was also moved to a separate script.
 Supercar Version 2.2 did not change any config settings from 2.1.3. However there were several
 changes to the Config notecard in the last year. If you are upgrading from an old version,
 check the settings in your Config to match the current version. For upgrading from older
-versions it is easier to transfer your settings to the new Config notecard format.
+versions it is usually easier to transfer your settings to the new Config notecard format
+which is included with the package..
 
 To see complete lists of changes for each version, please see the file Supercar_Plus_Versions_Credits.txt.
 
 Sit Scripts Update, December 23, 2025
 
-Sit scripts added a sitter touch adjust menu in summer 2025 as part of the Supercar 2.1.1 package.
+Sit scripts added a sitter touch menu to adjust position in summer 2025 as part of the Supercar 2.1.1 package.
 
 December 2025 the sit scripts added a feature to remember sitter adjustments and to automatically
 reapply them on future sits by the same avatar.
+
+Supercar Auto-Park Update, December 27, 2025
+
+The auto-park script received an important bug fix. If you are using an earlier version
+please update to the latest as older versions could cause problems.
+Auto-park is one of the features that split off
+from the main script recently to reduce memory usage, and this update irons out some things.
 
 -----
 

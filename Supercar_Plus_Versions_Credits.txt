@@ -225,6 +225,12 @@ Rev. 2.2
 - Major rewrite with ~20% less memory usage. Many bug fixes.
 - Config notecard settings reader moved to a separate script. Auto-park moved to a separate script.
 - Racecar effects consolidated into one script with options to enable/disable features. Prims to
-  display Exhaust pipe particle effects must be named "tailpipe".
+  display Exhaust pipe particle effects must be renamed "tailpipe" to resolve conflicts with other
+  scripting on vehicles.
+Rev. 2.2a
+- Add-on script update only
+- Sit scripts updated - add feature to remember sit adjustments and re-apply on future sits by same avatar
+- Auto-Park script - bugfix - if car taken to inventory with timer active, timer no longer fires after rez
+
 
 // END OF VERSION HISTORY AND CREDITS
