@@ -44,22 +44,18 @@ Features section provides more details.
 Supercar 2.2 is a major rewrite that improves a number of things, and uses about 20% less
 memory than 2.1.x.
 
-The main script and many add-ons received bug fixes and improvements as part of the release. If you are
-upgrading, check the version numbers of the main script and add-on scripts in your vehicle
-and update to any new versions. If there are issues, check documentation on the script or
-add-on.
-
 The biggest change with version 2.2 is using a separate script for reading in the Config
-notecard. Just drop in the Supercar Config NC Reader script along with the Config notecard
+notecard settings. Just drop in the Supercar Config NC Reader script along with the Config notecard
 and it will work like before. It doesn't matter if it is dropped in before or after the
 main script.
 
 The initializing sequence changed but works just the same. With the new version, the car
-script is initialized with its own settings and then it reads the Config NC and overwrites
-the configs with any changes. If any sound settings changed, the script performs sound
+script is initialized with its own settings and then it signals the reader script for
+updates. The reader script sends back settings in the Config NC and overwrites
+the previous configs. If any sound settings changed, the script performs sound
 preloading again.
 
-Auto-Park feature was also moved to a separate script. 
+Auto-Park feature was also moved to a separate script.
 
 Supercar Version 2.2 did not change any config settings from 2.1.3. However there were several
 changes to the Config notecard in the last year. If you are upgrading from an old version,
@@ -69,19 +65,20 @@ which is included with the package..
 
 To see complete lists of changes for each version, please see the file Supercar_Plus_Versions_Credits.txt.
 
-Sit Scripts Update, December 23, 2025
+_Sit Scripts Update, v2.1, December 23, 2025_
 
-Sit scripts added a sitter touch menu to adjust position in summer 2025 as part of the Supercar 2.1.1 package.
+Sit scripts in the Supercar package are general purpose sit scripts distributed for convenience,
+they are not limited to use with vehicles.
 
-December 2025 the sit scripts added a feature to remember sitter adjustments and to automatically
+In summer 2025 sit scripts added a sitter touch menu to adjust position as part of the Supercar 2.1.1 package.
+
+December 2025 the sit scripts added a feature to remember per-avatar sit adjustments and to automatically
 reapply them on future sits by the same avatar.
 
-Supercar Auto-Park Update, December 27, 2025
+_Supercar Auto-Park Update, v2.6, December 27, 2025_
 
 The auto-park script received an important bug fix. If you are using an earlier version
-please update to the latest as older versions could cause problems.
-Auto-park is one of the features that split off
-from the main script recently to reduce memory usage, and this update irons out some things.
+please update to the latest version.
 
 -----
 
@@ -114,8 +111,7 @@ Now Edit your vehicle, hold down the Shift key, and select the new cube prim las
 them together with the Link button. You should now be able to drive your car!
 
 The driver's position is likely to be wrong. You can fix this using a Sit Positioner
-System or a sit script. This only needs to be done once. A free Sit Positioner System is
-available at Burn2 from giver boxes in the sandbox. 􀀠. When you adjust the driver
+System or a sit script. When you adjust the driver
 position make sure that you are changing the root prim, even if there is a separate visual
 drivers seat. Re-test driving the car after you set the sit position.
 
