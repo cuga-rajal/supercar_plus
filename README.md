@@ -687,22 +687,23 @@ messages.
 
 When the script resets or is placed in a car, it checks and the physics types of
 all child prims on the vehicle and stores them in memory so that it can preserve
-then before and after driving. When the driver sits to drive, all child prims
+those prim types before and after driving. When the driver sits to drive, all child prims
 are set to physics type None to minimize lag - physics calculations only need to
 be made for the one root prim with a simple shape. When the driver stands, the
-script restores the original physics types of all child prims.
+script restores the original physics types of all child prims individually.
 
 If you change any child prim physics types on the vehicle, make sure you reset
 the car script *before* you drive it so that it can refresh it's list of child
 prim physics types. Otherwise you will lose your changes. There is no way for
-the script to automatically detect when child prim physics type is changed, so the
-script reset must be done manually.
+the script to automatically detect when child prim physics type is changed by hand,
+so the script reset must be done manually.
 
 The script has an option to selectively keep physics shape type Prim on some
 child prims during driving, if needed, rather than setting every child prim type
 None. This can be done by naming the Description field of any prim that you want
 to remain physical to "prim" and resetting the script. This feature is useful
-for creating articulating hinges on multi-axle vehicles (experimental).
+for special situations where some prims other than the root prim need to remain
+solid while the vehicle is being driven.
 
 
 
